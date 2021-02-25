@@ -1,0 +1,119 @@
+import Login from '../Pages/Login.jsx'
+import NotAuthorized from '../Pages/NotAuthorized.jsx'
+import Dashboard from '../Pages/Dashboard.jsx'
+import MyProfile from '../Pages/MyProfile.jsx'
+import SubjectList from '../Pages/subject/SubjectList.jsx';
+import CreateSubject from '../Pages/subject/CreateSubject.jsx';
+import SubSubjectList from '../Pages/subject/SubSubjectList.jsx';
+import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
+import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
+
+import DeleteData from '../Pages/DeleteData.jsx';
+
+import AdminList from '../Pages/Admin/AdminList.jsx';
+import CreateAdmin from '../Pages/Admin/CreateAdmin.jsx';
+import RoleList from '../Pages/Role/RoleList.jsx';
+import CreateRole from '../Pages/Role/CreateRole.jsx';
+import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.jsx';
+import PermissionList from '../Pages/Permission/PermissionList.jsx';
+
+export const guestRoutes =  [
+    { 
+        path:'/',
+        component: Login
+    },
+    {
+        path:'/login',
+        component: Login
+    },
+    
+    {
+        path:'/403',
+        component: NotAuthorized
+    }
+
+];
+
+export const privateRoutes = [
+    {
+        path: '/dashboard',
+        component: Dashboard
+    },
+    {
+        path: '/my-profile',
+        component: MyProfile
+    },
+    {
+        path: '/subject',
+        component: SubjectList
+    },
+    {
+        path: '/subject-create',
+        component: CreateSubject
+    },
+    {
+        path: '/subject-update/:id',
+        component: CreateSubject
+    },
+    {
+        path: '/sub-subject/:subject_name/:subject_id',
+        component: SubSubjectList
+    },
+    {
+        path: '/sub-subject/:subject_name/create/:subject_id',
+        component: CreateSubSubject
+    },
+    {
+        path: '/sub-subject',
+        component: AllSubSubjectList
+    },
+    {
+        path: '/sub-subject/create',
+        component: CreateSubSubject
+    },
+    {
+        path: '/delete-data/:module/:method/:id',
+        component: DeleteData
+    }
+    
+];
+
+export const adminRoutes = [
+    {
+        path: '/master-admin',
+        component: AdminList
+    },
+    {
+        path: '/master-admin/create',
+        component: CreateAdmin
+    },
+    
+    {
+        path: '/master-admin/update/:id',
+        component: CreateAdmin
+    },
+
+    {
+        path: '/master-role',
+        component: RoleList
+    },    
+
+    {
+        path: '/master-role/create',
+        component: CreateRole
+    },
+
+    {
+        path: '/master-role/update/:id',
+        component: CreateRole
+    },
+    
+    {
+        path: '/master-permission-group',
+        component: PermissionGroupList
+    },    
+    {
+        path: '/master-permission',
+        component: PermissionList
+    }
+]

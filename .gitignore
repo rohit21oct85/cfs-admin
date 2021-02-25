@@ -1,0 +1,10 @@
+website/node_modules/
+node_modules/
+config/
+.env/
+.idea/
+.vs/
+.env
+.pk
+.pem
+.pub

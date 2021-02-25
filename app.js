@@ -1,0 +1,75 @@
+const dotenv = require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const path = require("path");
+const session = require('express-session')
+const Routes = require("./routes/index.js");
+
+const app = express();
+app.use(cors());
+const PORT = process.env.PORT || 8080;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+const flash = require('connect-flash')
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+    next();
+  });
+
+// express session 
+app.use(session({
+    secret: 'kikai-secerate',
+    resave: true,
+    saveUninitialized: true
+}));
+// connect flash session
+app.use(flash());
+
+// global vars session
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg')
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+})
+// DB Cofiguration
+if(process.env.NODE_ENV === 'production') {
+  const MONGO_URI = process.env.MONGO_URI
+  mongoose.connect(MONGO_URI, { useFindAndModify: false, useNewUrlParser: true,useUnifiedTopology: true, useCreateIndex: true})
+  .then(() => console.log('Mongo DB Connected on Server'))
+  .catch(err => console.log(err) );
+}else{
+  const db = require('./config/keys').MongoURI
+  mongoose.connect(db, { useFindAndModify: false, useNewUrlParser: true,useUnifiedTopology: true, useCreateIndex: true})
+  .then(() => console.log('Mongo DB Connected Locally'))
+  .catch(err => console.log(err) );
+}
+  
+// login
+app.use("/api/v1/admin", Routes.AdminAuthRoutes);
+app.use("/api/v1/master-role", Routes.roleRoutes);
+app.use("/api/v1/master-permission", Routes.permissionRoutes);
+app.use("/api/v1/master-permission-group", Routes.permissionGroupRoutes);
+app.use("/api/v1/master-admin", Routes.adminRoutes);
+app.use("/api/v1/master-delete", Routes.removeDataRoutes);
+app.use("/api/v1/subject", Routes.subjectRoutes);
+app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('website/build'));
+  app.get('*', (req, res) => {
+    const index = path.join(__dirname,'website','build', 'index.html');
+    res.sendFile(index);
+  });
+}
+app.listen(PORT, () => {
+    console.log(`App is running on PORT ${PORT}`);
+})
