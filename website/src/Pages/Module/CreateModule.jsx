@@ -7,52 +7,56 @@ import useAxios from '../../hooks/useAxios'
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
-import {SubjectContext} from '../../context/SubjectContext';
+import {AdminContext} from '../../context/AdminContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
-export default function CreateSubject() {
+export default function CreateModule() {
     const history = useHistory();
     const params = useParams();
+    
     const {state} = useContext(AuthContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    const {state: sState, dispatch: sDispatch} = useContext(SubjectContext);
+    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
 
     const [formData, setFormData] = useState("");
 
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
+        console.log(formData); 
+        // return;
         if(formData == ''){
-            errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Subject Name'});
+            errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Name'});
         }else{
             if(params.id){
-                response = await api.patch(`subject/update/${params.id}`,formData);
+                response = await api.patch(`master-module/update/${params.id}`,formData);
             }else{
-                response = await api.post('subject/create',formData);
+                response = await api.post('master-module/create',formData);
             }
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-            history.push('/subject');
+            history.push('/master-module');
         }
     }
     async function handelChange(e){
         const data = e.target.value;
-        const subject = data.replace(/[^a-zA-Z0-9, ]/g, "");
-        setFormData({...formData, subject: subject});
+        const filedValue = data.replace(/[^a-zA-Z0-9, ]/g, "");
+        setFormData({...formData, [e.target.name]: filedValue});
     }
+
     const {response} = useAxios({
-        method: 'get', url: `subject/view/${params.id}`
+        method: 'get', url: `master-module/view/${params.id}`
     });
-    const [subject, setSubject] = useState('');
+    const [module, setModule] = useState('');
     useEffect( () => {
         if(response !== null){
-            const subRes = response.data;
-            sDispatch({type: 'SET_SUBJECT', payload: subRes});
-            if(sState){
-                setSubject(subRes.subject)
+            const modRes = response.data;
+            adminDispatch({type: 'GET_MODLIST', payload: modRes});
+            if(adminState){
+                setModule(modRes)
             }
         }   
-    },[params.id, response])
+    },[response,module])
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -65,19 +69,19 @@ export default function CreateSubject() {
 return (
 
     <>
-    {state.isLoggedIn && errorState && sState && (
-      
+    {state.isLoggedIn && errorState && adminState.ModList && (
+    
     <div className="col-lg-10 col-md-10 main_dash_area">
         <div className="main-area-all">
             <div className="dashboard_main-container">
                 <div className="dash-main-head">
-                    <h2>Create New Subject</h2>
+                    <h2>Create New Module</h2>
                 </div>
                 
                 <div className="dash-cont-start">
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
-                        <Link to={`/subject`} className="btn btn-sm dark">
+                        <Link to={`/master-module`} className="btn btn-sm dark">
                         <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
                         </Link>
                         </div>
@@ -90,11 +94,11 @@ return (
                             <Notification>{errorState.success}</Notification>
                         )}
 
-                        <Form method="POST" className="col-md-6 p-0">
-                            <Form.Group>
-                                <Form.Label>Subject Name</Form.Label>
-                                <Form.Control name="subject" autoComplete="off"
-                                defaultValue={subject}
+                        <Form autoComplete="off" className="col-md-6 p-0">
+                            <Form.Group method="POST">
+                                <Form.Label>Module Name</Form.Label>
+                                <Form.Control name="module_name" autoComplete="off"
+                                defaultValue={module.module_name}
                                 onChange={handelChange}
                                 onKeyDown={ 
                                     event => {
@@ -102,13 +106,28 @@ return (
                                             event.preventDefault()
                                         }
                                     }
-                                } placeholder="Subject Name"/>
+                                } placeholder="Enter Module Name"/>
                             </Form.Group>
-                            <Form.Group>
+                                
+                            <Form.Group method="POST">
+                                <Form.Label>Module Description</Form.Label>
+                                <Form.Control name="description" autoComplete="off"
+                                defaultValue={module.description}
+                                onChange={handelChange}
+                                onKeyDown={ 
+                                    event => {
+                                        if(event.key === 'Enter'){
+                                            event.preventDefault()
+                                        }
+                                    }
+                                } placeholder="Enter Module description"/>
+                            </Form.Group>
+                            
+                            <Form.Group className="mt-3">
                                 <Button 
                                 onClick={handleSubmit}
                                 className="btn dark btn-sm">
-                                    {params.id ? 'Update Subject':'Save Subject'}
+                                    {params.id ? 'Update Module':'Save Module'}
                                 </Button>
                             </Form.Group>
                         </Form>

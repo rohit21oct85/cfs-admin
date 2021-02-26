@@ -14,11 +14,28 @@ const reducer = (state, action) => {
                 ...state,
                 Roles: action.payload
             }
+        case 'GET_ALL_MODLISTS': 
+            return {
+                ...state,
+                ModLists: action.payload
+            }    
+        case 'GET_REMOVE_ALL_DATA': 
+            state.RemoveAllDatas.push(action.payload);    
+            return {
+                ...state,
+                RemoveAllDatas: state.RemoveAllDatas
+            }    
+        case 'GET_MODLIST': 
+            return {
+                ...state,
+                ModList: action.payload
+            }    
         case 'GET_ROLE':
             return {
                 ...state,
                 role: action.paylaod
-            }    
+            } 
+                 
         default:
             return state;
     }
@@ -28,11 +45,18 @@ function AdminProvider({children}){
     const [state, dispatch] = useReducer(reducer, {
         Admins: [],
         Roles: [],
+        ModLists: [],
+        RemoveAllDatas: [],
         role: {
             id: '',
             name: '',
             description: '',
             role: ''
+        },
+        ModList: {
+            id:'',
+            module_name:'',
+            description: ''
         }
     });
     return (

@@ -56,6 +56,7 @@ if(process.env.NODE_ENV === 'production') {
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
+app.use("/api/v1/master-module", Routes.moduleRoutes);
 app.use("/api/v1/master-permission", Routes.permissionRoutes);
 app.use("/api/v1/master-permission-group", Routes.permissionGroupRoutes);
 app.use("/api/v1/master-admin", Routes.adminRoutes);

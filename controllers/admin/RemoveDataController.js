@@ -7,7 +7,8 @@ const createRemoveData = async (req, res) => {
         const newRemoveData = new RemoveData(body);
         await newRemoveData.save();
         return res.status(200).json({ 
-            message: "Delete Resource created sucessfully"
+            message: "Delete Resource created sucessfully",
+            data: newRemoveData
         });
     
         
@@ -67,9 +68,9 @@ const removeRemoveData = async (req, res) => {
     }
 }
 const getDataView = async (req, res) => {
-    const module = req.params.module;
+    const module_name = req.params.module;
     try{
-        const AllRemoveData = await RemoveData.find({module: module},{__v: 0});
+        const AllRemoveData = await RemoveData.find({module_name: module_name},{__v: 0});
         return res.status(200).json({ 
             total: AllRemoveData.length,
             data: AllRemoveData 

@@ -2,15 +2,24 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const RemoveDataSchema = new mongoose.Schema({
-    module: {
+    module_id: {
         type: String,
         required: true,
     },
-    method: {
+    module_name: {
+        type: String,
+        required: true,
+    },
+    module_method: {
         type: String,
         required: true
     },
-    password: {
+    module_password: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    module_plain_password: {
         type: String,
         required: true,
         trim: true
@@ -27,17 +36,17 @@ const RemoveDataSchema = new mongoose.Schema({
 });
 
 RemoveDataSchema.pre('save', function(next) {
-    const admin = this;
-    if(!admin.isModified || !admin.isNew){
+    const removeData = this;
+    if(!removeData.isModified || !removeData.isNew){
         next();
     }else{
-        bcrypt.hash(admin.password, 10, function(err, hash){
+        bcrypt.hash(removeData.module_password, 10, function(err, hash){
             if(err) {
-                console.log('Error hashing password for admin', admin.fullname);
+                console.log('Error hashing password for admin', removeData.module_name);
                 next(err);
             }
             else{
-                admin.password = hash;
+                removeData.module_password = hash;
                 next();
             }
         })
@@ -46,15 +55,14 @@ RemoveDataSchema.pre('save', function(next) {
 
 RemoveDataSchema.pre('findOneAndUpdate', async function(next) {
     try {
-        if (this._update.password) {
-            const hashed = await bcrypt.hash(this._update.password, 10)
-            this._update.password = hashed;
+        if (this._update.module_password) {
+            const hashed = await bcrypt.hash(this._update.module_password, 10)
+            this._update.module_password = hashed;
         }
         next();
     } catch (err) {
         return next(err);
     }
 });
-
 
 module.exports = mongoose.model('RemoveData', RemoveDataSchema);

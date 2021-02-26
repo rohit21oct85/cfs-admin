@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
     .post('/create',checkAuth, RemoveData.createRemoveData)
-    .get('/all',checkAuth, RemoveData.getAllRemoveData)
+    .get('/view-all',checkAuth, RemoveData.getAllRemoveData)
     .patch('/update/:id',checkAuth,RemoveData.updateRemoveData)
     .delete('/delete/:id',checkAuth,RemoveData.removeRemoveData)
     .get('/view/:module',checkAuth, RemoveData.getDataView)

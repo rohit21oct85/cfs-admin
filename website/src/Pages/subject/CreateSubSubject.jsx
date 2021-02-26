@@ -56,7 +56,7 @@ export default function CreateSubSubject() {
                 setSubject(subRes)
             }
         }   
-    },[subject]);
+    },[response, subject]);
 
     useEffect( () => {
         
@@ -122,14 +122,16 @@ return (
                                     <select className="form-control" name="subject" autoComplete="off"
                                     onChange={ 
                                         event => {
-                                            console.log(event.target)
-                                            // history.push(`sub-subject/${event.target.dataset('value')}`)
+                                            const value = event.target.value;
+                                            const subject_name = value.split('_')[0];
+                                            const subject_id = value.split('_')[1];
+                                            history.push(`/sub-subject/${subject_name.trim().replace(' ','-').toLowerCase()}/create/${subject_id}`)
                                         }
                                     } >
                                         <option>Select Subject</option>
                                         {sState.Subjects.map( sub => {
                                             return (
-                                            <option data-id={sub._id} data-value={sub.subject}>{sub.subject}</option>
+                                            <option key={sub._id} value={sub.subject+'_'+sub._id}>{sub.subject}</option>
                                             )
                                         })}
                                     </select>

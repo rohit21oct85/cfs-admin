@@ -14,6 +14,9 @@ import AdminList from '../Pages/Admin/AdminList.jsx';
 import CreateAdmin from '../Pages/Admin/CreateAdmin.jsx';
 import RoleList from '../Pages/Role/RoleList.jsx';
 import CreateRole from '../Pages/Role/CreateRole.jsx';
+import ModuleList from '../Pages/Module/ModuleList.jsx';
+import CreateModule from '../Pages/Module/CreateModule.jsx';
+import CreateModulePassword from '../Pages/Module/CreateModulePassword.jsx';
 import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.jsx';
 import PermissionList from '../Pages/Permission/PermissionList.jsx';
 
@@ -71,6 +74,7 @@ export const privateRoutes = [
         path: '/sub-subject/create',
         component: CreateSubSubject
     },
+    
     {
         path: '/delete-data/:module/:method/:id',
         component: DeleteData
@@ -97,6 +101,25 @@ export const adminRoutes = [
         path: '/master-role',
         component: RoleList
     },    
+    
+    {
+        path: '/master-module',
+        component: ModuleList
+    }, 
+    {
+        path: '/master-module/create',
+        component: CreateModule
+    }, 
+    {
+        path: '/master-module/update/:id',
+        component: CreateModule
+    }, 
+    
+    {
+        path: '/master-module/password/:module_name/:module_id',
+        component: CreateModulePassword
+    }, 
+
 
     {
         path: '/master-role/create',

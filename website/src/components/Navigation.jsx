@@ -71,6 +71,12 @@ return (
             
             <li>
                 <Nav className="ml-auto">
+                    <NavLink to="/master-module" >Manage Modules</NavLink>
+                </Nav>
+            </li>
+            
+            <li>
+                <Nav className="ml-auto">
                     <NavLink to="/master-permission-group">Manage Permission Group</NavLink>
                 </Nav>
             </li>
