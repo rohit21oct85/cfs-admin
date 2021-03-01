@@ -143,7 +143,13 @@ export const adminRoutes = [
     {
         path: '/master-permission-group',
         component: PermissionGroupList
-    },    
+    },
+        
+    {
+        path: '/master-permission-group/:module_name/update/:id',
+        component: PermissionGroupList
+    },
+
     {
         path: '/master-permission',
         component: PermissionList

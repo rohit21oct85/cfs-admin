@@ -1,8 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 
 import {AdminContext} from '../../context/AdminContext';
-import {ErrorContext} from '../../context/ErrorContext';
-import * as api from '../../Helper/ApiHelper.jsx';
+
 import useAxios from '../../hooks/useAxios.jsx';
 
 import SinglePermission from './SinglePermission';
@@ -10,7 +9,6 @@ import SinglePermission from './SinglePermission';
 const AllPermissionGroup = () => {
     
     const {state, dispatch} = useContext(AdminContext);
-    const {state:errorState, dispatch:errorDispatch} = useContext(ErrorContext);
     const {response, isLoading} = useAxios({
         method: 'get', url: 'master-permission-group/view-all'
     });    

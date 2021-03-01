@@ -52,11 +52,9 @@ export default function CreateRole() {
         if(response !== null){
             const roleRes = response.data;
             adminDispatch({type: 'SET_ROLE', payload: roleRes});
-            if(adminState){
-                setRole(roleRes)
-            }
+            setRole(roleRes)
         }   
-    },[params.id, response])
+    },[params.id, response, role])
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);

@@ -38,7 +38,7 @@ export default function PermissionGroupList() {
         clearTimeout(timerError)
         clearTimeout(timerSuccess)
         }
-    },[errorState]);
+    },[errorState.errors, errorState.success]);
 return (
     <>
     {state.isLoggedIn && errorState && adminState.ModLists && (
@@ -52,11 +52,9 @@ return (
                 <div className="dash-cont-start">
                     <div className="row">
                         <div className="col-md-3">
-                            <h3>Add Permission </h3>
                             <CreatePermissionGroup />
                         </div>
                         <div className="col-md-9">
-                            <h3>All Permission Group </h3>
                             <div className="subject-main-container">
                                 <AllPermissionGroup />
                             </div>

@@ -58,9 +58,8 @@ export default function CreateModulePassword() {
             if(response !== null){
                 const RemoveAllDataRes = response.data;
                 adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: RemoveAllDataRes});
-                if(adminState){
-                    setRemoveAllData(RemoveAllDataRes)
-                }
+                setRemoveAllData(RemoveAllDataRes)
+                
             }   
         },[response,formSubmitted])
     useEffect( () => {

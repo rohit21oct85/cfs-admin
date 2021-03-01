@@ -43,7 +43,13 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 permissionGroups: action.payload
-            }    
+            }  
+        case 'SET_SELECTED_METHOD':{
+            return {
+                ...state,
+                selected_methods: action.payload
+            }
+        }
         default:
             return state;
     }
@@ -67,10 +73,12 @@ function AdminProvider({children}){
             module_name:'',
             description: ''
         },
-        methods: [{name: 'create',value:'Create Module'},{name: 'update',value:'Update Module'},
-            {name: 'delete',value:'Delete Module'},{name: 'view',value:'View Module'},
-            {name: 'view-all',value:'View All Module'},{name: 'delete-all',value:'Delete All Module'},
-            {name: 'upload',value:'Uplaod Module'}]
+        methods: [{name: 'create',value:'Create Module', checked: false},{name: 'update',value:'Update Module', checked: false},
+            {name: 'delete',value:'Delete Module',checked: false},{name: 'view',value:'View Module',checked: false},
+            {name: 'view-all',value:'View All Module',checked: false},{name: 'delete-all',value:'Delete All Module',checked: false},
+            {name: 'upload',value:'Uplaod Module',checked: false}
+        ],
+        selected_methods: []
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>
