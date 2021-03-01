@@ -59,7 +59,7 @@ const CreatePermissionGroup = () => {
                             <div className="methods label"  key={mod.name}>
                                 <label htmlFor={`${mod.name}`}>
                                     <input 
-                                        name="method"
+                                        name="module_method"
                                         type="checkbox" 
                                         className="check" 
                                         value={`${mod.name}`} 

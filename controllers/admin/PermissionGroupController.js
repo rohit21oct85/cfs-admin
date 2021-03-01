@@ -3,17 +3,12 @@ const PermissionGroup = require('../../models/admin/PermissionGroup.js');
 const CreatePermissionGroup = async (req, res) => {
     const data = req.body;
     try {
-        await PermissionGroup.create(data).then( async result => {
-            const AllPermissionGroups =  await ViewPermissionGroup();
-            return res.status(200).json({
-                message: "Submitted, Successfully",
-                data: AllPermissionGroups
-            });
-        }).catch(error => {
-            return res.status(409).json({
-                message: "Error occured",
-                errors: error.message
-            });
+        const newPermissionGroup = new PermissionGroup(data);
+        await newPermissionGroup.save();
+        const AllPermissionGroups =  await ViewPermissionGroup();
+        return res.status(200).json({
+            message: "Submitted, Successfully",
+            data: AllPermissionGroups
         });
     }
     catch(error){
