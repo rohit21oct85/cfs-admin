@@ -4,12 +4,39 @@ const bcrypt = require('bcrypt');
 const createRemoveData = async (req, res) => {
     const body = req.body;
     try {
-        const newRemoveData = new RemoveData(body);
-        await newRemoveData.save();
-        return res.status(200).json({ 
-            message: "Delete Resource created sucessfully",
-            data: newRemoveData
-        });
+        
+        await RemoveData.findOneAndUpdate({
+                module_name: req.body.module_name,
+                module_method: req.body.module_method
+            },
+                req.body)
+            .then( async (response) => {
+                if(response){
+                    const AllRemoveData = await RemoveData.find({module_name: req.body.module_name},{__v: 0});
+                    return res.status(200).json({ 
+                        message: "Delete Resource created sucessfully",
+                        data: AllRemoveData
+                    });
+                }else{
+                    const newRemoveData = new RemoveData(body);
+                    await newRemoveData.save();
+                    const AllRemoveData = await RemoveData.find({module_name: req.body.module_name},{__v: 0});
+                    return res.status(200).json({ 
+                        message: "Delete Resource created sucessfully",
+                        data: AllRemoveData
+                    });
+                }
+                
+            })
+            .catch(error => {
+                return res.status(500).json({
+                    message: "Error Found",
+                    errors: error.message
+                })
+            });
+
+
+        
     
         
     } catch (error) {
@@ -21,17 +48,17 @@ const createRemoveData = async (req, res) => {
 const updateRemoveData = async (req, res) =>{
     try {
         await RemoveData.findOneAndUpdate({_id: req.params.id},req.body)
-                .then(response => {
-                    return res.status(202).json({
-                        message: "Delete Resource, Updated successfully"
-                    })
+            .then(response => {
+                return res.status(202).json({
+                    message: "Delete Resource, Updated successfully"
                 })
-                .catch(error => {
-                    return res.status(500).json({
-                        message: "Error Found",
-                        errors: error.message
-                    })
-                });
+            })
+            .catch(error => {
+                return res.status(500).json({
+                    message: "Error Found",
+                    errors: error.message
+                })
+            });
 
     } catch (error) {
         res.status(409).json({
@@ -84,37 +111,23 @@ const getDataView = async (req, res) => {
 }
 const checkPassword = async (req, res) => {
     try {
-        await RemoveData.findOne({module: req.body.module},{__v: 0}).then( resource => {
-            if(resource){
-                bcrypt.compare(req.body.password, resource.password, function(err,response){
-                    if(err){
-                        return res.status(409).json({ 
-                            message: "Password does not match"
-                        });
-                    }
-                    else{
-                        if(response){
-                           return res.status(200).json({ 
-                                status: true
-                            });
-                        } else {
-                            return res.status(401).json({ 
-                                message: "Password does not match"
-                            });
-                        }                      
-                    }
-                });
+        await RemoveData.findOne({
+            module_name: req.body.module,
+            module_method: req.body.method,
+            module_plain_password: req.body.password
+        },{__v: 0}).then( response => {
+            if(response){
+                return res.status(200).json({ 
+                    status: true,
+                    data: response._id
+                }); 
             }else{
-                res.status(409).json({ 
-                    message: "Resource or Password doesnot matched"
-                })
+                return res.status(200).json({ 
+                    status: false,
+                    message: "Module password not valid"
+                }); 
             }
-        }).catch(error => {
-            res.status(500).json({
-                message: "Resource Does not exists in our database",
-                errors: error.message
-            });     
-        })
+        });
         
     } catch (error) {
         return res.status(402).json({
@@ -122,6 +135,8 @@ const checkPassword = async (req, res) => {
         });  
     }
 }
+
+
 module.exports = {
     createRemoveData,
     updateRemoveData,

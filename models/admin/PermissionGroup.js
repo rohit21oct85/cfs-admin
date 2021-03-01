@@ -1,21 +1,24 @@
 const mongoose = require('mongoose');
 
 const PermissionGroupSchema = new mongoose.Schema({
-    name: {
+    module_id: {
         type: String,
         required: true,
     },
-    description: {
+    module_name: {
         type: String,
         required: true,
-        unique: true,
+    },
+    module_method: {
+        type: [{name: String}],
+        required: true
     },
     status:{
         type: Boolean,
         required: true,
         default: true
     },
-    create_at: {
+    created_at: {
         type: Date,
         default: Date.now
     }

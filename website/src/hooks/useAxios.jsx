@@ -14,7 +14,6 @@ export default function useAxios({method, url, data = null}) {
     }else{
         var API_URL = 'https://cfs-admin.herokuapp.com/api/v1/';
     }
-
     const api = axios.create({
         baseURL: API_URL,
         headers: {
@@ -22,22 +21,22 @@ export default function useAxios({method, url, data = null}) {
             'Authorization':'Bearer '+ state.access_token
         }
     });
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            await api[method](url, JSON.parse(data))
+                    .then( res => {
+                        setResponse(res.data);
+                    }).finally( () => {
+                        setIsLoading(false);
+                    })
+        } catch (error) {
+            setError(error.message);
+        }
+    }
 
     useEffect( () => {
-        const fetchData = async () => {
-            try {
-                await api[method](url, JSON.parse(data))
-                        .then( res => {
-                            setResponse(res.data);
-                        }).finally( () => {
-                            setIsLoading(false);
-                        })
-            } catch (error) {
-                setError(error.message);
-            }
-        }
-        return fetchData();
-
+        fetchData();
     },[method, url, data]);
 
     return {response, error, isLoading};

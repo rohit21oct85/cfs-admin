@@ -10,7 +10,7 @@ export const Notification = ({children}) => {
 
     return (
         <Row>
-        <Col xs={6} className="">
+        <Col xs={12} className="">
         <Alert variant="info" onClose={() => setShow(false)} dismissible>
             {children}
         </Alert>

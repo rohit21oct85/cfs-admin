@@ -72,7 +72,7 @@ const updateSubSubject = async (req, res) =>{
 
 const getAllSubSubject = async (req, res) => {
     try{
-        const Subjects = await SubSubject.find({},{__v: 0});
+        const Subjects = await SubSubject.find({status: true},{__v: 0});
         return res.status(200).json({ 
             total: Subjects.length,
             data: Subjects 

@@ -7,8 +7,10 @@ const CreateAdmin = async (req, res) => {
     
         const newAdmin = new Admin(body);
         await newAdmin.save();
+        const AllAdmins = await Admin.find({},{__v: 0});
         return res.status(200).json({ 
-            message: "Admin created sucessfully"
+            message: "Admin created sucessfully",
+            admins: AllAdmins
         });
     
         

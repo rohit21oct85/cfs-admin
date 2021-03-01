@@ -4,7 +4,6 @@
 }
 .main-area-all {
     background-color: #fff;
-    /* padding-left: 5px; */
     overflow-y: auto;
 }
 .dashboard_main-container {
@@ -19,7 +18,6 @@
     position: relative;
     padding-bottom: 5px;
     margin: 0;
-    /* border-bottom: 1px solid #e0e0e0; */
     background-color: #fff;
     padding: 12px;
 }
@@ -410,6 +408,15 @@ p{
 .name-main{
     font-weight: 600;
     font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+}
+.update-icons{
+    height: 25px;
+    line-height: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .delBtn,.delBtn:active{
     background: none !important;
@@ -494,4 +501,16 @@ p{
     color: #000;
     font-size: 0.8em;
     font-weight: 500;
+}
+.methods{
+    width: 100%;
+    background: #cdcdcd;
+    border: 1px solid #eee;
+    border-left: 3px solid #f90;
+    padding:5px 25px 0px 10px ;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+.check{
+    text-align: left;
 }

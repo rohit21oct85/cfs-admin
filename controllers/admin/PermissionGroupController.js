@@ -1,18 +1,28 @@
 const PermissionGroup = require('../../models/admin/PermissionGroup.js');
 
 const CreatePermissionGroup = async (req, res) => {
-    const body = req.body;
+    const data = req.body;
     try {
-        const newPermissionGroup = new PermissionGroup(body);
-        await newPermissionGroup.save();
-        return res.status(200).json({ 
-            message: "Permission Group created sucessfully"
+        await PermissionGroup.create(data).then( async result => {
+            const AllPermissionGroups =  await ViewPermissionGroup();
+            return res.status(200).json({
+                message: "Submitted, Successfully",
+                data: AllPermissionGroups
+            });
+        }).catch(error => {
+            return res.status(409).json({
+                message: "Error occured",
+                errors: error.message
+            });
         });
-    } catch (error) {
-        res.status(502).json({
-            message : error.message
-        })
     }
+    catch(error){
+        return res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+    
 }
 const UpdatePermissionGroup = async (req, res) =>{
     try {

@@ -9,6 +9,7 @@ import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
+import ViewData from '../Pages/ViewData.jsx';
 
 import AdminList from '../Pages/Admin/AdminList.jsx';
 import CreateAdmin from '../Pages/Admin/CreateAdmin.jsx';
@@ -74,11 +75,15 @@ export const privateRoutes = [
         path: '/sub-subject/create',
         component: CreateSubSubject
     },
-    
     {
         path: '/delete-data/:module/:method/:id',
         component: DeleteData
+    },
+    {
+        path: '/view-data/:module/:rmodule/:method/:id',
+        component: ViewData
     }
+
     
 ];
 
@@ -118,8 +123,12 @@ export const adminRoutes = [
     {
         path: '/master-module/password/:module_name/:module_id',
         component: CreateModulePassword
-    }, 
-
+    },
+     
+    {
+        path: '/master-module/password/:module_name/:module_id/:module_method/:id',
+        component: CreateModulePassword
+    },
 
     {
         path: '/master-role/create',

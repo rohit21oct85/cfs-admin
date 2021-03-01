@@ -20,22 +20,30 @@ const reducer = (state, action) => {
                 ModLists: action.payload
             }    
         case 'GET_REMOVE_ALL_DATA': 
-            state.RemoveAllDatas.push(action.payload);    
             return {
                 ...state,
-                RemoveAllDatas: state.RemoveAllDatas
-            }    
+                RemoveAllDatas: action.payload
+            }       
         case 'GET_MODLIST': 
             return {
                 ...state,
                 ModList: action.payload
+            }    
+        case 'SET_USER': 
+            return {
+                ...state,
+                user: action.payload
             }    
         case 'GET_ROLE':
             return {
                 ...state,
                 role: action.paylaod
             } 
-                 
+        case 'GET_ALL_PERMISSION_GROUPS':
+            return {
+                ...state,
+                permissionGroups: action.payload
+            }    
         default:
             return state;
     }
@@ -47,6 +55,7 @@ function AdminProvider({children}){
         Roles: [],
         ModLists: [],
         RemoveAllDatas: [],
+        permissionGroups: [],
         role: {
             id: '',
             name: '',
@@ -57,7 +66,11 @@ function AdminProvider({children}){
             id:'',
             module_name:'',
             description: ''
-        }
+        },
+        methods: [{name: 'create',value:'Create Module'},{name: 'update',value:'Update Module'},
+            {name: 'delete',value:'Delete Module'},{name: 'view',value:'View Module'},
+            {name: 'view-all',value:'View All Module'},{name: 'delete-all',value:'Delete All Module'},
+            {name: 'upload',value:'Uplaod Module'}]
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>

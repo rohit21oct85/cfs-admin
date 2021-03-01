@@ -4,97 +4,99 @@ import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
 import * as api from '../../Helper/ApiHelper.jsx';
 import useAxios from '../../hooks/useAxios'
+import useGeneratePassword from '../../hooks/useGeneratePassword'
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {AdminContext} from '../../context/AdminContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft, faTrash, faEdit, faEye,faEyeSlash, faLock, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft, faTrash, faEdit, faEye,faEyeSlash, faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateModulePassword() {
-const history = useHistory();
-const params = useParams();
+    const history = useHistory();
+    const params = useParams();
 
-const {state} = useContext(AuthContext);
-const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
+    const {state} = useContext(AuthContext);
+    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
+    
+    const {randomPassword,generateRandomPassword} = useGeneratePassword();
 
-const [formData, setFormData] = useState("");
+    const [formData, setFormData] = useState("");
 
-async  function handleSubmit(e){
-e.preventDefault();
-let response = null;
-// console.log(formData); 
-// return;
-if(formData == ''){
-    errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Name'});
-}else{
-    if(params.id){
-        response = await api.patch(`master-delete/update/${params.id}`,formData);
-    }else{
-        response = await api.post('master-delete/create',formData);
+    const [formSubmitted, setFormSubmitted] = useState(false);
+        async  function handleSubmit(e){
+            e.preventDefault();
+            let response = null;
+            if(formData.module_method == ''){
+                errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Method Name'});
+            }else{
+                formData['module_password'] = randomPassword;
+                formData['module_plain_password'] = randomPassword;
+                if(params.id){
+                    response = await api.patch(`master-delete/update/${params.id}`,formData);
+                }else{
+                    response = await api.post('master-delete/create',formData);
+                }
+                setFormSubmitted(true);
+                errorDispatch({type: 'SET_SUCCESS', payload: response.message});
+                adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: response.data.data});
+                history.push(`/master-module/password/${params.module_name}/${params.module_id}`);
+            }
+        }
+        async function handelChange(e){
+            const data = e.target.value;
+            const filedValue = data.replace(/[^a-zA-Z0-9-, ]/g, "");
+            setFormData({...formData, [e.target.name]: filedValue});
+        }
+
+        const {response} = useAxios({
+            method: 'get', url: `master-delete/view/${params.module_name}`
+        });
+        const [removeAllData, setRemoveAllData] = useState('');
+        useEffect( () => {
+            if(response !== null){
+                const RemoveAllDataRes = response.data;
+                adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: RemoveAllDataRes});
+                if(adminState){
+                    setRemoveAllData(RemoveAllDataRes)
+                }
+            }   
+        },[response,formSubmitted])
+    useEffect( () => {
+    let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
+    let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
+    return () => {
+        clearTimeout(timerError)
+        clearTimeout(timerSuccess)
     }
-    errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-    adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: response.data.data})
-    history.push(`/master-module/password/${params.module_name}/${params.module_id}`);
-}
-}
-async function handelChange(e){
-const data = e.target.value;
-const filedValue = data.replace(/[^a-zA-Z0-9, ]/g, "");
-setFormData({...formData, [e.target.name]: filedValue});
-}
-
-const {response} = useAxios({
-method: 'get', url: `master-delete/view/${params.module_name}`
-});
-const [removeAllData, setRemoveAllData] = useState('');
-useEffect( () => {
-if(response !== null){
-    const RemoveAllDataRes = response.data;
-    errorDispatch({type: 'SET_SUCCESS', payload: response.message})
-    adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: RemoveAllDataRes});
-    if(adminState){
-        setRemoveAllData(RemoveAllDataRes)
+    },[errorState.error, errorState.success]);
+    
+    useEffect( () => {
+        setFormData({...formData,'module_name': params.module_name, 'module_id': params.module_id, 'module_method': ''});
+    },[params])
+    
+    const handleDelete = async (e) => {
+        history.push(`/delete-data/master-module/delete/${e}`) 
     }
-}   
-},[response])
-useEffect( () => {
-let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
-let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
-return () => {
-    clearTimeout(timerError)
-    clearTimeout(timerSuccess)
-}
-},[errorState.error, errorState.success]);
-useEffect( () => {
-setFormData({...formData,'module_name': params.module_name, 'module_id': params.module_id});
-},[params])
-const [randomPassword, setRandomPassword] = useState(null);
-
-const generateRandomPassword = () => {
-var pass = '';
-var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +  
-        'abcdefghijklmnopqrstuvwxyz0123456789'+
-        '@#$&*'; 
-for (let i = 1; i <= 12; i++) { 
-    var char = Math.floor(Math.random() 
-                * str.length + 1); 
-        
-    pass += str.charAt(char) 
-} 
-setRandomPassword(pass);
-setFormData({...formData,'module_password': pass,'module_plain_password': pass});
-}
-const handleDelete = async (e) => {
-history.push(`delete-data/master-module/delete/${e}`) 
-}
-const handleUpdate = async (e) => {
-history.push(`/master-module/update/${e}`);
-}
-const [maskedPassword, setMaskedPassword] = useState(true);
-const [passwordValidity, setPasswordValidity] = useState(false);
-const [showPassword, setShowPassword] = useState(false);
+    const handleUpdate = async (e) => {
+        history.push(`/master-module/password/${params.module_name}/${params.module_id}/${e.module_method}/${e.id}`);
+    }
+    const [maskedPassword, setMaskedPassword] = useState(true);
+    const [passwordValidity, setPasswordValidity] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [viewPassword, setViewPassword] = useState('');
+    const handlePasswordVerify = () => {
+        if(viewPassword == 'wrongpassword'){
+            setShowPassword(true);
+            setPasswordValidity(false);
+        }else{
+            alert("you have entered a wrong password");
+            setShowPassword(false);
+            setPasswordValidity(true);
+            setViewPassword('');
+        }
+    }
 
 return (
 
@@ -120,6 +122,7 @@ return (
                         <h5><em><b>All Methods Password</b></em></h5>    
                     </div>
                 </div>
+                
                 <div className="row">
                 <div className="col-md-4 no-gutter mt-2">
                 {errorState.error && ( 
@@ -151,7 +154,7 @@ return (
                             <p style={{ marginBottom: '2px' }}><small>Enter: create, update, <b className="text-danger">delete</b>, view, view-all</small></p>
                         </Form.Label>
                         <Form.Control name="module_method" autoComplete="off"
-                            defaultValue={module.module_method}
+                            defaultValue={(params.module_method) ? params.module_method :module.module_method}
                             onChange={handelChange}
                             onKeyDown={ 
                                 event => {
@@ -164,14 +167,17 @@ return (
                     
                     <Form.Group method="POST">
                         <Form.Label>
-                            Module Methods Password
-                        <FontAwesomeIcon 
-                            style={{ marginBottom: '2px',cursor: 'pointer', marginLeft: '15px' }}
+                            <p 
+                            className="pl-0 mb-0"
+                            style={{ cursor: 'pointer', fontWeight: 'bold'}}
                             onClick={generateRandomPassword}
-                            icon={faLock} 
-                            title='Generate Password'
-                        />
-                    
+                            >
+                            <FontAwesomeIcon 
+                                icon={faLock} 
+                                className="mr-2"  varient="solid"
+                            />
+                             Generate Random password
+                            </p>
                         </Form.Label>
                         <Form.Control name="module_password" autoComplete="off"
                             defaultValue={(module.module_password) ? generateRandomPassword : randomPassword}
@@ -192,8 +198,17 @@ return (
                         <Button 
                         onClick={handleSubmit}
                         className="btn dark btn-md">
-                            {params.id ? 'Update Module Password':'Save Module Password'}
+                            {params.id ? 'Update Password':'Save Password'}
                         </Button>
+                        {params.id && (
+                            <Button 
+                            onClick={ () => {
+                                history.push(`/master-module/password/${params.module_name}/${params.module_id}`)
+                            }}
+                            className="btn dark btn-md ml-2">
+                                Cancel
+                            </Button>
+                        )}
                     </Form.Group>
                 </Form>
                 </div>
@@ -207,11 +222,11 @@ return (
                                 </Link>
                             </div>
                             <div>
-                                <Button className="delBtn" onClick={handleUpdate.bind(this,removeData._id)}>
+                                <Button className="delBtn" onClick={handleUpdate.bind(this,{id: removeData._id, module_method: removeData.module_method})}>
                                     <FontAwesomeIcon icon={faEdit} className="text-danger mr-2"  varient="solid"/>
                                 </Button>
                                 
-                                <Button className="delBtn" onClick={handleDelete.bind(this,module._id)}>
+                                <Button className="delBtn" onClick={handleDelete.bind(this,removeData._id)}>
                                     <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
                                 </Button>
                             </div>
@@ -238,36 +253,61 @@ return (
                                     Module Password: 
                                 </div>
                                 {maskedPassword && (
-                                <div className="name-main">
-                                    <span>*************</span>
-                                    <FontAwesomeIcon 
-                                        className="ml-2"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={ e => {
-                                            setPasswordValidity(true);
-                                            setMaskedPassword(false);
-                                        }}
-                                        icon={faEye}
-                                    />
-                                </div>
-                                )}
+                                 
+                                 <div className="name-main">
+                                     <span>*************</span>
+                                     <FontAwesomeIcon 
+                                         className="ml-2"
+                                         style={{ cursor: 'pointer' }}
+                                         onClick={ e => {
+                                             setPasswordValidity(true);
+                                             setMaskedPassword(false);
+                                             setViewPassword('');
+                                         }}
+                                         icon={faEye}
+                                     />
+                                 </div>
+                                 )}
                                 {showPassword && (
-                                    <div className="name-main">
-                                    <span>
-                                        {removeData.module_plain_password}
-                                    </span>
-                                    <FontAwesomeIcon 
-                                    className="ml-2"
-                                    icon={faEyeSlash}/>
-                                    </div>
-                                )}
+                                 
+                                 <div className="name-main">
+                                     <span>
+                                         {removeData.module_plain_password}
+                                     </span>
+                                     <div className="update-icons col-md-3 pr-2">
+                                         <FontAwesomeIcon 
+                                             className="ml-2"
+                                             style={{ cursor: 'pointer' }}
+                                             onClick={ e => {
+                                                 setPasswordValidity(false);
+                                                 setShowPassword(false);
+                                                 setMaskedPassword(true);
+                                             }}
+                                             icon={faTimes}/>
+                                     </div>
+                                 </div>
+                                 )}
                                 {passwordValidity && (
                                 <div className="name-main">
-                                    <input type="text" className="form-control" />
-                                    <FontAwesomeIcon 
-                                        className="ml-2"
-                                        style={{ cursor: 'pointer' }}
-                                        icon={faSave}/>
+                                    <input type="password" name='password' autoComplete="off" value={viewPassword} onChange={ e => setViewPassword(e.target.value)}  className="col-md-9 form-control" style={{  height: '25px' }} />
+                                    <div className="update-icons col-md-3 pr-2">
+                                        <FontAwesomeIcon 
+                                            className="ml-2"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={handlePasswordVerify}
+                                            icon={faEyeSlash}/>
+                                            
+                                        <FontAwesomeIcon 
+                                            className="ml-2"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={ e => {
+                                                setPasswordValidity(false);
+                                                setMaskedPassword(true);
+                                            }}
+                                            icon={faTimes}/>
+                                    </div>
+                                    
+
                                 </div>
                                 )}
                                 

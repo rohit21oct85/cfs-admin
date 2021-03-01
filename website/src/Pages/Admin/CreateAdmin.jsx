@@ -7,7 +7,7 @@ import useAxios from '../../hooks/useAxios'
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
-import {SubjectContext} from '../../context/SubjectContext';
+import {AdminContext} from '../../context/AdminContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,7 +16,7 @@ export default function CreateAdmin() {
     const params = useParams();
     const {state} = useContext(AuthContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    const {state: sState, dispatch: sDispatch} = useContext(SubjectContext);
+    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
 
     const [formData, setFormData] = useState("");
 
@@ -27,32 +27,34 @@ export default function CreateAdmin() {
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Subject Name'});
         }else{
             if(params.id){
-                response = await api.patch(`subject/update/${params.id}`,formData);
+                response = await api.patch(`master-admin/update/${params.id}`,formData);
             }else{
-                response = await api.post('subject/create',formData);
+                response = await api.post('master-admin/create',formData);
             }
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-            history.push('/subject');
+            history.push('/master-admin');
         }
     }
     async function handelChange(e){
         const data = e.target.value;
-        const subject = data.replace(/[^a-zA-Z0-9, ]/g, "");
-        setFormData({...formData, subject: subject});
+        const user = data.replace(/[^a-zA-Z0-9, ]/g, "");
+        setFormData({...formData, [e.target.name]: user});
     }
     const {response} = useAxios({
-        method: 'get', url: `subject/view/${params.id}`
+        method: 'get', url: `master-admin/view/${params.id}`
     });
-    const [subject, setSubject] = useState('');
+    const [user, setUser] = useState({});
     useEffect( () => {
         if(response !== null){
-            const subRes = response.data;
-            sDispatch({type: 'SET_SUBJECT', payload: subRes});
-            if(sState){
-                setSubject(subRes.subject)
+            const userRes = response.data;
+            if(userRes.status){
+                adminDispatch({type: 'SET_USER', payload: userRes});
+                setUser(userRes)
+            }else{
+                adminDispatch({type: 'SET_USER', payload: {}});
             }
         }   
-    },[params.id, response])
+    },[params.id, response, user]);
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -94,7 +96,7 @@ return (
                             <Form.Group method="POST">
                                 <Form.Label>Admin Full Name</Form.Label>
                                 <Form.Control name="fullname" autoComplete="off"
-                                defaultValue={subject}
+                                defaultValue={user && user.fullname}
                                 onChange={handelChange}
                                 onKeyDown={ 
                                     event => {
@@ -108,7 +110,7 @@ return (
                             <Form.Group method="POST">
                                 <Form.Label>Admin Email</Form.Label>
                                 <Form.Control name="email" autoComplete="nope"
-                                defaultValue={subject}
+                                defaultValue={user && user.email}
                                 onChange={handelChange}
                                 onKeyDown={ 
                                     event => {
@@ -123,7 +125,6 @@ return (
                                 <Form.Label>Admin Password</Form.Label>
                                 <Form.Control name="password" autoComplete="off"
                                 type="password"
-                                defaultValue={subject}
                                 onChange={handelChange}
                                 onKeyDown={ 
                                     event => {
@@ -135,14 +136,14 @@ return (
                             </Form.Group>
 
                             <div className="row">
-                                <div class="col-md-6">
+                                <div className="col-md-6">
                                     <label> Role</label>
                                     <select className="form-control" name="role">
                                         <option>Select Role</option>
                                     </select>
                                 </div>
                                 
-                                <div class="col-md-6">
+                                <div className="col-md-6">
                                     <label> Status</label>
                                     <select className="form-control" name="role">
                                         <option>Select Stauts</option>

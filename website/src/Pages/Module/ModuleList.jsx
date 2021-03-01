@@ -23,7 +23,9 @@ export default function ModuleList() {
     
     const [appModule, setAppModule] = useState();
     const handleDelete = async (e) => {
-        history.push(`delete-data/master-module/delete/${e}`) 
+        const module_id = e.id;
+        const module_name = e.module_name.toLowerCase().replace(' ','-');
+        history.push(`delete-data/master-module/delete/${module_id}`) 
     }
     const handleUpdate = async (e) => {
         history.push(`/master-module/update/${e}`);
@@ -32,7 +34,7 @@ export default function ModuleList() {
     const handleLock = async (e) => {
         const module_id = e.id;
         const module_name = e.module_name.toLowerCase().replace(' ','-');
-        history.push(`/master-module/password/${module_name}/${module_id}`);
+        history.push(`/view-data/master-module/${module_name}/view/${module_id}`);
     }
 
     useEffect(() => {
@@ -94,7 +96,7 @@ return (
                                             <FontAwesomeIcon icon={faLock} className="text-success mr-2"  varient="solid"/>
                                         </Button>
                     
-                                        <Button className="delBtn" onClick={handleDelete.bind(this,module._id)}>
+                                        <Button className="delBtn" onClick={handleDelete.bind(this,{id: module._id,module_name: module.module_name})}>
                                             <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
                                         </Button>
                                     </div>
