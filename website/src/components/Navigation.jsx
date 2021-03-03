@@ -3,14 +3,19 @@ import { Link, useHistory ,NavLink } from "react-router-dom";
 import './loginNav.css';
 import { Navbar,Nav} from 'react-bootstrap'
 import {AuthContext} from '../context/AuthContext.jsx';
+import {AdminContext} from '../context/AdminContext.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
+import useAxios from '../hooks/useAxios';
 
 export default function Navigation() {
     const history = useHistory();
     const { state, dispatch } = useContext(AuthContext);
-    
+    const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
+    const {response, isLoading, error} = useAxios({
+        method: 'get', url: 'master-module/view-all'
+    });
     const HandleRoute = (e) => {
         history.push('/my-profile');
     }
@@ -18,10 +23,21 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
+    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
+    const [adminRoutes, setAdminRoutes] = useState([]);
+    useEffect(() => {
+        if(response !== null){
+            const ModuleRoutes = response.data;
+            const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+            setSuperAdminRoutes(sRoutes);
+            const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+            setAdminRoutes(aRoutes);
+        }
+    }, [response]);
 return (
 <>
 
-{state.isLoggedIn && (
+{state.isLoggedIn && adminState.ModLists && (
 <div className="login_menu col-lg-2 col-md-2 col-12" bg="dark" variant="dark" expand="lg">
     <div className="webLogo">
         <img src="/logo.png" alt="User"/>
@@ -55,58 +71,24 @@ return (
                     <NavLink to="/dashboard" >Dashboard</NavLink>
                 </Nav>
             </li>
-            {state.role == 1 && (
-            <>    
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/master-admin" >Manage Admin</NavLink>
-                </Nav>
-            </li>
+            {state.role == 1 && superAdminRoutes.map(routes => {
+                return (
+                    <li>
+                    <Nav className="ml-auto">
+                        <NavLink to={`/${routes.module_name.trim().toLowerCase().replaceAll(' ','-')}`} >{routes.module_name}</NavLink>
+                    </Nav>
+                    </li>
+                )
+            })}
             
-            <li>
+            { (state.role == 1 || state.role == 2) && adminRoutes.map(routes => { return (
+                <li>
                 <Nav className="ml-auto">
-                    <NavLink to="/master-role" >Manage Role</NavLink>
+                    <NavLink to={`/${routes.module_name.trim().toLowerCase().replaceAll(' ','-')}`} >{routes.module_name}</NavLink>
                 </Nav>
-            </li>
+                </li>
+            )})}
             
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/master-module" >Manage Modules</NavLink>
-                </Nav>
-            </li>
-            
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/master-permission-group">Manage Permission Group</NavLink>
-                </Nav>
-            </li>
-            
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/master-permission" >Manage Permission</NavLink>
-                </Nav>
-            </li>
-
-            </>
-            )}
-
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/subject" >Subject</NavLink>
-                </Nav> 
-            </li>
-            
-            <li>
-                <Nav className="ml-auto">
-                    <NavLink to="/sub-subject" >Sub Subject</NavLink>
-                </Nav> 
-            </li>
-
-            <li>
-            <Nav className="ml-auto">
-                    <NavLink to="/reports" >Reports</NavLink>
-                </Nav> 
-            </li>
             
         </ul>
     </div>

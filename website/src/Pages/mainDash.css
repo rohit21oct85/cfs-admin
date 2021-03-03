@@ -533,3 +533,6 @@ p{
 .check{
     text-align: left;
 }
+.module_name{
+    text-transform: capitalize
+}

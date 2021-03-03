@@ -11,6 +11,7 @@ import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
 
 import useAxios from '../../hooks/useAxios';
+
 export default function ModuleList() {
 
     const history = useHistory();

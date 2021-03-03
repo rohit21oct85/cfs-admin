@@ -10,6 +10,10 @@ const ModuleSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    role_access:{
+        type: Number,
+        required: true
+    },
     status:{
         type: Boolean,
         required: true,

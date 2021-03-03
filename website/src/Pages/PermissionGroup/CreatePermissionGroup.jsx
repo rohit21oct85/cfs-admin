@@ -48,7 +48,7 @@ const CreatePermissionGroup = () => {
             const PermissionGroupRes = response.data.module_method;
             dispatch({type: 'SET_SELECTED_METHOD', payload: PermissionGroupRes});
             setPermissionGroup(PermissionGroupRes);
-            console.log(state.selected_methods)
+            
         }   
     },[params.module_name, response, permissionGroup])
     
@@ -122,7 +122,7 @@ const CreatePermissionGroup = () => {
                                     name="module_method"
                                     type="checkbox" 
                                     className="check  checkbox" 
-                                    defaultValue={`${mod.name}`}
+                                    value={`${mod.name}`}
                                     checked={checked ? 'checked':''} 
                                     onChange={handleChange}
                                     id={`${mod.name}`}/>
@@ -131,7 +131,7 @@ const CreatePermissionGroup = () => {
                                     name="module_method"
                                     type="checkbox" 
                                     className="check  checkbox" 
-                                    defaultValue={`${mod.name}`}
+                                    value={`${mod.name}`}
                                     onChange={handleChange}
                                     id={`${mod.name}`}/>
                                 )}
