@@ -9,6 +9,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
 
 import useAxios from '../../hooks/useAxios';
 
@@ -78,6 +79,8 @@ return (
                         {errorState.success && ( 
                             <Notification>{errorState.success}</Notification>
                         )}
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                             
                         {adminState.ModLists.map( module => (
@@ -142,6 +145,7 @@ return (
                             </div>
                         ))}
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

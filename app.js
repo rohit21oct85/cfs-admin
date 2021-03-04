@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 // express session 
 app.use(session({
-    secret: 'kikai-secerate',
+    secret: 'acadecraft-secerate',
     resave: true,
     saveUninitialized: true
 }));
@@ -57,7 +57,8 @@ if(process.env.NODE_ENV === 'production') {
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
 app.use("/api/v1/master-module", Routes.moduleRoutes);
-app.use("/api/v1/master-permission", Routes.permissionRoutes);
+app.use("/api/v1/master-role-permission", Routes.rolePermissionRoutes);
+app.use("/api/v1/master-user-permission", Routes.userPermissionRoutes);
 app.use("/api/v1/master-permission-group", Routes.permissionGroupRoutes);
 app.use("/api/v1/master-admin", Routes.adminRoutes);
 app.use("/api/v1/master-delete", Routes.removeDataRoutes);

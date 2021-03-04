@@ -24,7 +24,6 @@ export default function CreateModule() {
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
-        console.log(formData); 
         // return;
         if(formData.module_name == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Name'});

@@ -10,6 +10,8 @@ import {AuthContext} from '../../context/AuthContext';
 import {SubjectContext} from '../../context/SubjectContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
+
 import useAxios from '../../hooks/useAxios';
 
 export default function SubSubjectList() {
@@ -24,9 +26,6 @@ export default function SubSubjectList() {
     });
     const handleDelete = async (e) => {
         history.push(`delete-data/subject/delete/${e}`);
-        // await api.del(`subject/delete/${e}`);
-        // document.getElementById('card-'+e).style.display = "none";
-        // history.push('/subject')
     }
     useEffect(() => {
         if(response !== null){
@@ -69,6 +68,8 @@ return (
                         {errorState.success && ( 
                             <Notification>{errorState.success}</Notification>
                         )}
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                         {sState.SubSubjects.map( sub => (
                             <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
@@ -93,6 +94,7 @@ return (
                             </div>
                         ))}
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

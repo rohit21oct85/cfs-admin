@@ -28,7 +28,7 @@ const CreatePermissionGroup = () => {
                 dispatch({ type: 'GET_ALL_PERMISSION_GROUPS', payload: response.data.data})
                 errorDispatch({type: 'SET_SUCCESS', payload: response.data.message});
                 clearFields()
-                history.push('/master-permission-group')
+                history.push('/master-permission-group');
             }else{
                 errorDispatch({type: 'SET_ERROR', payload: response.data.message});
             }
@@ -98,10 +98,10 @@ const CreatePermissionGroup = () => {
                             const module_name = mod.module_name.replaceAll(' ','-').toLowerCase().trim(); 
                             const module_id = mod._id;
                             return(
-                                <option 
-                                    value={`${module_name}_${module_id}`} 
-                                    selected={(module_name === params.module_name)?'selected':''}
-                                    key={mod._id}>{mod.module_name}</option>
+                            <option 
+                                value={`${module_name}_${module_id}`} 
+                                selected={(module_name === params.module_name)?'selected':''}
+                                key={mod._id}>{mod.module_name}</option>
                             )
                     })}
                     </select>
@@ -123,7 +123,7 @@ const CreatePermissionGroup = () => {
                                     type="checkbox" 
                                     className="check  checkbox" 
                                     value={`${mod.name}`}
-                                    checked={checked ? 'checked':''} 
+                                    checked={checked && checked} 
                                     onChange={handleChange}
                                     id={`${mod.name}`}/>
                                 ) :(

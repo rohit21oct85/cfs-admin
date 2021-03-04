@@ -22,27 +22,28 @@ export default function useAxios({method, url, data = null}) {
             'Authorization':'Bearer '+ state.access_token
         }
     });
-    const fetchData = async () => {
-        try {
-            const splitUrl = url.split('/');
-            var lastItem = splitUrl.pop();
-            if(lastItem !== 'undefined'){
-                setIsLoading(true);
-                await api[method](url, JSON.parse(data))
-                    .then( res => {
-                        setResponse(res.data);
-                    }).finally( () => {
-                        setIsLoading(false);
-                    })
-            }
-            
-        } catch (error) {
-            errorDispatch({type: 'SET_ERROR', payload: error.message});
-        }
-    }
+    
 
     useEffect( () => {
-        fetchData();
+        const fetchData = async () => {
+            try {
+                const splitUrl = url.split('/');
+                var lastItem = splitUrl.pop();
+                if(lastItem !== 'undefined'){
+                    setIsLoading(true);
+                    await api[method](url, JSON.parse(data))
+                        .then( res => {
+                            setResponse(res.data);
+                        }).finally( () => {
+                            setIsLoading(false);
+                        })
+                }
+                
+            } catch (error) {
+                errorDispatch({type: 'SET_ERROR', payload: error.message});
+            }
+        }
+        return fetchData();
     },[method, url, data]);
 
     return {response, isLoading};

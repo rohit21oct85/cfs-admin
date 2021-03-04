@@ -30,10 +30,12 @@ export default function Navigation() {
             const ModuleRoutes = response.data;
             const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
             setSuperAdminRoutes(sRoutes);
+            adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
             const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+            adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
             setAdminRoutes(aRoutes);
         }
-    }, [response]);
+    }, [response, history]);
 return (
 <>
 
@@ -71,9 +73,9 @@ return (
                     <NavLink to="/dashboard" >Dashboard</NavLink>
                 </Nav>
             </li>
-            {state.role == 1 && superAdminRoutes.map(routes => {
+            {state.role == 1 && adminState.superAdminRoutes.map(routes => {
                 return (
-                    <li>
+                    <li key={routes._id}>
                     <Nav className="ml-auto">
                         <NavLink to={`/${routes.module_name.trim().toLowerCase().replaceAll(' ','-')}`} >{routes.module_name}</NavLink>
                     </Nav>
@@ -81,8 +83,8 @@ return (
                 )
             })}
             
-            { (state.role == 1 || state.role == 2) && adminRoutes.map(routes => { return (
-                <li>
+            { (state.role == 1 || state.role == 2) && adminState.adminRoutes.map(routes => { return (
+                <li key={routes._id}>
                 <Nav className="ml-auto">
                     <NavLink to={`/${routes.module_name.trim().toLowerCase().replaceAll(' ','-')}`} >{routes.module_name}</NavLink>
                 </Nav>
