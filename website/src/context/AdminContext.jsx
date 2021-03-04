@@ -69,6 +69,13 @@ const reducer = (state, action) => {
                 ...state,
                 RolePermissions: action.payload
             }
+            
+        case 'GET_ROLE_PERMISSIONS': 
+            return {
+                ...state,
+                AllRolePermissions: action.payload
+            }
+
         default:
             return state;
     }
@@ -79,6 +86,7 @@ function AdminProvider({children}){
         Admins: [],
         Roles: [],
         RolePermissions: [],
+        AllRolePermissions: [],
         ModLists: [],
         RemoveAllDatas: [],
         permissionGroups: [],

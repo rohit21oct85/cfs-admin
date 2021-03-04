@@ -77,7 +77,7 @@ return (
                             <div className="subject-card" key={role._id} id={`card-${role._id}`}>
                                 <div className="subject-card-heading">
                                     <div>
-                                        <Link to={`sub-subject/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
+                                        <Link to={`view-permission/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
                                         #{role._id}
                                         </Link></div>
                                     <div>

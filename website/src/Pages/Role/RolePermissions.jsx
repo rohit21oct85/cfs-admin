@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import '../mainDash.css';
-import {  useHistory, Link, useParams  } from "react-router-dom";
+import {  useHistory,useParams,  Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faEdit, faPlus, faLock } from '@fortawesome/free-solid-svg-icons'
@@ -14,7 +14,7 @@ import {useFormData} from '../../hooks/useFormData';
 import * as api from '../../Helper/ApiHelper.jsx';
 import useAxios from '../../hooks/useAxios';
 
-export default function RolePermissionList() {
+export default function RolePermissions() {
 
     const history = useHistory();
     const params = useParams();
@@ -24,34 +24,22 @@ export default function RolePermissionList() {
     const {formData, handleChange} = useFormData();
     
     const {response, isLoading} = useAxios({
-        method: 'get', url: 'master-permission-group/view-all'
-    });
-
-    const {response:roleResponse} = useAxios({
-        method: 'get', url: 'master-role/view-all'
+        method: 'get', url: `master-role-permission/view/${params.role_id}/${params.role_name}`
     });
 
 
-    const [permissionGroup, setPermissionGroup] = useState();
-    const [Roles, setRoles] = useState();
+    const [RolePermissions, setRolePermissions] = useState();
+    
     useEffect(() => {
         if(response !== null){
-            const PermissionGroupRes = response.data;
-            adminDispatch({ type: 'GET_ALL_PERMISSION_GROUPS', payload: PermissionGroupRes})
-            if(PermissionGroupRes){
-                setPermissionGroup(PermissionGroupRes);
+            const RolePermissionRes = response.data.permissions;
+            adminDispatch({ type: 'GET_ROLE_PERMISSIONS', payload: RolePermissionRes})
+            if(RolePermissionRes){
+                setRolePermissions(RolePermissionRes);
             }
         }
+    }, [response,RolePermissions]);
 
-        if(roleResponse !== null){
-            const Roles = roleResponse.data;
-            adminDispatch({type: 'GET_ALL_ROLE', payload: Roles});
-            if(Roles){
-                setRoles(Roles);
-            }
-        }
-
-    }, [response,permissionGroup, roleResponse, Roles]);
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -144,7 +132,7 @@ return (
 <div className="main-area-all">
     <div className="dashboard_main-container">
         <div className="dash-main-head">
-            <h2>Permission List</h2>
+            <h2>Permission List {params.role_name}</h2>
             
         </div>
         {errorState.success && ( <Notification>{errorState.success}</Notification>)}
@@ -153,73 +141,40 @@ return (
         {!isLoading && (
         <div className="dash-con-heading">
             <div className="col-md-12 row">
-                <select 
-                    name="role"
-                    id="role"
-                    className="roles col-md-6 form-control"
-                    onChange={handleChange}
-                >
-                <option value="">Select Roles</option>
-                    
-                {adminState.Roles.map( role => { return(
-                    <option 
-                        selected={role._id === params.role_id ? 'selected':''}
-                        value={`${role.name.toLowerCase().trim().replaceAll(' ','-')}_${role._id}`}
-                        key={role._id}>{role.name}</option>
-                )})}
-                </select>
-                <Button 
-                onClick={handleSubmit}
-                className="btn btn-sm dark">Save Permission</Button>
+                <Link to={`/role-permission/update/${params.role_name}/${params.role_id}`}
+                className="btn btn-sm dark">Update Permission</Link>
             </div>    
         </div>
         )}
         {!isLoading && (
         <div className="dash-cont-start">
-        <h4 className="mt-2">All Permission Groups</h4>    
-        <div className="col-md-12 row">
-            <input type="checkbox" className="checkall" id="checkAll" name="CheckAll" 
-            onChange={handleCheckAll}/>
-            <label htmlFor="checkAll">Check All </label>
-        </div>
-        <hr />
-        {adminState.permissionGroups.map(permission => { return (
-            <div 
-                key={permission._id} 
-                className="mb-2"
-            >
-            <h5 className="module_name cursor">
-            <input type="checkbox" className="moduleAll" id={permission._id} name="moduleAll" 
-            onChange={handleModuleAll.bind(this, permission._id)}/>
-            <label 
-                style={{ marginLeft: '5px' }}
-                htmlFor={permission._id}
-                >{permission.module_name.replaceAll('-',' ')}</label>
-            
-            </h5>
-            <hr />
-            <div className="col-md-12 row">
-            {permission.module_method.map( method => {
-                return (
-                <div className="col-md-2 subject-card" key={method._id}>
-                    <input 
-                            className={permission._id}
-                            type="checkbox"
-                            name="permissions"
-                            onChange={handleChange}
-                            id={method._id}
-                            value={`${method.name}_${permission.module_name}`}
-                            
-                        /> 
-                    <label htmlFor={method._id} style={{ marginBottom: '0px', marginLeft: '5px' }}>
-                        {method.name}</label>
-
+        <h4 className="mt-2">All Role Permissions</h4>    
+        <div className="subject-main-container">
+            {adminState.AllRolePermissions.map(permission => { return (
+                <div className="subject-card" key={permission._id}>
+                <div className="subject-card-body mt-2">
+                    
+                    <div className="admin-name"> 
+                        <div className="name-label">
+                            Module Name: 
+                        </div>
+                        <div className="name-main">
+                        {permission.module_name.replaceAll('-',' ')}
+                        </div>
+                    </div> 
+                    
+                    <div className="admin-name"> 
+                        <div className="name-label">
+                            Method Name: 
+                        </div>
+                        <div className="name-main">
+                        {permission.method_name.replaceAll('-',' ')}
+                        </div>
+                    </div> 
                 </div>
-                );
-                })}
                 </div>
-            </div>
-        )})}
+            )})}
+        </div>    
         </div>
         )}
         

@@ -56,13 +56,16 @@ return (
                 
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
+                        <div className="col-md-6 pl-0">
 
                             <Link to={`/subject`} className="btn btn-sm dark mb-3 mr-2">
                                 <FontAwesomeIcon icon={faHandPointLeft}></FontAwesomeIcon>
                             </Link>
                             <Link to={`/sub-subject/${params.subject_name}/create/${params.subject_id}`} className="btn btn-sm dark mb-3">
-                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject
+                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject Manual
+                            </Link>
+                            <Link to={`/sub-subject/upload`} className="btn btn-sm dark mb-3 ml-2">
+                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Upload CSV Sub Subject
                             </Link>
                         </div>
                         {errorState.success && ( 
@@ -79,7 +82,7 @@ return (
                                         #{sub._id}
                                         </Link></div>
                                     <div>
-                                        <Link to={`/subject-update/${sub._id}`}>
+                                        <Link to={`/sub-subject/update/${sub._id}`}>
                                             <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
                                         </Link>
                                         <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
@@ -88,8 +91,14 @@ return (
                                     </div>
                                 </div>
                                 <div className="subject-card-body">
-                                    <p style={{ margin: '2px' }}>Subject: {sub.subject}</p>
-                                    <p style={{ margin: '2px' }}>Sub Subject: {sub.sub_subject}</p>
+                                    <div className="admin-name"> 
+                                        <div className="name-label">
+                                            Sub Subject: 
+                                        </div>
+                                        <div className="name-main date">
+                                            {sub.sub_subject}
+                                        </div>
+                                    </div> 
                                 </div>
                             </div>
                         ))}

@@ -8,6 +8,7 @@ import SubSubjectList from '../Pages/subject/SubSubjectList.jsx';
 import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
 import AllBookList from '../Pages/books/AllBookList.jsx';
+import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -21,6 +22,7 @@ import CreateModule from '../Pages/Module/CreateModule.jsx';
 import CreateModulePassword from '../Pages/Module/CreateModulePassword.jsx';
 import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.jsx';
 import RolePermissionList from '../Pages/Permission/RolePermissionList.jsx';
+import RolePermissions from '../Pages/Role/RolePermissions.jsx';
 import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
 
 export const guestRoutes =  [
@@ -78,6 +80,14 @@ export const privateRoutes = [
         component: CreateSubSubject
     },
     {
+        path: '/sub-subject/:subject_name/upload/:subject_id',
+        component: UploadSubSubject
+    },
+    {
+        path: '/sub-subject/upload',
+        component: UploadSubSubject
+    },
+    {
         path: '/delete-data/:module/:method/:id',
         component: DeleteData
     },
@@ -111,6 +121,10 @@ export const adminRoutes = [
     {
         path: '/master-role',
         component: RoleList
+    },    
+    {
+        path: '/view-permission/:role_name/:role_id',
+        component: RolePermissions
     },    
     
     {
@@ -158,6 +172,10 @@ export const adminRoutes = [
 
     {
         path: '/role-permission',
+        component: RolePermissionList
+    },
+    {
+        path: '/role-permission/update/:role_name/:role_id',
         component: RolePermissionList
     },
     

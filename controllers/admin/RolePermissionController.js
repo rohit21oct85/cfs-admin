@@ -51,7 +51,10 @@ const UpdatePermission = async (req, res) =>{
 }
 const ViewPermission = async (req, res) => {
     try{
-        const PermissionData = await RolePermission.findOne({_id: req.params.id},{__v: 0});
+        const PermissionData = await RolePermission.findOne({
+            role_id: req.params.role_id,
+            role_name: req.params.role_name,
+        },{__v: 0});
         return res.status(200).json({ 
             data: PermissionData
         });    

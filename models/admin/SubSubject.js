@@ -12,13 +12,14 @@ const SubSubjectSchema = new mongoose.Schema({
     sub_subject: {
         type: String,
         required: true,
+        unique: true,
     },
-    status:{
+    status: {
         type: Boolean,
         required: true,
         default: true
     },
-    created_at:{
+    created_at: {
         type: Date,
         default: Date.now
     }
