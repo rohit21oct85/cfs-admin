@@ -5,6 +5,7 @@ export const useFormData = () => {
     const [formData, setFormData] = useState({});
     
     const handleChange = async (e) => {
+       
        if(e){
         const data = e.target.value;
         const checkedArr = [];
@@ -29,13 +30,16 @@ export const useFormData = () => {
             }
         } 
         else if(e.target.type == 'checkbox') {
+            console.log("dasd")
             const checkeds = document.getElementsByTagName('input');
+            console.log(checkeds)
             for (let i = 0; i < checkeds.length; i++) {
                 if (checkeds[i].checked) {
                 checkedArr.push({name: checkeds[i].value});
                 }
             }
             value = checkedArr;
+            console.log(value);
             setFormData({...formData, [e.target.name]:  value});
         }
         return formData;
