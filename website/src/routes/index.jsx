@@ -7,6 +7,7 @@ import CreateSubject from '../Pages/subject/CreateSubject.jsx';
 import SubSubjectList from '../Pages/subject/SubSubjectList.jsx';
 import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
+import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -74,6 +75,14 @@ export const privateRoutes = [
     {
         path: '/sub-subject/create',
         component: CreateSubSubject
+    },
+    {
+        path: '/sub-subject/:subject_name/upload/:subject_id',
+        component: UploadSubSubject
+    },
+    {
+        path: '/sub-subject/upload',
+        component: UploadSubSubject
     },
     {
         path: '/delete-data/:module/:method/:id',
