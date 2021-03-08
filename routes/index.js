@@ -9,15 +9,20 @@ const SubSubjectRoutes = require('./SubSubjectRoutes.js');
 
 const removeDataRoutes = require('./RemoveDataRoutes.js');
 
+const StudentAuthRoutes = require('./StudentAuthRoutes.js');
+const TutorAuthRoutes = require('./TutorAuthRoutes.js');
+
 
 module.exports = {
-   AdminAuthRoutes,
-   roleRoutes,
-   moduleRoutes,
-   permissionRoutes,
-   permissionGroupRoutes,
-   adminRoutes,
-   subjectRoutes,
-   SubSubjectRoutes,
-   removeDataRoutes
+    AdminAuthRoutes,
+    roleRoutes,
+    moduleRoutes,
+    permissionRoutes,
+    permissionGroupRoutes,
+    adminRoutes,
+    subjectRoutes,
+    SubSubjectRoutes,
+    removeDataRoutes,
+    StudentAuthRoutes,
+    TutorAuthRoutes,
 }

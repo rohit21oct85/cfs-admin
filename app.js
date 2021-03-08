@@ -64,6 +64,9 @@ app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);
 app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
 
+app.use("/api/v1/student", Routes.StudentAuthRoutes);
+app.use("/api/v1/tutor", Routes.TutorAuthRoutes);
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('website/build'));
     app.get('*', (req, res) => {
