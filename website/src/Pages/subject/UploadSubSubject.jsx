@@ -42,8 +42,9 @@ export default function CreateSubSubject() {
     }
 
     async function handelChange(e){
-        console.log(e.target.files[0].type)
-        if(e.target.files[0].type == "text/csv"){
+        const filename = e.target.files[0].name;
+        const ext = filename.split('.')[1];
+        if(ext === "csv"){
             formDataUpload.append('file', e.target.files[0]);
         }else{
             errorDispatch({type: 'SET_ERROR', payload: 'Only .csv files are allowed'});
@@ -82,7 +83,7 @@ return (
         <div className="main-area-all">
             <div className="dashboard_main-container">
                 <div className="dash-main-head">
-                    <h2>Create New Subject</h2>
+                    <h2>Upload SubSubject</h2>
                 </div>
                 
                 <div className="dash-cont-start">

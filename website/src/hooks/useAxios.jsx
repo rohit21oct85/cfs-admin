@@ -1,14 +1,15 @@
 import {useEffect, useState, useContext} from 'react'
 import axios from 'axios';
 import {AuthContext} from '../context/AuthContext';
+import {ErrorContext} from '../context/ErrorContext';
 
 export default function useAxios({method, url, data = null}) {
     
     const [response, setResponse] = useState(null);
-    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
     const {state } = useContext(AuthContext);
-    
+    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+
     if(process.env.NODE_ENV === 'development'){
         var API_URL = 'http://localhost:8080/api/v1/';
     }else{
@@ -21,23 +22,29 @@ export default function useAxios({method, url, data = null}) {
             'Authorization':'Bearer '+ state.access_token
         }
     });
-    const fetchData = async () => {
-        try {
-            setIsLoading(true);
-            await api[method](url, JSON.parse(data))
-                    .then( res => {
-                        setResponse(res.data);
-                    }).finally( () => {
-                        setIsLoading(false);
-                    })
-        } catch (error) {
-            setError(error.message);
-        }
-    }
+    
 
     useEffect( () => {
-        fetchData();
+        const fetchData = async () => {
+            try {
+                const splitUrl = url.split('/');
+                var lastItem = splitUrl.pop();
+                if(lastItem !== 'undefined'){
+                    setIsLoading(true);
+                    await api[method](url, JSON.parse(data))
+                        .then( res => {
+                            setResponse(res.data);
+                        }).finally( () => {
+                            setIsLoading(false);
+                        })
+                }
+                
+            } catch (error) {
+                errorDispatch({type: 'SET_ERROR', payload: error.message});
+            }
+        }
+        return fetchData();
     },[method, url, data]);
 
-    return {response, error, isLoading};
+    return {response, isLoading};
 }

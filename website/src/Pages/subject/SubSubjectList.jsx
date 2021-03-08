@@ -10,6 +10,8 @@ import {AuthContext} from '../../context/AuthContext';
 import {SubjectContext} from '../../context/SubjectContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
+
 import useAxios from '../../hooks/useAxios';
 
 export default function SubSubjectList() {
@@ -24,9 +26,6 @@ export default function SubSubjectList() {
     });
     const handleDelete = async (e) => {
         history.push(`delete-data/subject/delete/${e}`);
-        // await api.del(`subject/delete/${e}`);
-        // document.getElementById('card-'+e).style.display = "none";
-        // history.push('/subject')
     }
     useEffect(() => {
         if(response !== null){
@@ -66,12 +65,14 @@ return (
                                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject Manual
                             </Link>
                             <Link to={`/sub-subject/upload`} className="btn btn-sm dark mb-3 ml-2">
-                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject
+                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Upload CSV Sub Subject
                             </Link>
                         </div>
                         {errorState.success && ( 
                             <Notification>{errorState.success}</Notification>
                         )}
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                         {sState.SubSubjects.map( sub => (
                             <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
@@ -81,7 +82,7 @@ return (
                                         #{sub._id}
                                         </Link></div>
                                     <div>
-                                        <Link to={`/subject-update/${sub._id}`}>
+                                        <Link to={`/sub-subject/update/${sub._id}`}>
                                             <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
                                         </Link>
                                         <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
@@ -90,12 +91,19 @@ return (
                                     </div>
                                 </div>
                                 <div className="subject-card-body">
-                                    <p style={{ margin: '2px' }}>Subject: {sub.subject}</p>
-                                    <p style={{ margin: '2px' }}>Sub Subject: {sub.sub_subject}</p>
+                                    <div className="admin-name"> 
+                                        <div className="name-label">
+                                            Sub Subject: 
+                                        </div>
+                                        <div className="name-main date">
+                                            {sub.sub_subject}
+                                        </div>
+                                    </div> 
                                 </div>
                             </div>
                         ))}
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

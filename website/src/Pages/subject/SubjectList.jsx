@@ -10,6 +10,8 @@ import {AuthContext} from '../../context/AuthContext';
 import {SubjectContext} from '../../context/SubjectContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
+
 import useAxios from '../../hooks/useAxios';
 
 export default function SubjectList() {
@@ -62,6 +64,8 @@ return (
                         {errorState.success && ( 
                             <Notification>{errorState.success}</Notification>
                         )}
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                         {sState.Subjects.map( sub => (
                             <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
@@ -124,6 +128,7 @@ return (
                             </div>
                         ))}
                         </div>
+                        )}                    
                     </div>
                 </div>
             </div>

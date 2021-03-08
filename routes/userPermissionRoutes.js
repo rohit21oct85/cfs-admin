@@ -1,5 +1,5 @@
 const express =  require("express");
-const Auth = require('../controllers/admin/PermissionController.js');
+const Auth = require('../controllers/admin/UserPermissionController.js');
 const checkAuth =  require("../middleware/check-auth.js");
 const adminAuth =  require("../middleware/admin-auth.js");
 const router = express.Router();

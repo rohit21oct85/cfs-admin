@@ -7,6 +7,7 @@ import CreateSubject from '../Pages/subject/CreateSubject.jsx';
 import SubSubjectList from '../Pages/subject/SubSubjectList.jsx';
 import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
+import AllBookList from '../Pages/books/AllBookList.jsx';
 import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
@@ -20,7 +21,9 @@ import ModuleList from '../Pages/Module/ModuleList.jsx';
 import CreateModule from '../Pages/Module/CreateModule.jsx';
 import CreateModulePassword from '../Pages/Module/CreateModulePassword.jsx';
 import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.jsx';
-import PermissionList from '../Pages/Permission/PermissionList.jsx';
+import RolePermissionList from '../Pages/Permission/RolePermissionList.jsx';
+import RolePermissions from '../Pages/Role/RolePermissions.jsx';
+import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
 
 export const guestRoutes =  [
     { 
@@ -91,6 +94,10 @@ export const privateRoutes = [
     {
         path: '/view-data/:module/:rmodule/:method/:id',
         component: ViewData
+    },
+    {
+        path: '/books',
+        component: AllBookList
     }
 
     
@@ -114,6 +121,10 @@ export const adminRoutes = [
     {
         path: '/master-role',
         component: RoleList
+    },    
+    {
+        path: '/view-permission/:role_name/:role_id',
+        component: RolePermissions
     },    
     
     {
@@ -160,7 +171,17 @@ export const adminRoutes = [
     },
 
     {
-        path: '/master-permission',
-        component: PermissionList
+        path: '/role-permission',
+        component: RolePermissionList
+    },
+    {
+        path: '/role-permission/update/:role_name/:role_id',
+        component: RolePermissionList
+    },
+    
+    {
+        path: '/user-permission',
+        component: UserPermissionList
     }
+
 ]

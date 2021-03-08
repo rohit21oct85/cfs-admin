@@ -9,6 +9,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
 
 import CreatePermissionGroup from './CreatePermissionGroup';
 import AllPermissionGroup from './AllPermissionGroup';
@@ -48,7 +49,8 @@ return (
                 <div className="dash-main-head">
                     <h2>Permission Group List</h2>
                 </div>
-                
+                {isLoading && (<LoadingComp />)}
+                {!isLoading && (
                 <div className="dash-cont-start">
                     <div className="row">
                         <div className="col-md-3">
@@ -62,6 +64,7 @@ return (
                     </div>
                     
                 </div>
+                )}
             </div>
         </div>
     </div>
