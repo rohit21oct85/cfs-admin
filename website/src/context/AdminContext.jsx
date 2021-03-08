@@ -75,7 +75,11 @@ const reducer = (state, action) => {
                 ...state,
                 AllRolePermissions: action.payload
             }
-
+        case 'GET_ALL_BOOKS': 
+            return {
+                ...state,
+                AllBooks: action.payload
+            }
         default:
             return state;
     }
@@ -109,6 +113,7 @@ function AdminProvider({children}){
         selected_methods: [],
         superAdminRoutes: [],
         adminRoutes: [],
+        AllBooks: [],
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>

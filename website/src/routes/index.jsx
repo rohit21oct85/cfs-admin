@@ -7,8 +7,9 @@ import CreateSubject from '../Pages/subject/CreateSubject.jsx';
 import SubSubjectList from '../Pages/subject/SubSubjectList.jsx';
 import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
-import AllBookList from '../Pages/books/AllBookList.jsx';
 import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
+import AllBookList from '../Pages/Books/AllBookList.jsx';
+import UploadBooks from '../Pages/Books/UploadBooks.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -98,6 +99,14 @@ export const privateRoutes = [
     {
         path: '/books',
         component: AllBookList
+    },
+    {
+        path: '/books-upload',
+        component: UploadBooks
+    },
+    {
+        path: '/books-upload/:subject_name/:subject_id',
+        component: UploadBooks
     }
 
     

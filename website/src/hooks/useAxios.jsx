@@ -43,7 +43,7 @@ export default function useAxios({method, url, data = null}) {
                 errorDispatch({type: 'SET_ERROR', payload: error.message});
             }
         }
-        return fetchData();
+        fetchData();
     },[method, url, data]);
 
     return {response, isLoading};

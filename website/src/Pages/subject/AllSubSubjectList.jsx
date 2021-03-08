@@ -26,9 +26,6 @@ export default function AllSubSubjectList() {
     });
     const handleDelete = async (e) => {
         history.push(`delete-data/sub-subject/delete/${e}`);
-        // await api.del(`subject/delete/${e}`);
-        // document.getElementById('card-'+e).style.display = "none";
-        // history.push('/subject')
     }
     useEffect(() => {
         if(response !== null){

@@ -3,7 +3,7 @@ import '../mainDash.css';
 import {  useHistory, Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faEdit, faPlus, faCloud } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
@@ -22,23 +22,17 @@ export default function AllBookList() {
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
     const {formData, handleChange} = useFormData();
     const {response, isLoading} = useAxios({
-        method: 'get', url: 'master-books/view-all'
+        method: 'get', url: 'books/view-all'
     });
 
-
-    const [permissionGroup, setPermissionGroup] = useState();
     useEffect(() => {
         if(response !== null){
-            const PermissionGroupRes = response.data;
-            adminDispatch({ type: 'GET_ALL_PERMISSION_GROUPS', payload: PermissionGroupRes})
-            if(PermissionGroupRes){
-                setPermissionGroup(PermissionGroupRes);
-            }
+            const Books = response.data;
+            adminDispatch({ type: 'GET_ALL_BOOKS', payload: Books})
         }
+        console.log(adminState.AllBooks)
 
-       
-
-    }, [response,permissionGroup]);
+    }, [response]);
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -50,6 +44,14 @@ export default function AllBookList() {
     
     const handleSubmit = async () => {
         console.log(formData);
+    }
+
+    const handleDelete = async (e) => {
+        history.push(`delete-data/books/delete/${e}`) 
+    }
+    
+    const handleUpdate = async (e) => {
+        history.push(`/books/update/${e}`);
     }
 
 return (
@@ -71,48 +73,95 @@ return (
                 onClick={ e => history.push('/books-create')}
                 className="btn btn-sm dark">
                     <FontAwesomeIcon icon={faPlus} /> Add books</Button>
+                    
+                <Button 
+                onClick={ e => history.push('/books-upload')}
+                className="btn btn-sm dark ml-2">
+                    <FontAwesomeIcon icon={faCloud} /> Upload books</Button>
+
             </div>    
         </div>
         {!isLoading && (
         <div className="dash-cont-start">
-        <h4 className="mt-2">All Permission Groups</h4>    
+        <h4 className="mt-2">All Books</h4>    
         <hr />
-        {adminState.permissionGroups.map(permission => { return (
-            <div 
-                key={permission._id} 
-                className="mb-2"
-            >
-            <h5 className="module_name cursor">
-            <span 
-                style={{ marginLeft: '5px' }}
-                htmlFor={permission.module_name}
-                >{permission.module_name.replaceAll('-',' ')}</span>
+        <div className="subject-main-container">    
             
-            </h5>
-            <hr />
-            <div className="col-md-12 row">
-            {permission.module_method.map( method => {
-                return (
-                <div className="col-md-2 subject-card" key={method._id}>
-                    <label htmlFor={method._id} style={{ marginBottom: '0px' }}>
-                        <input 
-                            type="checkbox"
-                            name="module_method"
-                            id={method._id}
-                            onChange={handleChange}
-                            value={`${method.name}_${permission.module_name}`}
-                            
-                        /> 
-                        <span style={{ marginLeft: '5px' }}>
-                            {method.name}
-                        </span>
-                    </label>
-                </div>
-                );
-                })}
+        {adminState.AllBooks.map(books => { return (
+           <div className="module-card" key={books._id} id={`card-${books._id}`}>
+            <div className="subject-card-heading">
+                <div>
+                    <Link to={`view-permission/${books.BookName.replaceAll(' ','-').toLowerCase().trim()}/${books._id}`}>
+                    #{books._id}
+                    </Link></div>
+                <div>
+                    <Button className="delBtn" onClick={handleUpdate.bind(this,books._id)}>
+                        <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
+                    </Button>
+                    <Button className="delBtn" onClick={handleDelete.bind(this,books._id)}>
+                        <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
+                    </Button>
                 </div>
             </div>
+            <div className="subject-card-body mt-2">
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Subject: 
+                    </div>
+                    <div className="name-main">
+                        {books.subject_name}
+                    </div>
+                </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Sub Subject: 
+                    </div>
+                    <div className="name-main">
+                        {books.sub_subject_name}
+                    </div>
+                </div> 
+                
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        BookName: 
+                    </div>
+                    <div className="name-main">
+                        {books.BookName}
+                    </div>
+                </div> 
+                
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Book Edition: 
+                    </div>
+                    <div className="name-main">
+                        {books.BookEdition}
+                    </div>
+                </div> 
+                
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        ISBN13: 
+                    </div>
+                    <div className="name-main">
+                        {books.ISBN13}
+                    </div>
+                </div> 
+                
+                
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Created On: 
+                    </div>
+                    <div className="name-main">
+                        {books.created_at.split('T')[0]}
+                    </div>
+                </div> 
+                 
+            </div>
+        </div>
         )})}
+        </div>
         </div>
         )}
         

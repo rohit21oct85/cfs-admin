@@ -6,6 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const session = require('express-session')
 const Routes = require("./routes/index.js");
+const WebRoutes = require("./routes/web-routes.js");
 
 const app = express();
 app.use(cors());
@@ -39,8 +40,9 @@ app.use((req, res, next) => {
         res.locals.error_msg = req.flash('error_msg');
         res.locals.error = req.flash('error');
         next();
-    })
-    // DB Cofiguration
+});
+
+// DB Cofiguration
 if (process.env.NODE_ENV === 'production') {
     const MONGO_URI = process.env.MONGO_URI
     mongoose.connect(MONGO_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -64,6 +66,10 @@ app.use("/api/v1/master-admin", Routes.adminRoutes);
 app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);
 app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
+app.use("/api/v1/books", Routes.BookRoutes);
+// front urls
+app.use("/web/books", WebRoutes.WebBookRoutes);
+
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('website/build'));

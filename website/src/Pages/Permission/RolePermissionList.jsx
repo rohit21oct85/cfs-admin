@@ -27,6 +27,10 @@ export default function RolePermissionList() {
         method: 'get', url: 'master-permission-group/view-all'
     });
 
+    const {response:rolepermission} = useAxios({
+        method: 'get', url: `master-role-permission/view/${params.role_id}/${params.role_name}`
+    });
+
     const {response:roleResponse} = useAxios({
         method: 'get', url: 'master-role/view-all'
     });
@@ -51,7 +55,12 @@ export default function RolePermissionList() {
             }
         }
 
-    }, [response,permissionGroup, roleResponse, Roles]);
+        if(rolepermission !== null){
+            const RolePermissionRes = rolepermission.data.permissions;
+            adminDispatch({ type: 'GET_ROLE_PERMISSIONS', payload: RolePermissionRes})
+        }
+
+    }, [response,permissionGroup, roleResponse, Roles, rolepermission]);
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -94,16 +103,14 @@ export default function RolePermissionList() {
     }
 
     const handleModuleAll = async (e) => {
-        const checModule = document.getElementById(e).checked;
-        if(checModule){
-            
+        const checkModule = document.getElementById(e).checked;
+        if(checkModule){
             var modEle = document.getElementsByClassName(e);  
             for(var i=0; i<modEle.length; i++){  
-                if(modEle[i].type=='checkbox')  
+                if(modEle[i].type == 'checkbox')  
                 modEle[i].checked=true;  
             }
         }else{
-            
             var modEle = document.getElementsByClassName(e);  
             for(var i=0; i<modEle.length; i++){  
                 if(modEle[i].type=='checkbox')  
@@ -134,6 +141,18 @@ export default function RolePermissionList() {
                 errorDispatch({type: 'SET_ERROR', payload: response.data.message});
             }
         }
+    }
+    const checkModuleExists = (RolePermissions, value) => {
+        return RolePermissions.some( item =>  {
+            return item.module_name === value ? true : false
+        })
+        
+    }
+    const checkMethodExists = (RolePermissions, value) => {
+        return RolePermissions.some( item => {
+            const checkItem = item.method_name+'_'+item.module_name;
+            return checkItem === value ? true: false;
+        });
     }
 
 return (
@@ -183,23 +202,33 @@ return (
             <label htmlFor="checkAll">Check All </label>
         </div>
         <hr />
-        {adminState.permissionGroups.map(permission => { return (
+        {adminState.permissionGroups.map(permission => { 
+            const module_name = permission.module_name.replaceAll('-',' ');
+            const moduleChecked = checkModuleExists(adminState.AllRolePermissions,permission.module_name);
+            return (
             <div 
                 key={permission._id} 
                 className="mb-2"
             >
             <h5 className="module_name cursor">
-            <input type="checkbox" className="moduleAll" id={permission._id} name="moduleAll" 
-            onChange={handleModuleAll.bind(this, permission._id)}/>
+            <input 
+                type="checkbox" 
+                className="moduleAll" 
+                id={permission._id} 
+                checked={moduleChecked}
+                name="moduleAll" 
+                onChange={handleModuleAll.bind(this, permission._id)}/>
             <label 
                 style={{ marginLeft: '5px' }}
                 htmlFor={permission._id}
-                >{permission.module_name.replaceAll('-',' ')}</label>
+                >{module_name}</label>
             
             </h5>
             <hr />
             <div className="col-md-12 row">
             {permission.module_method.map( method => {
+                const method_name = `${method.name}_${permission.module_name}`;
+                const methodChecked = checkMethodExists(adminState.AllRolePermissions, method_name);
                 return (
                 <div className="col-md-2 subject-card" key={method._id}>
                     <input 
@@ -208,7 +237,8 @@ return (
                             name="permissions"
                             onChange={handleChange}
                             id={method._id}
-                            value={`${method.name}_${permission.module_name}`}
+                            checked={methodChecked}
+                            value={method_name}
                             
                         /> 
                     <label htmlFor={method._id} style={{ marginBottom: '0px', marginLeft: '5px' }}>
