@@ -66,6 +66,7 @@ const Verify = async(req, res) => {
         }
         const stud = await Student.findOneAndUpdate({ _id: token._userId, email: req.params.email }, { $set: { 'status': true } })
         if (stud) {
+            await Token.deleteOne({ token: req.params.token });
             return res.status(200).send({ msg: 'Your account has been successfully verified!' });
         } else {
             return res.status(401).send({ msg: 'We were unable to find a user for this verification. Please SignUp!' });
