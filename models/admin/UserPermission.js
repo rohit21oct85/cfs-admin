@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
 
-const PermissionSchema = new mongoose.Schema({
-    group:{
+const UserPermissionSchema = new mongoose.Schema({
+    user_name:{
         type: String,
         required: true,
     },
-    group_id:{
+    user_id:{
         type: String,
         required: true,
     },
-    name: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-        unique: true,
+    permissions: {
+        type: [{method: String},{module: String}],
+        required: true
     },
     status:{
         type: Boolean,
@@ -29,4 +24,4 @@ const PermissionSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Permission', PermissionSchema);
+module.exports = mongoose.model('UserPermission', UserPermissionSchema);

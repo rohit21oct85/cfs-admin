@@ -10,6 +10,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
 
 import useAxios from '../../hooks/useAxios';
 
@@ -66,6 +67,13 @@ return (
                         {errorState.success && ( 
                             <Notification>{errorState.success}</Notification>
                         )}
+                        
+                        {errorState.error && ( 
+                            <Notification>{errorState.error}</Notification>
+                        )}
+
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                         {adminState.Admins.map( admin => (
                             <div className="subject-card" key={admin._id} id={`card-${admin._id}`}>
@@ -124,6 +132,7 @@ return (
                             </div>
                         ))}
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -89,7 +89,7 @@ return (
                                             }
                                         }
                                     } 
-                                    placeholder="Enter Password to delete this Resource"/>
+                                    placeholder="Enter Password to view this Resource"/>
                             </Form.Group>
                             
                             <Form.Group className="mt-3">

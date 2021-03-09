@@ -24,9 +24,8 @@ export default function CreateModule() {
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
-        console.log(formData); 
         // return;
-        if(formData == ''){
+        if(formData.module_name == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Name'});
         }else{
             if(params.id){
@@ -47,6 +46,11 @@ export default function CreateModule() {
     const {response} = useAxios({
         method: 'get', url: `master-module/view/${params.id}`
     });
+    
+    const {response:roleResponse} = useAxios({
+        method: 'get', url: `master-role/view-all`
+    });
+
     const [module, setModule] = useState('');
     useEffect( () => {
         if(response !== null){
@@ -56,7 +60,13 @@ export default function CreateModule() {
                 setModule(modRes)
             }
         }   
-    },[response,module])
+        if(roleResponse !== null){
+            console.log(roleResponse)
+            const RolesResponse = roleResponse.data;
+            adminDispatch({type: 'GET_ALL_ROLE', payload: RolesResponse});
+        }
+    },[response,module,roleResponse]);
+
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -69,7 +79,7 @@ export default function CreateModule() {
 return (
 
     <>
-    {state.isLoggedIn && errorState && adminState.ModList && (
+    {state.isLoggedIn && (
     
     <div className="col-lg-10 col-md-10 main_dash_area">
         <div className="main-area-all">
@@ -121,6 +131,17 @@ return (
                                         }
                                     }
                                 } placeholder="Enter Module description"/>
+                            </Form.Group>
+                            
+                            <Form.Group method="POST">
+                                <Form.Label>Module Access</Form.Label>
+                                <select name="role_access" className="form-control"
+                                onChange={handelChange}>
+                                    <option>Select Module Access</option>
+                                    {adminState.Roles.map(role => (
+                                        <option value={role.role}>{role.name}</option>
+                                    ))}
+                                </select>
                             </Form.Group>
                             
                             <Form.Group className="mt-3">

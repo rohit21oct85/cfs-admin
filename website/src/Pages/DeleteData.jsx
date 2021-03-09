@@ -9,11 +9,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 import {AuthContext} from '../context/AuthContext';
+import {AdminContext} from '../context/AdminContext';
 import {ErrorContext} from '../context/ErrorContext';
 import {Notification} from '../components/Notification';
 
 export default function DeleteData() {
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+    const {dispatch: adminDispatch} = useContext(AdminContext);
     const history = useHistory();
     const params = useParams();
     

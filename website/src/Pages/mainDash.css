@@ -11,7 +11,7 @@
     background-color: #f6f6f6;
 }
 .dash-main-head {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .dash-main-head h2 {
    
@@ -36,9 +36,16 @@ h2{
 }
 .dash-cont-start{
     background-color: #fff;
-    padding: 20px 20px;
+    padding: 10px 20px 50px 20px;
     height: 79vh;
+    margin-bottom: 1em;
     overflow: auto;
+}
+.dash-con-heading{
+    background-color: #fff;
+    padding: 10px 10px;
+    margin-bottom: 0.5em;
+    height: auto !important;
 }
 .dash_over_view {
     background-color: #fff;
@@ -373,14 +380,14 @@ p{
     width: 33%;
     border: 1px solid #ccc;
     padding: 0.7rem 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     box-shadow: 1px 3px 6px #ccccccd6;
 }
 .module-card {
     width: 49%;
     border: 1px solid #ccc;
     padding: 0.7rem 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     box-shadow: 1px 3px 6px #ccccccd6;
 }
 
@@ -532,4 +539,31 @@ p{
 }
 .check{
     text-align: left;
+}
+.module_name{
+    text-transform: capitalize;
+    cursor: pointer
+}
+.animation{
+    width: 0%;
+    position: fixed;
+    top: 0;
+    left: 0; 
+    height: 3px; 
+    background: #F90;
+    animation: mymove 0.5s infinite;
+}
+@keyframes mymove {
+  0%   {width: 0%;}
+  25%  {width: 25%;}
+  50%  {width: 50%;}
+  75%  {width: 75%;}
+  100% {width: 100%;}
+
+}
+
+.checkall{
+    margin: 5px 5px 0 0;
+    width: 15px;
+    height: 15px;
 }

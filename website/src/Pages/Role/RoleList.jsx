@@ -10,6 +10,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
+import {LoadingComp} from '../../components/LoadingComp';
 
 import useAxios from '../../hooks/useAxios';
 
@@ -46,7 +47,7 @@ export default function RoleList() {
         clearTimeout(timerError)
         clearTimeout(timerSuccess)
         }
-    },[errorState])
+    },[errorState.errror , errorState.success])
 return (
 
     <>
@@ -67,15 +68,16 @@ return (
                                Add New Role
                         </Link>
                         </div>
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
+                        {errorState.success && ( <Notification>{errorState.success}</Notification>)}
+                        {errorState.error && ( <Notification>{errorState.error}</Notification>)}
+                        {isLoading && (<LoadingComp />)}
+                        {!isLoading && (
                         <div className="subject-main-container">
                         {adminState.Roles.map( role => (
                             <div className="subject-card" key={role._id} id={`card-${role._id}`}>
                                 <div className="subject-card-heading">
                                     <div>
-                                        <Link to={`sub-subject/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
+                                        <Link to={`view-permission/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
                                         #{role._id}
                                         </Link></div>
                                     <div>
@@ -136,6 +138,7 @@ return (
                             </div>
                         ))}
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

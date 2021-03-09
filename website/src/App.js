@@ -16,16 +16,20 @@ import AdminProvider from './context/AdminContext.jsx';
 import SubjectProvider from './context/SubjectContext.jsx';
 import ErrorProvider from './context/ErrorContext.jsx';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
-
-library.add(faTrash, faEdit, faPlus);
-
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+const queryClient = new QueryClient()
 function App() {
 return (
 <Router>
   <div className="wrapper">
     <div className="row no-gutters">
+    <QueryClientProvider client={queryClient}>
     <AuthProvider>
     <AdminProvider>
     <SubjectProvider>
@@ -50,6 +54,7 @@ return (
     </SubjectProvider> 
     </AdminProvider>  
     </AuthProvider>  
+    </QueryClientProvider>
 </div>
   </div>
 </Router>

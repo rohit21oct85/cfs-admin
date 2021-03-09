@@ -50,6 +50,36 @@ const reducer = (state, action) => {
                 selected_methods: action.payload
             }
         }
+        
+        case 'SET_SA_ROUTES':{
+            return {
+                ...state,
+                superAdminRoutes: action.payload
+            }
+        }
+        
+        case 'SET_A_ROUTES':{
+            return {
+                ...state,
+                adminRoutes: action.payload
+            }
+        }
+        case 'GET_ALL_ROLE_PERMISSION': 
+            return {
+                ...state,
+                RolePermissions: action.payload
+            }
+            
+        case 'GET_ROLE_PERMISSIONS': 
+            return {
+                ...state,
+                AllRolePermissions: action.payload
+            }
+        case 'GET_ALL_BOOKS': 
+            return {
+                ...state,
+                AllBooks: action.payload
+            }
         default:
             return state;
     }
@@ -59,6 +89,8 @@ function AdminProvider({children}){
     const [state, dispatch] = useReducer(reducer, {
         Admins: [],
         Roles: [],
+        RolePermissions: [],
+        AllRolePermissions: [],
         ModLists: [],
         RemoveAllDatas: [],
         permissionGroups: [],
@@ -78,7 +110,10 @@ function AdminProvider({children}){
             {name: 'view-all',value:'View All Module',checked: false},{name: 'delete-all',value:'Delete All Module',checked: false},
             {name: 'upload',value:'Uplaod Module',checked: false}
         ],
-        selected_methods: []
+        selected_methods: [],
+        superAdminRoutes: [],
+        adminRoutes: [],
+        AllBooks: [],
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>
