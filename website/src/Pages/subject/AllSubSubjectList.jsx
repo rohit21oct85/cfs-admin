@@ -11,66 +11,48 @@ import {SubjectContext} from '../../context/SubjectContext';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
-
-import useAxios from '../../hooks/useAxios';
+import useAllSubSubjects from '../../hooks/useAllSubSubjects';
 
 export default function AllSubSubjectList() {
     const history = useHistory();
-    const params = useParams();
-
     const {state} = useContext(AuthContext);
-    const {state: sState, dispatch: sDispatch} = useContext(SubjectContext);
-    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    const {response, isLoading} = useAxios({
-        method: 'get', url: `sub-subject/all`
-    });
+    const {data, isLoading, error} = useAllSubSubjects();
     const handleDelete = async (e) => {
         history.push(`delete-data/sub-subject/delete/${e}`);
     }
-    useEffect(() => {
-        if(response !== null){
-            const AllSubSubject = response.data;
-            // console.log(AllSubSubject);
-            sDispatch({type: 'GET_ALL_SUB_SUBJECT', payload: AllSubSubject});
-        }
-    }, [response]);
-    useEffect( () => {
-        let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
-        let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
-        return () => {
-        clearTimeout(timerError)
-        clearTimeout(timerSuccess)
-        }
-    },[errorState])
+
 return (
 
     <>
-    {state.isLoggedIn && sState.Subjects && errorState && (
-      
+    {state.isLoggedIn && (
+    
     <div className="col-lg-10 col-md-10 main_dash_area">
         <div className="main-area-all">
             <div className="dashboard_main-container">
                 <div className="dash-main-head">
                     <h2>All Sub Subject</h2>
                 </div>
-                
+                {error && <Notification>{error}</Notification>}
+                {isLoading && (<LoadingComp />)}
+                <div className="dash-con-heading">
+                    <div className="col-md-12 row">
+                        <Link to={`/sub-subject/create`} className="btn btn-sm dark">
+                            <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject Manual
+                        </Link>
+                        <Link to={`/sub-subject/upload`} className="btn btn-sm dark ml-2">
+                            <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Upload CSV Sub Subject
+                        </Link>
+                    </div>    
+                </div>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
                         <div className="col-md-6 pl-0 ">
-                            <Link to={`/sub-subject/create`} className="btn btn-sm dark mb-3">
-                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add New Sub Subject Manual
-                            </Link>
-                            <Link to={`/sub-subject/upload`} className="btn btn-sm dark mb-3 ml-2">
-                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Upload CSV Sub Subject
-                            </Link>
+                            
                         </div>
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
-                        {isLoading && (<LoadingComp />)}
+                        
                         {!isLoading && (
                         <div className="subject-main-container">
-                        {sState.SubSubjects.map( sub => (
+                        {data.map( sub => (
                             <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
                                 <div className="subject-card-heading">
                                     <div>

@@ -7,21 +7,20 @@ const permissionGroupRoutes = require('./permissionGroupRoutes.js');
 const adminRoutes = require('./adminRoutes.js');
 const subjectRoutes = require('./subjectRoutes.js');
 const SubSubjectRoutes = require('./SubSubjectRoutes.js');
+const removeDataRoutes = require('./RemoveDataRoutes.js');
 const BookRoutes = require('./BookRoutes.js');
 
-const removeDataRoutes = require('./RemoveDataRoutes.js');
-
-
 module.exports = {
-   AdminAuthRoutes,
-   roleRoutes,
-   moduleRoutes,
-   rolePermissionRoutes,
-   userPermissionRoutes,
-   permissionGroupRoutes,
-   adminRoutes,
-   subjectRoutes,
-   SubSubjectRoutes,
-   BookRoutes,
-   removeDataRoutes
+    AdminAuthRoutes,
+    roleRoutes,
+    moduleRoutes,
+    permissionGroupRoutes,
+    subjectRoutes,
+    SubSubjectRoutes,
+    removeDataRoutes,
+    rolePermissionRoutes,
+    userPermissionRoutes,
+    permissionGroupRoutes,
+    adminRoutes,
+    BookRoutes,
 }

@@ -67,9 +67,12 @@ app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);
 app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
 app.use("/api/v1/books", Routes.BookRoutes);
-// front urls
-app.use("/web/books", WebRoutes.WebBookRoutes);
 
+
+app.use("/web/v1/books", WebRoutes.WebBookRoutes);
+app.use("/web/v1/category", WebRoutes.CategoryRoutes);
+app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
+app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('website/build'));

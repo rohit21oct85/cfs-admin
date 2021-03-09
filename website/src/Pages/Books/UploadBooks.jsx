@@ -19,6 +19,8 @@ export default function UploadBooks() {
     const {state: sState, dispatch: sDispatch} = useContext(SubjectContext);
 
     const formDataUpload = new FormData();
+    const [subSubjectName, setSubSubjectName] = useState(null);
+    const [subSubjectId, setSubSubjectId] = useState(null);
     async  function handleSubmit(e){
         e.preventDefault();
         console.log(formDataUpload.file);
@@ -29,6 +31,9 @@ export default function UploadBooks() {
         }else{
             formDataUpload.append('subject_name', params.subject_name);
             formDataUpload.append('subject_id',  params.subject_id);
+            formDataUpload.append('sub_subject_name',  subSubjectName);
+            formDataUpload.append('sub_subject_id',  subSubjectId);
+            formDataUpload.append('file',  file);
             
             response = await api.post('books/upload',formDataUpload);
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
@@ -37,12 +42,15 @@ export default function UploadBooks() {
     }
     const [btnDisabled, setBtnDisbaled] = useState(true)
     const [fileDisabled, setFileDisbaled] = useState(true)
+    const [file, setFile] = useState(null);
     async function handelChangeUpload(e){
         const filename = e.target.files[0].name;
+        console.log('file onchange ' ,  filename);
         const ext = filename.split('.')[1];
         console.log(ext)
         if(ext === "csv"){
             setBtnDisbaled(false);
+            setFile(e.target.files[0]);
             formDataUpload.append('file', e.target.files[0]);
         }else{
             setBtnDisbaled(true);
@@ -165,8 +173,9 @@ return (
                                     const subject_name = value.split('_')[0];
                                     const sub_subject_id = value.split('_')[1];
                                     const sub_subject_name = subject_name.trim().replace(' ','-').toLowerCase();
-                                    formDataUpload.append('sub_subject_name', sub_subject_name);
-                                    formDataUpload.append('sub_subject_id',  sub_subject_id);
+                                    
+                                    setSubSubjectName(sub_subject_name);
+                                    setSubSubjectId(sub_subject_id);
                                     setFileDisbaled(false);
                                     
                                 }

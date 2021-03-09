@@ -4,7 +4,8 @@ import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import * as api from '../Helper/ApiHelper.jsx';
 import {AuthContext} from '../context/AuthContext.jsx';
-
+import {AdminContext} from '../context/AdminContext.jsx';
+import useAxios from '../hooks/useAxios';
 import './login.css';
 
 export default function Login() {
@@ -12,9 +13,13 @@ export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const [error, setError] = useState(null);
-
+    const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
     const {state,dispatch } = useContext(AuthContext);
     
+    const {response} = useAxios({
+        method: 'get', url: 'master-module/view-all'
+    });
+
     const submitForm = async (e) => {
         e.preventDefault();
         const email = emailRef.current.value;
@@ -60,7 +65,19 @@ export default function Login() {
             }
         }   
     }
-
+    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
+    const [adminRoutes, setAdminRoutes] = useState([]);
+    useEffect(() => {
+        if(response !== null){
+            const ModuleRoutes = response.data;
+            const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+            setSuperAdminRoutes(sRoutes);
+            adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
+            const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+            adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+            setAdminRoutes(aRoutes);
+        }
+    }, [response, history]);
     useEffect( () => {
         let timer1 = setTimeout(() => setError(null), 2500);
         return () => {

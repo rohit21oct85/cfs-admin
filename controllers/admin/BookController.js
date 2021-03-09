@@ -50,10 +50,8 @@ const createBook = async(req, res) => {
 }
 
 const uploadBook = async(req, res) => {
-    // return res.send(req.file);
     const data = req.body;
     let FinalData = [];
-
     try {
         let results = [];
         fs.createReadStream(req.file.path)
@@ -83,7 +81,7 @@ const uploadBook = async(req, res) => {
             });
     } catch (error) {
         return res.status(409).json({
-            message: "Error occured",
+            message: "External Error occured",
             errors: error.message
         });
     }
@@ -132,7 +130,7 @@ const getAllBook = async(req, res) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const Books = await Book.find({ status: true }, { __v: 0 });
+        const Books = await Book.find({ status: true }, { __v: 0 }).limit(20);
         
         return res.status(200).json({
             total: Books.length,

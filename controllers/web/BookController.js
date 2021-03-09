@@ -2,7 +2,7 @@ const Book = require('../../models/admin/Book.js');
 
 const getAllBook = async(req, res) => {
     try {
-        const Books = await Book.find({ status: true }, { __v: 0 });
+        const Books = await Book.find({ status: true }, { __v: 0 }).limit(10);
         return res.status(200).json({
             data: Books
         });

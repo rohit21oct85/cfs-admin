@@ -12,36 +12,16 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 import {useFormData} from '../../hooks/useFormData';
 
-import useAxios from '../../hooks/useAxios';
+import useAllBooks from '../../hooks/useAllBooks';
 
 export default function AllBookList() {
 
     const history = useHistory();
     const {state} = useContext(AuthContext);
-    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
-    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
     const {formData, handleChange} = useFormData();
-    const {response, isLoading} = useAxios({
-        method: 'get', url: 'books/view-all'
-    });
-
-    useEffect(() => {
-        if(response !== null){
-            const Books = response.data;
-            adminDispatch({ type: 'GET_ALL_BOOKS', payload: Books})
-        }
-        console.log(adminState.AllBooks)
-
-    }, [response]);
-    useEffect( () => {
-        let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
-        let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
-        return () => {
-            clearTimeout(timerError)
-            clearTimeout(timerSuccess)
-        }
-    },[errorState.error, errorState.success]);
     
+    const {data, isLoading, error} = useAllBooks();
+
     const handleSubmit = async () => {
         console.log(formData);
     }
@@ -64,9 +44,9 @@ return (
         <div className="dash-main-head">
             <h2>All Books</h2>
         </div>
-        {errorState.success && ( <Notification>{errorState.success}</Notification>)}
-        {errorState.error && ( <Notification>{errorState.error}</Notification>)}
-        {isLoading && (<LoadingComp />)}
+        {error && <Notification>{error}</Notification>}
+        {isLoading && <LoadingComp />}
+
         <div className="dash-con-heading">
             <div className="col-md-12 row">
                 <Button 
@@ -83,15 +63,13 @@ return (
         </div>
         {!isLoading && (
         <div className="dash-cont-start">
-        <h4 className="mt-2">All Books</h4>    
-        <hr />
         <div className="subject-main-container">    
             
-        {adminState.AllBooks.map(books => { return (
+        {data.map(books => { return (
            <div className="module-card" key={books._id} id={`card-${books._id}`}>
             <div className="subject-card-heading">
                 <div>
-                    <Link to={`view-permission/${books.BookName.replaceAll(' ','-').toLowerCase().trim()}/${books._id}`}>
+                    <Link to={`view-permission/${books._id}`}>
                     #{books._id}
                     </Link></div>
                 <div>
