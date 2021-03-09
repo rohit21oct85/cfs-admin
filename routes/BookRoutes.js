@@ -21,7 +21,7 @@ var upload = multer({ storage: storage })
 const router = express.Router();
 
 router
-    .get('/subject/:subject_id', checkAuth, Book.AllBook)
+    .get('/subject/:sub_subject_id', checkAuth, Book.BooksBySubSubjectId)
     .get('/view-all', checkAuth, Book.getAllBook)
     .post('/create', checkAuth, Book.createBook)
     .post('/upload', upload.single('file'), checkAuth, Book.uploadBook)
