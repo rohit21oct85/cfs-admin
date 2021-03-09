@@ -13,7 +13,9 @@ export default function Navigation() {
     const history = useHistory();
     const { state, dispatch } = useContext(AuthContext);
     const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
-   
+    const {response, isLoading, error} = useAxios({
+        method: 'get', url: 'master-module/view-all'
+    });
     const HandleRoute = (e) => {
         history.push('/my-profile');
     }
@@ -21,7 +23,19 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
-    
+    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
+    const [adminRoutes, setAdminRoutes] = useState([]);
+    useEffect(() => {
+        if(response !== null){
+            const ModuleRoutes = response.data;
+            const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+            setSuperAdminRoutes(sRoutes);
+            adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
+            const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+            adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+            setAdminRoutes(aRoutes);
+        }
+    }, [response, history]);
 return (
 <>
 

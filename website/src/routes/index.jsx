@@ -114,6 +114,10 @@ export const privateRoutes = [
     },
     
     {
+        path: '/books-create',
+        component: CreateBooks
+    },
+    {
         path: '/books-create/:subject_name/:subject_id',
         component: CreateBooks
     },
