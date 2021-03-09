@@ -9,7 +9,9 @@ import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
 import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 import AllBookList from '../Pages/Books/AllBookList.jsx';
+import SubSubjectBooks from '../Pages/Books/SubSubjectBooks.jsx';
 import UploadBooks from '../Pages/Books/UploadBooks.jsx';
+import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -96,6 +98,12 @@ export const privateRoutes = [
         path: '/view-data/:module/:rmodule/:method/:id',
         component: ViewData
     },
+    
+    {
+        path: '/sub-subject/books/:sub_subject_name/:sub_subject_id',
+        component: SubSubjectBooks
+    },
+
     {
         path: '/books',
         component: AllBookList
@@ -104,10 +112,17 @@ export const privateRoutes = [
         path: '/books-upload',
         component: UploadBooks
     },
+    
+    {
+        path: '/books-create/:subject_name/:subject_id',
+        component: CreateBooks
+    },
+    
     {
         path: '/books-upload/:subject_name/:subject_id',
         component: UploadBooks
     }
+
 
     
 ];

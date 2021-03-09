@@ -9,5 +9,6 @@ const fetchAllBooks = async () => {
 
 export default function useAllBooks() {
     const response  = useQuery('books', fetchAllBooks);
+    
     return response;
 }

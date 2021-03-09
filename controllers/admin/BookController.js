@@ -2,12 +2,13 @@ const Book = require('../../models/admin/Book.js');
 const csv = require('csv-parser')
 const fs = require('fs')
 
-const AllBook = async(req, res) => {
+const BooksBySubSubjectId = async(req, res) => {
     try {
-        const Subjects = await Book.find({ subject_id: req.params.subject_id }, { __v: 0 });
+
+        const Books = await Book.find({ sub_subject_id: req.params.sub_subject_id }, { __v: 0 });
         return res.status(200).json({
-            total: Subjects.length,
-            data: Subjects
+            total: Books.length,
+            data: Books
         });
     } catch (error) {
         res.status(409).json({
@@ -176,7 +177,7 @@ const viewBook = async(req, res) => {
 
 
 module.exports = {
-    AllBook,
+    BooksBySubSubjectId,
     getAllBook,
     createBook,
     uploadBook,

@@ -10,13 +10,14 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
 
-import useAllBooks from '../../hooks/useAllBooks';
+import useAllBooksById from '../../hooks/useAllBooksById';
+
 import SingleBook from './SingleBook';
 
 export default function AllBookList() {
 const history = useHistory();
 const {state} = useContext(AuthContext);
-const {data, isLoading, error} = useAllBooks();
+const {data, isLoading, error} = useAllBooksById();
 return (
 
 <>
