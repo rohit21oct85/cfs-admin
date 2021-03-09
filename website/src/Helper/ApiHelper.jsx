@@ -25,8 +25,13 @@ export async function get(url){
 }
 
 export async function post(url, payload){
-    const response = await api.post(url, payload);
-    return response;
+    try {
+        const response = await api.post(url, payload);
+        return response;    
+    } catch (error) {
+        return error;
+    }
+    
 }
 
 export async function patch(url, payload){

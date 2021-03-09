@@ -13,13 +13,9 @@ export default function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const [error, setError] = useState(null);
-    const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
+    const { dispatch:adminDispatch } = useContext(AdminContext);
     const {state,dispatch } = useContext(AuthContext);
-    
-    const {response} = useAxios({
-        method: 'get', url: 'master-module/view-all'
-    });
-
+    const [loading, setLoading] = useState(false);
     const submitForm = async (e) => {
         e.preventDefault();
         const email = emailRef.current.value;
@@ -29,55 +25,60 @@ export default function Login() {
             return false;
         }else if(password === ''){
             setError("Please enter password");
+
             return false;
         }else{
+            setLoading(true);
             const formData = {email: emailRef.current.value , password: passwordRef.current.value};
             const response = await api.post('admin/login', formData);
-
-            let access_token = response.data.accessToken
-            let refresh_token = response.data.refreshToken
-            let fullname = response.data.admin.fullname
-            let email = response.data.admin.email
-            let role = response.data.admin.role
-            let created_at = response.data.admin.created_at
+            // console.log(response)
+            if(response.response && response.response.status){
+                setError("Email or password not matched");
+                setLoading(false);
+            }else{
+                let access_token = response.data.accessToken
+                let refresh_token = response.data.refreshToken
+                let fullname = response.data.admin.fullname
+                let email = response.data.admin.email
+                let role = response.data.admin.role
+                let created_at = response.data.admin.created_at
+                
+                let isLoggedIn = true;
+                localStorage.setItem('access_token', access_token)
+                localStorage.setItem('refresh_token', refresh_token);
+                localStorage.setItem('fullname', fullname);
+                localStorage.setItem('email', email);
+                localStorage.setItem('role', role);
+                localStorage.setItem('created_at', created_at);
+                localStorage.setItem('isLoggedIn', isLoggedIn);
+                const payloadData = {
+                    isLoggedIn,
+                    fullname,
+                    email,
+                    role,
+                    created_at,
+                    access_token,
+                    refresh_token
+                }
+                if(isLoggedIn){
+                    dispatch({type: 'LOGIN', payload: payloadData});
+                    const moduleResponse = await api.get(`master-module/view-all`);
+                    if(moduleResponse){
+                        const ModuleRoutes = moduleResponse.data.data;
+                        const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+                        adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
+                        const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+                        adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+                        setLoading(false);
+                        history.push('/dashboard');
+                    }
+                    
+                }
+            }
             
-            let isLoggedIn = true;
-            localStorage.setItem('access_token', access_token)
-            localStorage.setItem('refresh_token', refresh_token);
-            localStorage.setItem('fullname', fullname);
-            localStorage.setItem('email', email);
-            localStorage.setItem('role', role);
-            localStorage.setItem('created_at', created_at);
-            localStorage.setItem('isLoggedIn', isLoggedIn);
-            const payloadData = {
-                isLoggedIn,
-                fullname,
-                email,
-                role,
-                created_at,
-                access_token,
-                refresh_token
-            }
-            if(isLoggedIn){
-                dispatch({type: 'LOGIN', payload: payloadData});
-                // window.location.href = '/dashboard';
-                history.push('/dashboard');
-            }
         }   
     }
-    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
-    const [adminRoutes, setAdminRoutes] = useState([]);
-    useEffect(() => {
-        if(response !== null){
-            const ModuleRoutes = response.data;
-            const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
-            setSuperAdminRoutes(sRoutes);
-            adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
-            const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
-            adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
-            setAdminRoutes(aRoutes);
-        }
-    }, [response, history]);
+    
     useEffect( () => {
         let timer1 = setTimeout(() => setError(null), 2500);
         return () => {
@@ -96,7 +97,7 @@ export default function Login() {
                 </div>
                 <div className="col-md-3 card pl-3 pr-3 pt-5 pb-5">
                 <h4>Login </h4>    
-                {error && (<p style={{ color: 'red' }}>{error}</p>)} 
+                {error && (<p style={{ color: 'red', margin: '0px' }}>{error}</p>)} 
                 <hr />
                 <Form autoComplete="new-password" onSubmit={submitForm}>
                     <Form.Group controlId="formBasicEmail" className="text-left">
@@ -115,7 +116,7 @@ export default function Login() {
                         className="btn btn-md btn-block dark mt-3" 
                         type="submit"
                     >
-                        Login
+                        {loading ? 'Authenticating...':'Login'}
                     </Button>
                     </Form>
                     <div className="col-md-12 text-center mt-3">

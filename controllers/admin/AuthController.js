@@ -49,19 +49,19 @@ const Login = async (req, res) => {
                     }
                 });
             }else{
-                res.status(409).json({ 
+                return res.status(401).json({ 
                     message: "Email or Password doesnot matched"
                 })
             }
         }).catch(error => {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Email Does not exists in our database",
                 errors: error.message
             });     
         })
         
     } catch (error) {
-        return res.status(402).json({
+        return res.status(401).json({
             message: error.message
         });  
     }
