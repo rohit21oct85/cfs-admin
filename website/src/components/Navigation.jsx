@@ -7,17 +7,12 @@ import {AdminContext} from '../context/AdminContext.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
-import useAxios from '../hooks/useAxios';
+import * as api from '../Helper/ApiHelper';
 
 export default function Navigation() {
     const history = useHistory();
     const { state, dispatch } = useContext(AuthContext);
     const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
-    
-    
-    const {response, isLoading, error} = useAxios({
-        method: 'get', url: 'master-module/view-all'
-    });
     const HandleRoute = (e) => {
         history.push('/my-profile');
     }
@@ -25,29 +20,23 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
-    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
-    const [adminRoutes, setAdminRoutes] = useState([]);
     useEffect(() => {
-        if(response !== null){
-            const ModuleRoutes = response.data;
-            const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
-            setSuperAdminRoutes(sRoutes);
-            adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
-            const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
-            adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
-            setAdminRoutes(aRoutes);
+        const fetchModules = async () => {
+            const response = await api.get('master-module/view-all');
+            if(response !== null && state.isLoggedIn){
+                const ModuleRoutes = response.data.data;
+                const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+                adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
+                const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+                adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+            }
         }
-    }, [response, history]);
-    
-    function logout(){
-        dispatch({type: 'LOGOUT'})
-        history.push('/')
-    }
-    
+        fetchModules();
+    },[state.isLoggedIn]);
 return (
 <>
 
-{state.isLoggedIn && adminState.ModLists && (
+{state.isLoggedIn && (
 <div className="login_menu col-lg-2 col-md-2 col-12" bg="dark" variant="dark" expand="lg">
     <div className="webLogo">
         <img src="/logo.png" alt="User"/>
