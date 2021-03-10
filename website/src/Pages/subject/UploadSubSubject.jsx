@@ -28,11 +28,6 @@ export default function CreateSubSubject() {
         }else{
             formDataUpload.append('subject', params.subject_name);
             formDataUpload.append('subject_id',  params.subject_id);
-            console.log(formDataUpload);
-            // if(params.id){
-            //     console.log("update")
-                // response = await api.patch(`subject/update/${params.id}`,formData);
-            // }else{
             response = await api.post('sub-subject/upload',formDataUpload);
             console.log(response);
             // }
@@ -85,10 +80,16 @@ return (
                 <div className="dash-main-head">
                     <h2>Upload SubSubject</h2>
                 </div>
-                
-                <div className="dash-cont-start">
-                    <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
+                {errorState.error && ( 
+                            <Notification>{errorState.error}</Notification>
+                        )}
+                    
+                {errorState.success && ( 
+                    <Notification>{errorState.success}</Notification>
+                )}
+                <div className="dash-con-heading">
+                    <div className="row">
+                    <div className="col-md-1 pl-3">
                         {params.subject_name ? (
                             <Link to={`/sub-subject/${params.subject_name}/${params.subject_id}`} className="btn btn-sm dark">
                             <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
@@ -98,17 +99,14 @@ return (
                             <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
                             </Link>
                         )}    
-                        
-                        </div>
-                        <div className="col-md-12 no-gutter p-0 mt-2">
-                        {errorState.error && ( 
-                            <Notification>{errorState.error}</Notification>
-                        )}
-                            
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
-
+                    </div>
+                    <div className="col-md-5 pl-0">
+                        <a href="/sampledata/sub_subject_sample.csv" download>Download Sample File</a>
+                    </div>
+                    </div>
+                </div>
+                <div className="dash-cont-start">
+                    <div className="org-main-area">
                         <Form method="POST" className="col-md-6 p-0" encType="multipart/form-data">
                             <Form.Group>
                                 <Form.Label>Subject Name</Form.Label>
@@ -168,7 +166,6 @@ return (
                                 </Button>
                             </Form.Group>
                         </Form>
-                        </div>
                     </div>
                 </div>
             </div>
