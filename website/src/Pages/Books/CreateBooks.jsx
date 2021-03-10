@@ -29,10 +29,10 @@ export default function UploadBooks() {
   const formDataUpload = new FormData();
   const [subSubjectName, setSubSubjectName] = useState(null);
   const [subSubjectId, setSubSubjectId] = useState(null);
+  const [btnDisabled, setBtnDisbaled] = useState(true);
+  const [file, setFile] = useState(null);
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(formDataUpload.file);
-    // return;
     let response = null;
     if (formDataUpload.sub_subject_name == "") {
       errorDispatch({
@@ -44,14 +44,28 @@ export default function UploadBooks() {
       formDataUpload.append("subject_id", params.subject_id);
       formDataUpload.append("sub_subject_name", subSubjectName);
       formDataUpload.append("sub_subject_id", subSubjectId);
+      formDataUpload.append('file',  file);
 
       response = await api.post("books/create", formDataUpload);
       errorDispatch({ type: "SET_SUCCESS", payload: response.message });
       history.push(`/books`);
     }
   }
-  const [btnDisabled, setBtnDisbaled] = useState(true);
   
+    async function handelChangeUpload(e){
+        const filename = e.target.files[0].name;
+        console.log('file onchange ' ,  filename);
+        const ext = filename.split('.')[1];
+        console.log(ext)
+        if(ext === "csv"){
+            setBtnDisbaled(false);
+            setFile(e.target.files[0]);
+            formDataUpload.append('file', e.target.files[0]);
+        }else{
+            setBtnDisbaled(true);
+            errorDispatch({type: 'SET_ERROR', payload: 'Only .csv files are allowed'});
+        }
+    }
   return (
     <>
       {state.isLoggedIn && (
@@ -114,7 +128,6 @@ export default function UploadBooks() {
                                 const value = event.target.value;
                                 const subject_name = value.split("_")[0];
                                 const subject_id = value.split("_")[1];
-
                                 history.push(
                                   `/books-create/${subject_name
                                     .trim()
@@ -300,6 +313,14 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="image"
+                            onChange={handelChangeUpload}
+                            onKeyDown={ 
+                                event => {
+                                    if(event.key === 'Enter'){
+                                        event.preventDefault()
+                                    }
+                                }
+                            }
                           />
                         </Form.Group>
                         </div>
