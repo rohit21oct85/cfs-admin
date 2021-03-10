@@ -13,7 +13,6 @@ export default function Navigation() {
     const history = useHistory();
     const { state, dispatch } = useContext(AuthContext);
     const { state:adminState, dispatch:adminDispatch } = useContext(AdminContext);
-
     const HandleRoute = (e) => {
         history.push('/my-profile');
     }
@@ -21,6 +20,8 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
+    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
+    const [adminRoutes, setAdminRoutes] = useState([]);
     useEffect(() => {
         const fetchModules = async () => {
             const response = await api.get('master-module/view-all');
@@ -34,6 +35,7 @@ export default function Navigation() {
         }
         fetchModules();
     },[state.isLoggedIn]);
+
 return (
 <>
 

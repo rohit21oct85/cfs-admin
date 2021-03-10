@@ -28,6 +28,7 @@ import RolePermissionList from '../Pages/Permission/RolePermissionList.jsx';
 import RolePermissions from '../Pages/Role/RolePermissions.jsx';
 import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
 
+import UploadChapters from '../Pages/Chapters/UploadChapters.jsx';
 export const guestRoutes =  [
     { 
         path:'/',
@@ -125,6 +126,10 @@ export const privateRoutes = [
     {
         path: '/books-upload/:subject_name/:subject_id',
         component: UploadBooks
+    },
+    {
+        path: '/book-upload-chapters/:isbn/:book_name/:book_id',
+        component: UploadChapters
     }
 
 
