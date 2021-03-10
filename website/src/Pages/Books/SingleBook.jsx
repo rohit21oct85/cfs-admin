@@ -2,7 +2,7 @@ import React from 'react'
 import {useHistory, Link} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 
 export default function SingleBook({books}) {
     const history = useHistory();
@@ -12,6 +12,10 @@ export default function SingleBook({books}) {
     const handleUpdate = async (e) => {
         history.push(`/books/update/${e}`);
     }
+    const handleAdd = async (isbn, book, id) => {
+        const bookSlug = book.replace(/\s+/g, '-').toLowerCase();
+        history.push(`/book-upload-chapters/${isbn}/${bookSlug}/${id}`);
+    }
     return (
         <div className="module-card" key={books._id} id={`card-${books._id}`}>
         <div className="subject-card-heading">
@@ -20,6 +24,9 @@ export default function SingleBook({books}) {
                 #{books._id}
                 </Link></div>
             <div>
+                <Button className="delBtn" onClick={handleAdd.bind(this,books.ISBN13,books.BookName,books._id)}>
+                    <FontAwesomeIcon icon={faPlus} className="text-success mr-2"  varient="solid"/>
+                </Button>
                 <Button className="delBtn" onClick={handleUpdate.bind(this,books._id)}>
                     <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
                 </Button>
