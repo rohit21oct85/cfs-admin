@@ -54,12 +54,6 @@ const BookSchema = new mongoose.Schema({
     Author3: {
         type: String,
     },
-    Author4: {
-        type: String,
-    },
-    Author5: {
-        type: String,
-    },
     Description: {
         type: String,
     },

@@ -17,6 +17,11 @@ const ChapterSchema = new mongoose.Schema({
         type: Object,
         required: true,
     },
+    chapter_name:{
+        type: Object,
+        required: true,
+    },
+
     status: {
         type: Boolean,
         required: true,

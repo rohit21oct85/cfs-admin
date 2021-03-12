@@ -11,6 +11,7 @@ import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 import AllBookList from '../Pages/Books/AllBookList.jsx';
 import SubSubjectBooks from '../Pages/Books/SubSubjectBooks.jsx';
 import UploadBooks from '../Pages/Books/UploadBooks.jsx';
+import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
@@ -29,6 +30,7 @@ import RolePermissions from '../Pages/Role/RolePermissions.jsx';
 import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
 
 import UploadChapters from '../Pages/Chapters/UploadChapters.jsx';
+
 export const guestRoutes =  [
     { 
         path:'/',
@@ -113,6 +115,10 @@ export const privateRoutes = [
         path: '/books-upload',
         component: UploadBooks
     },
+    {
+        path: '/books-bulk-upload',
+        component: UploadBulkBooks
+    },
     
     {
         path: '/books-create',
@@ -128,7 +134,7 @@ export const privateRoutes = [
         component: UploadBooks
     },
     {
-        path: '/book-upload-chapters/:isbn/:book_name/:book_id',
+        path: '/upload-chapters/:isbn/:book_name/:book_id',
         component: UploadChapters
     }
 

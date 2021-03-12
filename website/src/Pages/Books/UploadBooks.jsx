@@ -21,6 +21,7 @@ export default function UploadBooks() {
     const formDataUpload = new FormData();
     const [subSubjectName, setSubSubjectName] = useState(null);
     const [subSubjectId, setSubSubjectId] = useState(null);
+    const [loading, setLoading] = useState(false);
     async  function handleSubmit(e){
         e.preventDefault();
         console.log(formDataUpload.file);
@@ -34,10 +35,18 @@ export default function UploadBooks() {
             formDataUpload.append('sub_subject_name',  subSubjectName);
             formDataUpload.append('sub_subject_id',  subSubjectId);
             formDataUpload.append('file',  file);
-            
+            setLoading(true);
+            setBtnDisbaled(true);
             response = await api.post('books/upload',formDataUpload);
-            errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-            history.push(`/books`);
+            if(response.status === 200){
+                history.push(`/sub-subject/books/${subSubjectName}/${subSubjectId}`);
+            }else{
+                errorDispatch({type: 'SET_SUCCESS', payload: response.message});
+                setBtnDisbaled(false);
+                setLoading(false);
+                history.push(`/books-upload/${subSubjectName}/${subSubjectId}`);
+            }
+            
         }
     }
     const [btnDisabled, setBtnDisbaled] = useState(true)
@@ -123,7 +132,7 @@ return (
                         )}     
                     </div>
                     <div className="col-md-5 pl-0">
-                        <a href="/sampledata/book_sample.csv" download>Download Sample File</a>
+                        <a href="/sampledata/book_simple_upload.csv" download>Download Sample File</a>
                     </div>
                     </div>
                 </div>
@@ -219,9 +228,9 @@ return (
                         <Form.Group>
                             <Button 
                             onClick={handleSubmit}
-                            disabled={btnDisabled}
+                            disabled={loading && btnDisabled}
                             className="btn dark btn-sm">
-                                Upload Books
+                               {loading ? 'processing...': 'Upload Books'} 
                             </Button>
                         </Form.Group>
                         </Form>

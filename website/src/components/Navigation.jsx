@@ -7,7 +7,8 @@ import {AdminContext} from '../context/AdminContext.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
-import * as api from '../Helper/ApiHelper';
+import axios from 'axios';
+import * as cons from '../Helper/Cons'
 
 export default function Navigation() {
     const history = useHistory();
@@ -20,17 +21,30 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
-    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
-    const [adminRoutes, setAdminRoutes] = useState([]);
     useEffect(() => {
+        
         const fetchModules = async () => {
-            const response = await api.get('master-module/view-all');
-            if(response !== null && state.isLoggedIn){
-                const ModuleRoutes = response.data.data;
-                const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
-                adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
-                const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
-                adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+            if(state.isLoggedIn){
+                console.log("app Load" , state.isLoggedIn)
+                let API_URL = '';
+                if(process.env.NODE_ENV === 'development'){
+                    API_URL = cons.LOCAL_API_URL;
+                }else{
+                    API_URL = cons.LIVE_API_URL;
+                }
+                const response = await axios.get(`${API_URL}master-module/view-all`, {
+                    headers: {
+                        'Content-Type': 'Application/json',
+                        'Authorization':'Bearer '+state.access_token
+                    }
+                });
+                if(response !== null){
+                    const ModuleRoutes = response.data.data;
+                    const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
+                    adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
+                    const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
+                    adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
+                }
             }
         }
         fetchModules();

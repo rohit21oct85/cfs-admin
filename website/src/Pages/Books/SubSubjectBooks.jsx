@@ -10,14 +10,16 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
 
-import useAllBooksById from '../../hooks/useAllBooksById';
+import useBook from '../../hooks/useBook';
 
 import SingleBook from './SingleBook';
+import SearchBook from './SearchBook';
 
 export default function AllBookList() {
-const history = useHistory();
+
+    const history = useHistory();
 const {state} = useContext(AuthContext);
-const {data, isLoading, error} = useAllBooksById();
+const {data, isLoading, error} = useBook();
 return (
 
 <>
@@ -42,7 +44,13 @@ return (
                 onClick={ e => history.push('/books-upload')}
                 className="btn btn-sm dark ml-2">
                     <FontAwesomeIcon icon={faCloud} /> Upload books</Button>
+                
+                <Button 
+                onClick={ e => history.push('/books-bulk-upload')}
+                className="btn btn-sm dark ml-2">
+                    <FontAwesomeIcon icon={faCloud} /> Bulk Uploads books</Button>
 
+                <SearchBook />  
             </div>    
         </div>
         {!isLoading && (

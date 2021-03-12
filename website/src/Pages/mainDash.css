@@ -386,7 +386,7 @@ p{
 .module-card {
     width: 49%;
     border: 1px solid #ccc;
-    padding: 0.7rem 1rem;
+    padding: 0.8rem;
     margin-bottom: 10px;
     box-shadow: 1px 3px 6px #ccccccd6;
 }
@@ -566,4 +566,45 @@ p{
     margin: 5px 5px 0 0;
     width: 15px;
     height: 15px;
+}
+.search-result{
+    position: absolute;
+    background: #efefef;
+    border: 1px solid #ededed;
+    box-shadow: 1px 2px 2px rgb(0 0 0 / 30%);
+    left: 25px;
+    top: 42px;
+    padding:5px;
+    z-index: 9999;
+}
+.search-result ul{
+    padding:0px;
+    margin:0px;
+    width: 500px;
+    min-height: auto;
+    /* height: 300px; */
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.search-result ul li.items{
+    list-style-type: none;
+    width: 98%;
+    background: #fff;
+    padding: 0px 15px;
+    margin: 0px 0px 5px 0;
+    box-shadow: 1px 2px 2px rgb(0 0 0 / 30%);
+}
+
+.search-result ul li.items:hover{
+    box-shadow: 1px 5px 5px rgb(0 0 0 / 46%);
+    cursor: pointer;
+}
+
+
+.search-result ul li.items .book_item {
+    margin-bottom: 0;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
 }

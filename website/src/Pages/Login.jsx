@@ -6,6 +6,10 @@ import * as api from '../Helper/ApiHelper.jsx';
 import {AuthContext} from '../context/AuthContext.jsx';
 import {AdminContext} from '../context/AdminContext.jsx';
 import useAxios from '../hooks/useAxios';
+
+import axios from 'axios';
+import * as cons from '../Helper/Cons'
+
 import './login.css';
 
 export default function Login() {
@@ -62,17 +66,8 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
-                    const moduleResponse = await api.get(`master-module/view-all`);
-                    if(moduleResponse){
-                        const ModuleRoutes = moduleResponse.data.data;
-                        const sRoutes = ModuleRoutes.filter( routes => routes.role_access === 1);
-                        adminDispatch({type: 'SET_SA_ROUTES', payload: sRoutes});
-                        const aRoutes = ModuleRoutes.filter( routes => routes.role_access === 2);
-                        adminDispatch({type: 'SET_A_ROUTES', payload: aRoutes});
-                        setLoading(false);
-                        history.push('/dashboard');
-                    }
                     
+                    history.push('/dashboard');
                 }
             }
             

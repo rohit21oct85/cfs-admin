@@ -5,7 +5,8 @@ const fs = require('fs')
 const BooksBySubSubjectId = async(req, res) => {
     try {
 
-        const Books = await Book.find({ sub_subject_id: req.params.sub_subject_id }, { __v: 0 });
+        const Books = await Book.find({ sub_subject_id: req.params.sub_subject_id }, { __v: 0 })
+                                .sort({created_at: -1}).limit(20);
         return res.status(200).json({
             total: Books.length,
             data: Books
@@ -21,6 +22,7 @@ const BooksBySubSubjectId = async(req, res) => {
 
 const createBook = async(req, res) => {
     const data = req.body;
+    return res.send(data);
     const sub_subject = data.sub_subject;
     const BookData = sub_subject.split(",");
     let FinalData = [];
@@ -66,14 +68,13 @@ const uploadBook = async(req, res) => {
                         sub_subject_name: data.sub_subject_name, 
                         sub_subject_id: data.sub_subject_id,
                         BookName: book.BookName,
-                        BookEdition: book.BookNameEdition,
                         Edition: book.Edition,
                         ISBN13: book.ISBN13,
                         ISBN10: book.ISBN10,
-                        extra_search: book.extra_search,
-                        image: book.image,
                         Author1: book.Author1,
-                        status: book.status 
+                        Author2: book.Author2,
+                        Author3: book.Author3,
+                        Description: book.description 
                     })
                 })
                 otherFunction(res, FinalData, function() {
@@ -87,14 +88,48 @@ const uploadBook = async(req, res) => {
         });
     }
 }
-
+const BulkUploadBook = async(req, res) => {
+    const data = req.body;
+    let FinalData = [];
+    try {
+        let results = [];
+        fs.createReadStream(req.file.path)
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                results.forEach(book => {
+                    FinalData.push({ 
+                        subject_id: book.subject_id, 
+                        subject_name: book.subject_name, 
+                        sub_subject_name: book.sub_subject_name, 
+                        sub_subject_id: book.sub_subject_id,
+                        BookName: book.BookName,
+                        Edition: book.Edition,
+                        ISBN13: book.ISBN13,
+                        ISBN10: book.ISBN10,
+                        Author1: book.Author1,
+                        Author2: book.Author2,
+                        Author3: book.Author3,
+                        Description: book.description 
+                    })
+                })
+                otherFunction(res, FinalData, function() {
+                    fs.unlinkSync(req.file.path)
+                })
+            });
+    } catch (error) {
+        return res.status(409).json({
+            message: "External Error occured",
+            errors: error.message
+        });
+    }
+}
 const otherFunction = async(res, FinalData, callback) => {
-    console.log(FinalData);
     await Book.insertMany(FinalData).then(() => {
         res.status(200).send('Sub subject Inserted')
         callback()
     }).catch(error => {
-        res.status(409).json({
+        return res.status(409).json({
             message: "Error occured while Inserting Data",
             errors: error.message
         });
@@ -131,7 +166,7 @@ const getAllBook = async(req, res) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const Books = await Book.find({ status: true }, { __v: 0 }).limit(20);
+        const Books = await Book.find({ status: true }, { __v: 0 }).sort({created_at: -1}).limit(20);
         
         return res.status(200).json({
             total: Books.length,
@@ -174,6 +209,42 @@ const viewBook = async(req, res) => {
     }
 
 }
+const searchBook = async(req, res) => {
+    try {
+        const isbn = req.params.isbn;
+        const books = await Book.aggregate([
+            {
+                "$search":{
+                    "autocomplete": {
+                        "path": "ISBN13",
+                        "query": `${isbn}`,
+                    }
+                }
+            }
+            ,{
+                $limit: 5
+            },{
+                $project: {
+                    sub_subject_name: 1,
+                    BookName: 1,
+                    ISBN13: 1,
+                    Edition: 1,
+                    Author1: 1,
+                    score: { $meta: "searchScore" }
+                }
+            }
+        ]);
+        return res.status(200).json({
+            data: books
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+
+}
 
 
 module.exports = {
@@ -181,7 +252,9 @@ module.exports = {
     getAllBook,
     createBook,
     uploadBook,
+    BulkUploadBook,
     updateBook,
     deleteBook,
-    viewBook
+    viewBook,
+    searchBook
 }

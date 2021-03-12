@@ -3,27 +3,29 @@ import '../mainDash.css';
 import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
 import * as api from '../../Helper/ApiHelper.jsx';
-
+import useAxios from '../../hooks/useAxios';
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
-
+import {SubjectContext} from '../../context/SubjectContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
-export default function UploadChapters() {
+export default function UploadBooks() {
     const history = useHistory();
     const params = useParams();
-    
     const {state} = useContext(AuthContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+    const {state: sState, dispatch: sDispatch} = useContext(SubjectContext);
 
     const formDataUpload = new FormData();
-    
+    const [subSubjectName, setSubSubjectName] = useState(null);
+    const [subSubjectId, setSubSubjectId] = useState(null);
     const [loading, setLoading] = useState(false);
     async  function handleSubmit(e){
         e.preventDefault();
-        
+        console.log(formDataUpload.file);
+        // return;
         let response = null;
         if(formDataUpload.sub_subject_name == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Select sub subject'});
@@ -54,6 +56,31 @@ export default function UploadChapters() {
             errorDispatch({type: 'SET_ERROR', payload: 'Only .csv files are allowed'});
         }
     }
+    const {response} = useAxios({
+        method: 'get', url: 'subject/all'
+    });
+    
+    const {response:subsubjectResponse} = useAxios({
+        method: 'get', url: `sub-subject/subject/${params.subject_id}`
+    });
+
+    const [subject, setSubject] = useState([]);
+    useEffect( () => {
+        if(response !== null){
+            const subRes = response.data;
+            sDispatch({type: 'GET_ALL_SUBJECT', payload: subRes});
+            
+            if(subRes){
+                setSubject(subRes)
+            }
+        }
+        if(subsubjectResponse !== null){
+            const SubSubRes = subsubjectResponse.data;
+            sDispatch({type: 'GET_ALL_SUB_SUBJECT', payload: SubSubRes});
+            
+        }   
+    },[response, subject, subsubjectResponse]);
+
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -61,18 +88,18 @@ export default function UploadChapters() {
             clearTimeout(timerError)
             clearTimeout(timerSuccess)
         }
-    },[errorState.error, errorState.success]);
+    },[errorState.error, errorState.success])
 
 return (
 
     <>
-    {state.isLoggedIn && (
+    {state.isLoggedIn && errorState && sState.Subjects && (
       
     <div className="col-lg-10 col-md-10 main_dash_area">
         <div className="main-area-all">
             <div className="dashboard_main-container">
                 <div className="dash-main-head">
-                    <h2>Upload Chapters</h2>
+                    <h2>Upload Books {params.subject_name}</h2>
                 </div>
                 {errorState.error && ( 
                     <Notification>{errorState.error}</Notification>
@@ -101,50 +128,35 @@ return (
                 </div>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                    <div className="col-md-12 no-gutter p-0 mt-2">
-                    
-                    <Form method="POST" className="col-md-8 p-0" encType="multipart/form-data">
-                        <Form.Group className="col-md-12">
-                            <Form.Label>
-                                Book Name
-                            </Form.Label>
-                            <p style={{ textTransform: 'capitalize'  }}><b>
-                                {params.book_name.replaceAll('-',' ')}</b></p>
-                        </Form.Group>
-                    
-                    
-                        <Form.Group className="col-md-6">
-                            <Form.Label>
-                                Book ISBN13
-                            </Form.Label>
-                            <p><b>{params.isbn}</b></p>
-                        </Form.Group> 
-                    
-                    
-                    <Form.Group className="col-md-6">
-                        <Form.Label>
-                            Choose Chapters File .csv format only
-                        </Form.Label>
-                        <Form.Control name="books" autoComplete="off" type="file" accept=".csv,"
-                        onChange={handelChangeUpload}
-                        onKeyDown={ 
-                            event => {
-                                if(event.key === 'Enter'){
-                                    event.preventDefault()
-                                }
-                            }
-                        }/>
-                    </Form.Group>
+                        <div className="col-md-12 no-gutter p-0 mt-2">
+                        
 
-                    <Form.Group className="col-md-6">
-                        <Button 
-                        onClick={handleSubmit}
-                        disabled={!loading && btnDisabled}
-                        className="btn dark btn-sm">
-                            {loading ? 'processing...': 'Upload Books'} 
-                        </Button>
-                    </Form.Group>
-                    </Form>
+                        <Form method="POST" className="col-md-6 p-0" encType="multipart/form-data">
+                            
+                        <Form.Group>
+                            <Form.Label>
+                                Upload Books File .csv format only
+                            </Form.Label>
+                            <Form.Control name="books" autoComplete="off" type="file" accept=".csv,"
+                            onChange={handelChangeUpload}
+                            onKeyDown={ 
+                                event => {
+                                    if(event.key === 'Enter'){
+                                        event.preventDefault()
+                                    }
+                                }
+                            }/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Button 
+                            onClick={handleSubmit}
+                            disabled={!loading && btnDisabled}
+                            className="btn dark btn-sm">
+                               {loading ? 'processing...': 'Upload Books'} 
+                            </Button>
+                        </Form.Group>
+                        </Form>
                         </div>
                     </div>
                 </div>

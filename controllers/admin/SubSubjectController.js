@@ -61,7 +61,7 @@ const uploadSubSubject = async(req, res) => {
             .on('data', (data) => results.push(data.subsubject))
             .on('end', () => {
                 results.forEach(sub => {
-                    FinalData.push({ status: 1, 'subject_id': data.subject_id, subject: data.subject, sub_subject: sub })
+                    FinalData.push({ status: 1, 'subject_id': data.subject_id, 'subject': data.subject, sub_subject: sub })
                 })
                 otherFunction(res, FinalData, function() {
                     console.log(req.file.path)

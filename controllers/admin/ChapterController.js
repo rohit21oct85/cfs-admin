@@ -1,18 +1,22 @@
 const Chapter = require('../../models/admin/Chapter.js');
 
-const uploadChapter = async(req, res) => {
-    return res.send(req.body);
+const UploadChapters = async(req, res) => {
     const data = req.body;
     let FinalData = [];
-
     try {
         let results = [];
         fs.createReadStream(req.file.path)
             .pipe(csv())
-            .on('data', (data) => results.push(data.subsubject))
+            .on('data', (data) => results.push(data))
             .on('end', () => {
-                results.forEach(sub => {
-                    FinalData.push({ status: 1, 'subject_id': data.subject_id, subject: data.subject, sub_subject: sub })
+                results.forEach(chapter => {
+                    FinalData.push({ 
+                        book_id: data.book_id, 
+                        book_name: data.book_name, 
+                        book_isbn: data.book_isbn, 
+                        chapter_no: chapter.chapter_no, 
+                        chapter_name: chapter.chapter_name, 
+                    })
                 })
                 otherFunction(res, FinalData, function() {
                     console.log(req.file.path)
@@ -25,4 +29,18 @@ const uploadChapter = async(req, res) => {
             errors: error.message
         });
     }
+}
+const otherFunction = async(res, FinalData, callback) => {
+    await Chapter.insertMany(FinalData).then(() => {
+        res.status(200).send('Chapters Added Inserted')
+        callback()
+    }).catch(error => {
+        return res.status(409).json({
+            message: "Error occured while Inserting Data",
+            errors: error.message
+        });
+    })
+}
+module.exports = {
+    UploadChapters
 }

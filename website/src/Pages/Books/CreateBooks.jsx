@@ -27,10 +27,13 @@ export default function UploadBooks() {
   const {data:SubSubjects} = useGetSubSubjects();
 
   const formDataUpload = new FormData();
+  const [formData, setFormData] = useState({});
   const [subSubjectName, setSubSubjectName] = useState(null);
   const [subSubjectId, setSubSubjectId] = useState(null);
   const [btnDisabled, setBtnDisbaled] = useState(true);
+  const [fileDisabled, setFileDisbaled] = useState(true)
   const [file, setFile] = useState(null);
+
   async function handleSubmit(e) {
     e.preventDefault();
     let response = null;
@@ -45,7 +48,15 @@ export default function UploadBooks() {
       formDataUpload.append("sub_subject_name", subSubjectName);
       formDataUpload.append("sub_subject_id", subSubjectId);
       formDataUpload.append('file',  file);
-
+      formDataUpload.append('BookName',formData.BookName);
+      formDataUpload.append('Edition',formData.Edition);
+      formDataUpload.append('ISBN13',formData.ISBN13);
+      formDataUpload.append('ISBN10',formData.ISBN10);
+      formDataUpload.append('Author1',formData.Author1);
+      formDataUpload.append('Author2',formData.Author2);
+      formDataUpload.append('Author3',formData.Author3);
+      formDataUpload.append('description',formData.description);
+      
       response = await api.post("books/create", formDataUpload);
       errorDispatch({ type: "SET_SUCCESS", payload: response.message });
       history.push(`/books`);
@@ -57,7 +68,7 @@ export default function UploadBooks() {
         console.log('file onchange ' ,  filename);
         const ext = filename.split('.')[1];
         console.log(ext)
-        if(ext === "csv"){
+        if(ext === "jpg" || ext === 'png' || ext === 'gif' || ext === 'jpeg'){
             setBtnDisbaled(false);
             setFile(e.target.files[0]);
             formDataUpload.append('file', e.target.files[0]);
@@ -65,6 +76,9 @@ export default function UploadBooks() {
             setBtnDisbaled(true);
             errorDispatch({type: 'SET_ERROR', payload: 'Only .csv files are allowed'});
         }
+    }
+    async function handleFormField(e){
+      setFormData({...formData, [e.target.name]: e.target.value});
     }
   return (
     <>
@@ -170,7 +184,7 @@ export default function UploadBooks() {
 
                                   setSubSubjectName(sub_subject_name);
                                   setSubSubjectId(sub_subject_id);
-                                  setBtnDisbaled(false);
+                                  setFileDisbaled(false);
                                 }}
                               >
                                 <option>Select Sub Subject</option>
@@ -201,19 +215,11 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="BookName"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
 
-                        <Form.Group>
-                          <Form.Label>Book Name Edition</Form.Label>
-                          <input
-                            type="text"
-                            autoComplete="off"
-                            className="form-control"
-                            name="BookNameEdition"
-                          />
-                        </Form.Group>
-
+                        
                         <Form.Group>
                           <Form.Label>Edition</Form.Label>
                           <input
@@ -221,6 +227,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Edition"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                       </div>
@@ -232,6 +239,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="ISBN13"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                         <Form.Group>
@@ -241,6 +249,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="ISBN10"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                                 
@@ -251,6 +260,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author1"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                         <Form.Group>
@@ -260,6 +270,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author2"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                         
@@ -270,39 +281,19 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author3"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                         </div>          
                         <div className="col-md-4">
-                                   
                         <Form.Group>
-                          <Form.Label>Author 4</Form.Label>
-                          <input
-                            type="text"
-                            autoComplete="off"
-                            className="form-control"
-                            name="Author4"
-                          />
-                        </Form.Group>
-                                
-                                
-                        <Form.Group>
-                          <Form.Label>Author 5</Form.Label>
-                          <input
-                            type="text"
-                            autoComplete="off"
-                            className="form-control"
-                            name="Author5"
-                          />
-                        </Form.Group>
-                        
-                        <Form.Group>
-                          <Form.Label>Extra Search</Form.Label>
+                          <Form.Label>Description</Form.Label>
                           <textarea
                             type="text"
                             autoComplete="off"
                             className="form-control"
-                            name="extra_search"
+                            name="Description"
+                            onChange={handleFormField}
                           />
                         </Form.Group>
                         
@@ -313,6 +304,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="image"
+                            disabled={fileDisabled}
                             onChange={handelChangeUpload}
                             onKeyDown={ 
                                 event => {
