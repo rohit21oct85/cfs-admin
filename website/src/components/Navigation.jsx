@@ -20,6 +20,8 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
+    const [superAdminRoutes, setSuperAdminRoutes] = useState([]);
+    const [adminRoutes, setAdminRoutes] = useState([]);
     useEffect(() => {
         const fetchModules = async () => {
             const response = await api.get('master-module/view-all');

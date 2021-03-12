@@ -13,7 +13,7 @@ const ChapterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    chapter_no:{
+    chapters:{
         type: Object,
         required: true,
     },

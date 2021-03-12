@@ -4,7 +4,6 @@ const fs = require('fs')
 
 const BooksBySubSubjectId = async(req, res) => {
     try {
-
         const Books = await Book.find({ sub_subject_id: req.params.sub_subject_id }, { __v: 0 });
         return res.status(200).json({
             total: Books.length,
@@ -16,7 +15,6 @@ const BooksBySubSubjectId = async(req, res) => {
             errors: error.message
         });
     }
-
 }
 
 const createBook = async(req, res) => {
