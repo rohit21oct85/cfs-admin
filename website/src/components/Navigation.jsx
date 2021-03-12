@@ -49,7 +49,6 @@ export default function Navigation() {
         }
         fetchModules();
     },[state.isLoggedIn]);
-
 return (
 <>
 
