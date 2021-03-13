@@ -10,6 +10,7 @@ import {ErrorContext} from '../../context/ErrorContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
+import BookImage from '../Books/BookImage';
 
 export default function UploadChapters() {
     const history = useHistory();
@@ -102,7 +103,9 @@ return (
                 <div className="dash-cont-start">
                     <div className="org-main-area">
                     <div className="col-md-12 no-gutter p-0 mt-2">
-                    
+                    {/* <div className="col-md-3">
+                        <BookImage bookname={params.book_name} isbn={params.isbn}/>
+                    </div>     */}
                     <Form method="POST" className="col-md-8 p-0" encType="multipart/form-data">
                         <Form.Group className="col-md-12">
                             <Form.Label>

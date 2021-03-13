@@ -230,9 +230,10 @@ export default function UploadBooks() {
                             onChange={handleFormField}
                           />
                         </Form.Group>
+                        
                       </div>
                        <div className="col-md-4">
-                        <Form.Group>
+                       <Form.Group>
                           <Form.Label>ISBN13</Form.Label>
                           <input
                             type="text"
@@ -274,6 +275,9 @@ export default function UploadBooks() {
                           />
                         </Form.Group>
                         
+                        
+                        </div>          
+                        <div className="col-md-4">
                         <Form.Group>
                           <Form.Label>Author 3</Form.Label>
                           <input
@@ -284,8 +288,6 @@ export default function UploadBooks() {
                             onChange={handleFormField}
                           />
                         </Form.Group>
-                        </div>          
-                        <div className="col-md-4">
                         <Form.Group>
                           <Form.Label>Description</Form.Label>
                           <textarea
@@ -297,24 +299,6 @@ export default function UploadBooks() {
                           />
                         </Form.Group>
                         
-                        <Form.Group>
-                          <Form.Label>Book Image</Form.Label>
-                          <input
-                            type="file"
-                            autoComplete="off"
-                            className="form-control"
-                            name="image"
-                            disabled={fileDisabled}
-                            onChange={handelChangeUpload}
-                            onKeyDown={ 
-                                event => {
-                                    if(event.key === 'Enter'){
-                                        event.preventDefault()
-                                    }
-                                }
-                            }
-                          />
-                        </Form.Group>
                         </div>
                     </div>    
                       <Form.Group>

@@ -13,13 +13,37 @@ const ChapterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    chapters:{
-        type: Object,
+    chapter_no:{
+        type: String,
         required: true,
     },
     chapter_name:{
-        type: Object,
+        type: String,
         required: true,
+    },
+
+    section_no:{
+        type: String,
+        required: true,
+    },
+    section_name:{
+        type: String,
+        required: true,
+    },
+    excerise:{
+        type: String,
+        required: true,
+    },
+    problem_no:{
+        type: String,
+        required: true,
+    },
+    question:{
+        type: String,
+        required: true,
+    },
+    answers:{
+        type: String,
     },
 
     status: {

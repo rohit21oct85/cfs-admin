@@ -4,13 +4,12 @@ const MakeSlug = (str) => {
 const GetString = (str, length) => {
     return str.substr(0,length);
 }
-
-const GenerateImage = () => {
-    return '';
+const GetName = (str) => {
+    return str.replaceAll('-', ' ');   
 }
 
 export {
     MakeSlug,
     GetString,
-    GenerateImage
+    GetName
 }

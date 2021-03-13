@@ -608,3 +608,38 @@ p{
     display: flex;
     justify-content: space-between;
 }
+.book_image_container{
+    position: relative;
+}
+
+.book_image_container .first_name{
+    position: absolute;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.6vw;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.2) ;
+    top: 20%;
+    left: 25%;
+}
+.book_image_container .middle_name{
+    position: absolute;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.6vw;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.2) ;
+    top: 27%;
+    left: 25%;
+}
+
+.book_image_container .color{
+    color: #fccb42;
+}
+.book_image_container .bottom_name{
+    position: absolute;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.6vw;
+    text-shadow: 0px 0px 5px rgba(0,0,0,0.2) ;
+    top: 34.5%;
+    left: 25%;
+}

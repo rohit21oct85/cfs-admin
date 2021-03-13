@@ -2,7 +2,8 @@ import React from 'react'
 import {useHistory} from 'react-router-dom'
 import * as api from '../../Helper/ApiHelper';
 import {Form} from 'react-bootstrap';
-import {MakeSlug, GenerateImage} from '../../utils/MakeSlug';
+import {MakeSlug, getBookImage} from '../../utils/MakeSlug';
+import BookImage from './BookImage';
 
 function SearchBook() {
     const history = useHistory();
@@ -75,16 +76,16 @@ function SearchBook() {
                         >
                             <div className="row p-2">
                                 <div className="col-md-3 pl-0 pr-0">
-                                    <img src={`https://www.crazyforstudy.com/uploads/book-images-with-text/IMG-${data.ISBN13}.jpg`} className="img-responsive" style={{ width: "80%"}}/>
+                                    <BookImage bookname={MakeSlug(data.BookName)} isbn={data.ISBN13}/>
                                 </div>
-                                <div className="col-md-9 pl-0">
+                                <div className="col-md-9 pl-3">
                                     <p className="book_item">
                                         <span>Subject: </span>
                                         <span>{data.sub_subject_name}</span>
                                     </p>
                                     <p className="book_item">
                                         <span>ISBN: </span>
-                                        <span onClick={GenerateImage}>{data.ISBN13}</span>
+                                        <span>{data.ISBN13}</span>
                                     </p>
                                     <p className="book_item">
                                         <span>Edition: </span>

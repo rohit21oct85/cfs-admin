@@ -20,6 +20,9 @@ var upload = multer({ storage: storage })
 
 const router = express.Router();
 
-router.post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters);
+router
+.get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
+.post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)
+;
 
 module.exports = router;

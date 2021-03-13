@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 import {MakeSlug, GetString} from '../../utils/MakeSlug';
+import BookImage from './BookImage';
 
 export default function SingleBook({books}) {
     const history = useHistory();
@@ -22,7 +23,7 @@ export default function SingleBook({books}) {
     <div className="module-card" key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pr-0">
-            <img src={`https://www.crazyforstudy.com/uploads/book-images-with-text/IMG-${books.ISBN13}.jpg`} className="img-responsive" style={{ width: "100%" }}/>
+            <BookImage bookname={MakeSlug(books.BookName)} isbn={books.ISBN13}/>
         </div>
         <div className="col-md-9">    
             <div className="subject-card-heading">
