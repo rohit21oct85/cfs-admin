@@ -1,5 +1,6 @@
 website/node_modules/
 node_modules/
+uploads/
 config/
 .env/
 .idea/

@@ -15,8 +15,9 @@ const getAllBook = async(req, res) => {
 }
 
 const BooksBySubSubjectName = async(req, res) => {
+    console.log(req.params, req.body.pageno)
     try {
-        const Books = await Book.find({ sub_subject_name: req.params.sub_subject_name }, { __v: 0 });
+        const Books = await Book.find({ sub_subject_name: req.params.sub_subject_name }, { __v: 0 }).skip(req.body.pageno * req.body.limit).limit(parseInt(req.body.limit));
         return res.status(200).json({
             total: Books.length,
             data: Books
