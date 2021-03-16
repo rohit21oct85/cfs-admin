@@ -5,10 +5,19 @@ const getAllCategory = async(req, res) => {
     try {
         const SubSubjectResponse = await Subject.aggregate([
             {
+                "$project": {
+                    "_id": {
+                        "$toString": "$_id"
+                    },
+                    "sub_subject" : 1,
+                    "subject" : 1,
+                }
+            },
+            {
             $lookup: {
                     from: "subsubjects",
-                    localField: "subject",
-                    foreignField: "subject",
+                    localField: "_id",
+                    foreignField: "subject_id",
                     as: "sub_subject"
                 },
             },
