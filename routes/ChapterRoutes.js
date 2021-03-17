@@ -23,6 +23,10 @@ const router = express.Router();
 router
 .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
 .post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)
+.get('/all/:isbn', Chapter.getBookChapters)
+.get('/section/:isbn', Chapter.getBookSections)
+.get('/exercise/:isbn', Chapter.getBookExercises)
+.get('/problem/:isbn', Chapter.getBookProblems)
 ;
 
 module.exports = router;

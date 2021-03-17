@@ -4,6 +4,7 @@ import * as api from '../../Helper/ApiHelper';
 import {Form} from 'react-bootstrap';
 import {MakeSlug, getBookImage} from '../../utils/MakeSlug';
 import BookImage from './BookImage';
+import BookHeading from './BookHeading';
 
 function SearchBook() {
     const history = useHistory();
@@ -76,9 +77,10 @@ function SearchBook() {
                         >
                             <div className="row p-2">
                                 <div className="col-md-3 pl-0 pr-0">
-                                    <BookImage bookname={MakeSlug(data.BookName)} isbn={data.ISBN13}/>
+                                    <BookImage isbn={data.ISBN13}/>
                                 </div>
                                 <div className="col-md-9 pl-3">
+                                   <BookHeading books={data}/>
                                     <p className="book_item">
                                         <span>Subject: </span>
                                         <span>{data.sub_subject_name}</span>

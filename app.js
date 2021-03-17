@@ -71,6 +71,7 @@ app.use("/api/v1/chapter", Routes.ChapterRoutes);
 
 
 app.use("/web/v1/books", WebRoutes.WebBookRoutes);
+app.use("/web/v1/chapter", WebRoutes.WebChapterRoutes);
 app.use("/web/v1/category", WebRoutes.CategoryRoutes);
 app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
 app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);

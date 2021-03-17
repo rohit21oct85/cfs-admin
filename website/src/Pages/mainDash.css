@@ -643,3 +643,9 @@ p{
     top: 34.5%;
     left: 25%;
 }
+span.problem_no {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}

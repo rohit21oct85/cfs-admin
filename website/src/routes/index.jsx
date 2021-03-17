@@ -13,6 +13,7 @@ import SubSubjectBooks from '../Pages/Books/SubSubjectBooks.jsx';
 import UploadBooks from '../Pages/Books/UploadBooks.jsx';
 import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
+import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -133,6 +134,12 @@ export const privateRoutes = [
         path: '/books-upload/:subject_name/:subject_id',
         component: UploadBooks
     },
+    
+    {
+        path: '/view-books-chapters/:isbn',
+        component: BooksChapters
+    },
+
     {
         path: '/upload-chapters/:isbn/:book_name/:book_id',
         component: UploadChapters

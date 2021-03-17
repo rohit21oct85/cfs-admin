@@ -1,48 +1,18 @@
 import React from 'react'
-import {useHistory, Link} from 'react-router-dom'
-import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 import {MakeSlug, GetString} from '../../utils/MakeSlug';
 import BookImage from './BookImage';
+import BookHeading from './BookHeading';
 
 export default function SingleBook({books}) {
-    const history = useHistory();
-    const handleDelete = async (e) => {
-        history.push(`delete-data/books/delete/${e}`) 
-    }
-    const handleUpdate = async (e) => {
-        history.push(`/books/update/${e}`);
-    }
-    const handleAdd = async (isbn, book, id) => {
-        // const book_name = book.replace(/\s+/g, '-').toLowerCase();
-        const book_name = MakeSlug(book);
-        history.push(`/upload-chapters/${isbn}/${book_name}/${id}`);
-    }
+    
     return (
     <div className="module-card" key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pr-0">
-            <BookImage bookname={MakeSlug(books.BookName)} isbn={books.ISBN13}/>
+            <BookImage isbn={books.ISBN13}/>
         </div>
         <div className="col-md-9">    
-            <div className="subject-card-heading">
-                <div>
-                    <Link to={`view-permission/${books._id}`}>
-                    #{books._id}
-                    </Link></div>
-                <div>
-                    <Button className="delBtn" onClick={handleAdd.bind(this,books.ISBN13,books.BookName,books._id)}>
-                        <FontAwesomeIcon icon={faUpload} alt="upload chapters" className="text-success mr-2"  varient="solid"/>
-                    </Button>
-                    <Button className="delBtn" onClick={handleUpdate.bind(this,books._id)}>
-                        <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                    </Button>
-                    <Button className="delBtn" onClick={handleDelete.bind(this,books._id)}>
-                        <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                    </Button>
-                </div>
-            </div>
+            <BookHeading books={books}/>
             <div className="subject-card-body mt-2">
                 <div className="admin-name"> 
                     <div className="name-label">
