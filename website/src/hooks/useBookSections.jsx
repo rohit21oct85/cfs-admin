@@ -5,9 +5,9 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useBook() {
+export default function useBookSections({chapter_no}) {
     const params = useParams();
-    const sub_subject_id = params.sub_subject_id;
+    const isbn = params.isbn;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -15,14 +15,17 @@ export default function useBook() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery(['books',sub_subject_id], async () => {
-        const result = await axios.get(`${API_URL}books/subject/${sub_subject_id}`,{
+    return useQuery(['chapters',isbn], async () => {
+        const result = await axios.get(`${API_URL}chapter/questions/${isbn}`,{
+            chapter_no
+        },{
             headers: {
                 'Content-Type': 'Application/json',
                 'Authorization':'Bearer '+state.access_token
             }
         });
-        return result.data.data; 
+        console.log('single Book sections ', result.data.sections);
+        return result.data.sections; 
     });
     
 }

@@ -147,16 +147,16 @@ const GetChapterQuestions = async (req, res) => {
 const UploadChapters = async(req, res) => {
     const data = req.body;
     let FinalData = [];
+    
     try {
         let results = [];
-        let chapters = [];
-        let chapter_index;
+        
         fs.createReadStream(req.file.path)
             .pipe(csv())
             .on('data', (data) => results.push(data))
             .on('end', () => {
                 results.forEach( (chapter, index) => {
-                    if(chapter.chapter_no !== ''){
+                    if(chapter.chapter_no !== '' ){
                         chapter_no = results[index].chapter_no
                         chapter_name = results[index].chapter_name
                     }
@@ -197,7 +197,10 @@ const UploadChapters = async(req, res) => {
 const otherFunction = async(res, FinalData, callback) => {
     // return res.send(FinalData);
     await Chapter.insertMany(FinalData).then(() => {
-        res.status(200).send('Chapters Added Inserted')
+        res.status(200).json({
+            success: true,
+            message: "Chapters added successfully"
+        })
         callback()
     }).catch(error => {
         return res.status(409).json({
@@ -233,9 +236,10 @@ const getBookChapters = async (req, res) => {
     });
 }
 const getBookSections = async (req, res) => {
+    
     const results = await Chapter.find({
         "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.body.chapter_no}`,
+        "chapter_no": `${req.params.chapter_no}`,
     },{
         _id: 0,
         section_no: 1,
@@ -262,8 +266,8 @@ const getBookSections = async (req, res) => {
 const getBookExercises = async (req, res) => {
     const results = await Chapter.find({
         "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.body.chapter_no}`,
-        "section_no": `${req.body.section_no}`,
+        "chapter_no": `${req.params.chapter_no}`,
+        "section_no": `${req.params.section_no}`,
     },{
         _id: 0,
         excerise: 1
@@ -291,9 +295,9 @@ const getBookExercises = async (req, res) => {
 const getBookProblems = async (req, res) => {
     const results = await Chapter.find({
         "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.body.chapter_no}`,
-        "section_no": `${req.body.section_no}`,
-        "excerise": `${req.body.excerise}`,
+        "chapter_no": `${req.params.chapter_no}`,
+        "section_no": `${req.params.section_no}`,
+        "excerise": `${req.params.excerise_no}`,
     },{
         _id: 0,
         problem_no: 1,
@@ -320,12 +324,44 @@ const getBookProblems = async (req, res) => {
         problems
     });
 }
-
+const searchQuestion = async (req, res) => {
+    const s = req.params.search;
+    const term = s.split('-').join(' ');
+    console.log(term);
+    const results = await Chapter.find({
+        book_isbn: '9780131453401', 
+        question: { $regex: s }
+    },{
+        _id: 0,
+        problem_no: 1,
+        question: 1,
+        chapter_no: 1,
+        chapter_name: 1,
+    }).limit( 10 );
+    const problems = [];
+    const map = new Map();
+    results.forEach( item => {
+        if(!map.has(item.problem_no)){
+            map.set(item.problem_no, true);
+            problems.push({
+                problem_no: item.problem_no, 
+                question: item.question, 
+                chapter_no: item.chapter_no, 
+                chapter_name: item.chapter_name, 
+                
+            })
+        }
+    });
+    res.status(200).json({
+        problems
+    });
+}
 module.exports = {
     UploadChapters,
     GetChapterQuestions,
     getBookChapters,
     getBookSections,
     getBookExercises,
-    getBookProblems
+    getBookProblems,
+    searchQuestion
 }

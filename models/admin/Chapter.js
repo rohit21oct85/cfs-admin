@@ -24,15 +24,12 @@ const ChapterSchema = new mongoose.Schema({
 
     section_no:{
         type: String,
-        required: true,
     },
     section_name:{
         type: String,
-        required: true,
     },
     excerise:{
         type: String,
-        required: true,
     },
     problem_no:{
         type: String,

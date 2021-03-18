@@ -29,6 +29,7 @@ router
     .post('/bulk-upload', upload.single('file'), checkAuth, Book.BulkUploadBook)
     .patch('/update/:id', Book.updateBook)
     .delete('/delete/:id', Book.deleteBook)
+    .delete('/delete-all', Book.deleteBookAll)
     .get('/view/:id', Book.viewBook);
 
 module.exports = router;

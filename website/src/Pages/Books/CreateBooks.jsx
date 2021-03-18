@@ -13,7 +13,7 @@ import { faHandPointLeft } from "@fortawesome/free-solid-svg-icons";
 
 import useAllSubjects from '../../hooks/useAllSubjects';
 import useGetSubSubjects from '../../hooks/useGetSubSubjects';
-
+import { MakeSlug } from '../../utils/MakeSlug';
 
 export default function UploadBooks() {
   const history = useHistory();
@@ -31,9 +31,8 @@ export default function UploadBooks() {
   const [subSubjectName, setSubSubjectName] = useState(null);
   const [subSubjectId, setSubSubjectId] = useState(null);
   const [btnDisabled, setBtnDisbaled] = useState(true);
-  const [fileDisabled, setFileDisbaled] = useState(true)
-  const [file, setFile] = useState(null);
-
+  
+  
   async function handleSubmit(e) {
     e.preventDefault();
     let response = null;
@@ -43,40 +42,17 @@ export default function UploadBooks() {
         payload: "Please Select sub subject",
       });
     } else {
-      formDataUpload.append("subject_name", params.subject_name);
-      formDataUpload.append("subject_id", params.subject_id);
-      formDataUpload.append("sub_subject_name", subSubjectName);
-      formDataUpload.append("sub_subject_id", subSubjectId);
-      formDataUpload.append('file',  file);
-      formDataUpload.append('BookName',formData.BookName);
-      formDataUpload.append('Edition',formData.Edition);
-      formDataUpload.append('ISBN13',formData.ISBN13);
-      formDataUpload.append('ISBN10',formData.ISBN10);
-      formDataUpload.append('Author1',formData.Author1);
-      formDataUpload.append('Author2',formData.Author2);
-      formDataUpload.append('Author3',formData.Author3);
-      formDataUpload.append('description',formData.description);
-      
-      response = await api.post("books/create", formDataUpload);
+      formData['subject_name'] = params.subject_name;
+      formData['subject_id'] = params.subject_id
+      formData['sub_subject_name'] = subSubjectName;
+      formData['sub_subject_id'] = subSubjectId;
+      console.log(formData);
+      response = await api.post("books/create", formData);
       errorDispatch({ type: "SET_SUCCESS", payload: response.message });
       history.push(`/books`);
     }
   }
   
-    async function handelChangeUpload(e){
-        const filename = e.target.files[0].name;
-        console.log('file onchange ' ,  filename);
-        const ext = filename.split('.')[1];
-        console.log(ext)
-        if(ext === "jpg" || ext === 'png' || ext === 'gif' || ext === 'jpeg'){
-            setBtnDisbaled(false);
-            setFile(e.target.files[0]);
-            formDataUpload.append('file', e.target.files[0]);
-        }else{
-            setBtnDisbaled(true);
-            errorDispatch({type: 'SET_ERROR', payload: 'Only .csv files are allowed'});
-        }
-    }
     async function handleFormField(e){
       setFormData({...formData, [e.target.name]: e.target.value});
     }
@@ -119,9 +95,10 @@ export default function UploadBooks() {
                     >
                     <div className="row">
                         <div className="col-md-4">
-                        <Form.Group>
+                        <Form.Group style={{ position: 'relative' }}>
                           <Form.Label>Subject Name</Form.Label>
                           {params.subject_name ? (
+                            <>
                             <Form.Control
                               name="subject"
                               autoComplete="off"
@@ -133,6 +110,17 @@ export default function UploadBooks() {
                               }}
                               placeholder="Subject Name"
                             />
+                            <span 
+                              className="dark pt-1 pb-1 pr-2 pl-2"
+                              style={{ 
+                                position: 'absolute', 
+                                right:'0%', 
+                                top: '50%', 
+                                cursor: 'pointer' 
+                              }}
+                            onClick={(event) => {history.push(`/books-create`)}}  
+                            >x</span>
+                            </>
                           ) : (
                             <select
                               className="form-control"
@@ -140,13 +128,11 @@ export default function UploadBooks() {
                               autoComplete="off"
                               onChange={(event) => {
                                 const value = event.target.value;
-                                const subject_name = value.split("_")[0];
+                                const subject_name = MakeSlug(value.split("_")[0]);
                                 const subject_id = value.split("_")[1];
+                                
                                 history.push(
-                                  `/books-create/${subject_name
-                                    .trim()
-                                    .replace(" ", "-")
-                                    .toLowerCase()}/${subject_id}`
+                                  `/books-create/${subject_name}/${subject_id}`
                                 );
                               }}
                             >
@@ -175,16 +161,13 @@ export default function UploadBooks() {
                                 autoComplete="off"
                                 onChange={(event) => {
                                   const value = event.target.value;
-                                  const subject_name = value.split("_")[0];
+                                  const sub_subject_name = MakeSlug(value.split("_")[0]);
                                   const sub_subject_id = value.split("_")[1];
-                                  const sub_subject_name = subject_name
-                                    .trim()
-                                    .replace(" ", "-")
-                                    .toLowerCase();
-
+                                  
                                   setSubSubjectName(sub_subject_name);
                                   setSubSubjectId(sub_subject_id);
-                                  setFileDisbaled(false);
+                                  
+                                  setBtnDisbaled(false);
                                 }}
                               >
                                 <option>Select Sub Subject</option>
@@ -295,6 +278,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Description"
+                            style={{ height: '190px' }}
                             onChange={handleFormField}
                           />
                         </Form.Group>

@@ -26,18 +26,20 @@ export default function UploadChapters() {
         e.preventDefault();
         
         let response = null;
-        if(formDataUpload.sub_subject_name == ''){
-            errorDispatch({type: 'SET_ERROR', payload: 'Please Select sub subject'});
-        }else{
-            formDataUpload.append('file',  file);
-            setLoading(true);
-            setBtnDisbaled(true);
-            response = await api.post('books/bulk-upload',formDataUpload);
-            errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-            setBtnDisbaled(false);
-            setLoading(false);
-            history.push(`/books`);
-        }
+        
+        formDataUpload.append('file',  file);
+        formDataUpload.append('book_id',  params.book_id);
+        formDataUpload.append('book_name',  params.book_name);
+        formDataUpload.append('book_isbn',  params.isbn);
+        setLoading(true);
+        setBtnDisbaled(true);
+        response = await api.post('chapter/upload',formDataUpload);
+        console.log(response); return;
+        errorDispatch({type: 'SET_SUCCESS', payload: response.message});
+        setBtnDisbaled(false);
+        setLoading(false);
+        history.push(`/books`);
+    
     }
     const [btnDisabled, setBtnDisbaled] = useState(true)
     const [file, setFile] = useState(null);
@@ -96,7 +98,7 @@ return (
                         )}     
                     </div>
                     <div className="col-md-5 pl-0">
-                        <a href="/sampledata/book_bulk_upload.csv" download>Download Sample File</a>
+                        <a href="/sampledata/chapter_upload-9780131453401.csv" download>Download Sample File</a>
                     </div>
                     </div>
                 </div>

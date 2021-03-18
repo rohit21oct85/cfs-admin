@@ -20,27 +20,27 @@ const BooksBySubSubjectId = async(req, res) => {
 }
 
 const createBook = async(req, res) => {
-    const data = req.body;
-    return res.send(data);
-    const sub_subject = data.sub_subject;
-    const BookData = sub_subject.split(",");
-    let FinalData = [];
-
     try {
-        await BookData.forEach(sub => {
-            FinalData.push({ status: 1, 'subject_id': data.subject_id, subject: data.subject, sub_subject: sub })
-        })
-
-        await Book.insertMany(FinalData).then(
-            res.status(201).json({
-                messgae: 'Sub subject Inserted'
-            })
-        ).catch(error => {
-            res.status(409).json({
-                message: "Error occured while Inserting Data",
-                errors: error.message
-            });
-        })
+        var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
+        await Book.findOneAndUpdate({
+            ISBN13: req.body.ISBN13,
+            subject_name: req.body.subject_name,
+            subject_id: req.body.subject_id,
+            sub_subject_name: req.body.sub_subject_name,
+            sub_subject_id: req.body.sub_subject_id,
+        },{ $set: req.body},options, async (err, doc) => {
+            if(err) {
+                return res.status(409).json({
+                    message: "Error occured",
+                    error: err.message
+                });
+            }else{
+                return res.status(201).json({
+                    status: 200,
+                    message: "Submitted, Successfully"
+                });
+            }
+        });
 
     } catch (error) {
         res.status(409).json({
@@ -179,6 +179,21 @@ const getAllBook = async(req, res) => {
     }
 }
 
+const deleteBookAll = async(req, res) => {
+    const subject_id = req.body.subject_id;
+    const sub_subject_id = req.body.sub_subject_id;
+    try {
+        await Book.deleteMany({ "subject_id": subject_id, "sub_subject_id": sub_subject_id }).then(response => {
+            return res.status(201).json({
+                message: "subject, deleted successfully"
+            })
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+};
 const deleteBook = async(req, res) => {
     const id = req.params.id;
     try {
@@ -193,6 +208,7 @@ const deleteBook = async(req, res) => {
         });
     }
 };
+
 
 const viewBook = async(req, res) => {
     try {
@@ -222,9 +238,12 @@ const searchBook = async(req, res) => {
             }
             ,{
                 $limit: 5
-            },{
+            }
+            
+            ,{
                 $project: {
                     sub_subject_name: 1,
+                    subject_name: 1,
                     BookName: 1,
                     ISBN13: 1,
                     Edition: 1,
@@ -254,6 +273,7 @@ module.exports = {
     BulkUploadBook,
     updateBook,
     deleteBook,
+    deleteBookAll,
     viewBook,
     searchBook
 }

@@ -24,9 +24,10 @@ router
 .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
 .post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)
 .get('/all/:isbn', Chapter.getBookChapters)
-.get('/section/:isbn', Chapter.getBookSections)
-.get('/exercise/:isbn', Chapter.getBookExercises)
-.get('/problem/:isbn', Chapter.getBookProblems)
+.get('/section/:isbn/:chapter_no', Chapter.getBookSections)
+.get('/exercise/:isbn/:chapter_no/:section_no', Chapter.getBookExercises)
+.get('/problem/:isbn/:chapter_no/:section_no/:excerise_no', Chapter.getBookProblems)
+.get('/search-question/:isbn/:search', Chapter.searchQuestion)
 ;
 
 module.exports = router;

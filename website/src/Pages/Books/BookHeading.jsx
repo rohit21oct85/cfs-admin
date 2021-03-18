@@ -18,17 +18,15 @@ function BookHeading({books}) {
         history.push(`/upload-chapters/${isbn}/${book_name}/${id}`);
     }
     
-    const handleViewChapters = async (isbn) => {
-        history.push(`/view-books-chapters/${isbn}`);
+    const handleViewChapters = async (isbn, book, id) => {
+        const book_name = MakeSlug(book);
+        history.push(`/view-books-chapters/${isbn}/${book_name}/${id}`);
     }
 
     return (
         <div className="subject-card-heading">
             <div>
-                
-            </div>
-            <div>
-                <Button className="delBtn" onClick={handleViewChapters.bind(this,books.ISBN13)}>
+                <Button className="delBtn" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <FontAwesomeIcon icon={faEye} title="View chapters" className="text-danger mr-2"  varient="solid"/>
                 </Button>
                 

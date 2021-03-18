@@ -136,7 +136,7 @@ export const privateRoutes = [
     },
     
     {
-        path: '/view-books-chapters/:isbn',
+        path: '/view-books-chapters/:isbn/:book_name/:book_id',
         component: BooksChapters
     },
 

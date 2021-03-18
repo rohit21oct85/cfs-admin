@@ -2,10 +2,10 @@ import React from 'react'
 import {useHistory} from 'react-router-dom'
 import * as api from '../../Helper/ApiHelper';
 import {Form} from 'react-bootstrap';
-import {MakeSlug, getBookImage} from '../../utils/MakeSlug';
+import {MakeSlug, GetString} from '../../utils/MakeSlug';
 import BookImage from './BookImage';
 import BookHeading from './BookHeading';
-
+import Highlighter from "react-highlight-words";
 function SearchBook() {
     const history = useHistory();
     const [search, setSearch] = React.useState('');
@@ -25,11 +25,11 @@ function SearchBook() {
                 if(responseData.length){
                     setSearchData(responseData);
                     setIsLoading(false);
-                    console.log(searchData.length)
+                    
                 }else{
                     setIsLoading(true);    
                     setSearchData([]);
-                    console.log(searchData.length)
+                    
                 }
                 
             }else{
@@ -72,35 +72,36 @@ function SearchBook() {
             <div className="col-md-12 search-result">
                 <ul>
                     {searchData && searchData.map(data => (
-                        <li className="items" key={data._id}
-                        onClick={handleAdd.bind(this,data.ISBN13,data.BookName,data._id)}
-                        >
+                        <li className="items" key={data._id}>
                             <div className="row p-2">
                                 <div className="col-md-3 pl-0 pr-0">
-                                    <BookImage isbn={data.ISBN13}/>
+                                    <BookImage width="78%" isbn={data.ISBN13}/>
                                 </div>
-                                <div className="col-md-9 pl-3">
-                                   <BookHeading books={data}/>
-                                    <p className="book_item">
-                                        <span>Subject: </span>
-                                        <span>{data.sub_subject_name}</span>
+                                <div className="col-md-9 pl-0">
+                                   
+                                   <strong>
+                                       {GetString(data.BookName,35)}
+                                   </strong>
+                                   <p className="book_item">
+                                        <span>{data.subject_name} :  
+                                        ({data.sub_subject_name})</span>
                                     </p>
                                     <p className="book_item">
-                                        <span>ISBN: </span>
-                                        <span>{data.ISBN13}</span>
-                                    </p>
-                                    <p className="book_item">
-                                        <span>Edition: </span>
                                         <span>{data.Edition}</span>
+                                        <span>ISBN-13: 
+                                        <Highlighter
+                                    highlightClassName="highlight"
+                                    searchWords={[search]}
+                                    autoEscape={true}
+                                    textToHighlight={data.ISBN13}
+                                /></span>
                                     </p>
+                                    
                                     <p className="book_item">
                                         <span>Author: </span>
-                                        <span>{data.Author1.substr(0,20)}</span>
+                                        <span>{GetString(data.Author1,20)}</span>
                                     </p>
-                                    <p className="book_item">
-                                        <span>BookName: </span>
-                                        <span>{data.BookName.substr(0,20) }</span>
-                                    </p>
+                                    <BookHeading books={data}/>
                                 </div>
                             </div>
                             

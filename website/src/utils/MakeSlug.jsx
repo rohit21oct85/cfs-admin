@@ -1,6 +1,10 @@
 const MakeSlug = (str) => {
-    return str.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');   
+    return str.trim().toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');   
 }
+const SameSlug = (str) => {
+    return str.trim().replace(/[^\w ]+/g,'').replace(/ +/g,'-');   
+}
+
 const GetString = (str, length) => {
     return str.substr(0,length);
 }
@@ -10,6 +14,7 @@ const GetName = (str) => {
 
 export {
     MakeSlug,
+    SameSlug,
     GetString,
     GetName
 }
