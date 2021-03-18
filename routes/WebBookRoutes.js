@@ -4,6 +4,7 @@ const router = express.Router();
 
 router
     .get('/view-all', Book.getAllBook)
-    .post('/subject/:sub_subject_name', Book.BooksBySubSubjectName);
+    .post('/subject/:sub_subject_name', Book.BooksBySubSubjectName)
+    .get('/subsubject/search/:subsubject/:isbn', Book.searchSubSubject)
     
 module.exports = router;
