@@ -69,8 +69,26 @@ const searchSubSubject = async(req, res) => {
 
 }
 
+const PopularBooks = async(req, res) => {
+    // return res.send("hasd");
+    try {
+        const Books = await Book.aggregate([
+            { $sample: { size: 4 } }
+        ]);
+        return res.status(200).json({
+            data: Books
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
 module.exports = {
     getAllBook,
     BooksBySubSubjectName,
     searchSubSubject,
+    PopularBooks,
 }
