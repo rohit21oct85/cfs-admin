@@ -2,7 +2,7 @@ import React, {useContext,useState, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
-import * as api from '../../Helper/ApiHelper.jsx';
+
 
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
@@ -10,7 +10,11 @@ import {ErrorContext} from '../../context/ErrorContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
-import BookImage from '../Books/BookImage';
+import * as util from '../../utils/MakeSlug';
+import axios from 'axios'
+import * as cons from '../../Helper/Cons.jsx'
+import useChapters from '../../hooks/useChapters';
+
 
 export default function UploadChapters() {
     const history = useHistory();
@@ -22,6 +26,18 @@ export default function UploadChapters() {
     const formDataUpload = new FormData();
     
     const [loading, setLoading] = useState(false);
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const options = {
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization':'Bearer '+state.access_token
+        }
+    };
     async  function handleSubmit(e){
         e.preventDefault();
         
@@ -33,8 +49,8 @@ export default function UploadChapters() {
         formDataUpload.append('book_isbn',  params.isbn);
         setLoading(true);
         setBtnDisbaled(true);
-        response = await api.post('chapter/upload',formDataUpload);
-        console.log(response); return;
+        response = await axios.post(`${API_URL}chapter/upload`,formDataUpload, options);
+        console.log(response);
         errorDispatch({type: 'SET_SUCCESS', payload: response.message});
         setBtnDisbaled(false);
         setLoading(false);
@@ -65,6 +81,8 @@ export default function UploadChapters() {
             clearTimeout(timerSuccess)
         }
     },[errorState.error, errorState.success]);
+
+    const {data, isLoading} = useChapters();
 
 return (
 
@@ -104,17 +122,51 @@ return (
                 </div>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                    <div className="col-md-12 no-gutter p-0 mt-2">
-                    {/* <div className="col-md-3">
-                        <BookImage bookname={params.book_name} isbn={params.isbn}/>
-                    </div>     */}
-                    <Form method="POST" className="col-md-8 p-0" encType="multipart/form-data">
+                    <div className="col-md-12 row no-gutter p-0 mt-2">
+                    <div className="col-md-6">
+                        <p style={{ fontWeight: 'bold', fontSize: '1rem' }}>Uploaded Content for {data && data.book_isbn}</p>
+                        <hr />
+                        {data && data.error === true && 
+                            (<div>
+                                <b>{data && data.message}</b>
+                            </div>)
+                        }
+                        <div className="tbl tbl-responsive">
+                        {data && data.error === false && 
+                            <div>
+                            <b>Total Problems</b>
+                            </div>
+                        }
+                        
+                        
+
+                            
+                            <div style={{ height: '180px',minHeight: '180px', overflowY: 'scroll', paddingRight: '10px' }}>
+                            {data && data.error === false && data.problems.map( pro => {
+                                return (
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <p style={{ fontSize: '0.95rem' }}><b>Question No:</b> {pro.problem_no}</p>
+                                    <p style={{ fontSize: '0.95rem' }}> {pro.question ? (
+                                        <b>Question: <span style={{color: 'green'  }}> Uploaded </span></b>
+                                    ): 
+                                    (
+                                        <b>Question: <span style={{color: 'red'  }}> Not Uploaded </span></b>
+                                    )
+                                }</p>
+                                </div>
+                                )
+                            })}
+                            </div>
+                        </div>    
+                        {data && data.error === false && 
+                        <Button className="btn btn-sm dark mt-2">Download Uploaded CSV</Button> }
+                    </div>  
+                    {!isLoading && (
+                        <Form method="POST" className="col-md-6 pl-2" encType="multipart/form-data">
                         <Form.Group className="col-md-12">
-                            <Form.Label>
-                                Book Name
-                            </Form.Label>
                             <p style={{ textTransform: 'capitalize'  }}><b>
-                                {params.book_name.replaceAll('-',' ')}</b></p>
+                                {util.GetName(params.book_name)}</b></p>
+                            <hr />    
                         </Form.Group>
                     
                     
@@ -125,32 +177,36 @@ return (
                             <p><b>{params.isbn}</b></p>
                         </Form.Group> 
                     
-                    
-                    <Form.Group className="col-md-6">
-                        <Form.Label>
-                            Choose Chapters File .csv format only
-                        </Form.Label>
-                        <Form.Control name="books" autoComplete="off" type="file" accept=".csv,"
-                        onChange={handelChangeUpload}
-                        onKeyDown={ 
-                            event => {
-                                if(event.key === 'Enter'){
-                                    event.preventDefault()
+                        <Form.Group className="col-md-6">
+                            <Form.Label>
+                                Choose Chapters File .csv format only
+                            </Form.Label>
+                            <Form.Control name="books" autoComplete="off" type="file" accept=".csv,"
+                            onChange={handelChangeUpload}
+                            onKeyDown={ 
+                                event => {
+                                    if(event.key === 'Enter'){
+                                        event.preventDefault()
+                                    }
                                 }
-                            }
-                        }/>
-                    </Form.Group>
+                            }/>
+                        </Form.Group>
 
-                    <Form.Group className="col-md-6">
-                        <Button 
-                        onClick={handleSubmit}
-                        disabled={!loading && btnDisabled}
-                        className="btn dark btn-sm">
-                            {loading ? 'processing...': 'Upload Books'} 
-                        </Button>
-                    </Form.Group>
-                    </Form>
-                        </div>
+                        <Form.Group className="col-md-6">
+                            <Button 
+                            onClick={handleSubmit}
+                            disabled={!loading && btnDisabled}
+                            className="btn dark btn-sm">
+                                {loading ? 'processing...': 'Upload Books'} 
+                            </Button>
+                        </Form.Group>
+                        </Form>
+                    )} 
+                    
+                     
+                   
+                    </div>    
+                    
                     </div>
                 </div>
             </div>

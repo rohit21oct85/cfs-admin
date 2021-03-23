@@ -5,7 +5,9 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useGlobalSearch(isbn) {
+export default function useGetQuestion() {
+    const params = useParams();
+    const q_id = params.q_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -13,17 +15,14 @@ export default function useGlobalSearch(isbn) {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery('books', async () => {
-        if(isbn.length > 5){
-            const result = await axios.get(`${API_URL}book/search/${isbn}`,{
-                headers: {
-                    'Content-Type': 'Application/json',
-                    'Authorization':'Bearer '+state.access_token
-                }
-            });
-            return result.data.data; 
-        }
+    return useQuery('question', async () => {
+        const result = await axios.get(`${API_URL}chapter/single-question/${q_id}`,{
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization':'Bearer '+state.access_token
+            }
+        });
+        return result.data.results; 
     });
-    
     
 }

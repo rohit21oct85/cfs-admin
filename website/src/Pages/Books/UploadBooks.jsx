@@ -10,6 +10,8 @@ import {ErrorContext} from '../../context/ErrorContext';
 import {SubjectContext} from '../../context/SubjectContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios'
+import * as cons from '../../Helper/Cons.jsx'
 
 export default function UploadBooks() {
     const history = useHistory();
@@ -22,6 +24,20 @@ export default function UploadBooks() {
     const [subSubjectName, setSubSubjectName] = useState(null);
     const [subSubjectId, setSubSubjectId] = useState(null);
     const [loading, setLoading] = useState(false);
+    
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const options = {
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization':'Bearer '+state.access_token
+        }
+    };
+    
     async  function handleSubmit(e){
         e.preventDefault();
         console.log(formDataUpload.file);
@@ -37,9 +53,9 @@ export default function UploadBooks() {
             formDataUpload.append('file',  file);
             setLoading(true);
             setBtnDisbaled(true);
-            response = await api.post('books/upload',formDataUpload);
+            response = await axios.post(`${API_URL}books/upload`,formDataUpload, options);
             if(response.status === 200){
-                history.push(`/sub-subject/books/${subSubjectName}/${subSubjectId}`);
+                history.push(`/books/${params.subject_name}/${subSubjectName}/${subSubjectId}`);
             }else{
                 errorDispatch({type: 'SET_SUCCESS', payload: response.message});
                 setBtnDisbaled(false);

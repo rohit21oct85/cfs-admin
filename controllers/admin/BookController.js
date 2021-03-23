@@ -137,7 +137,28 @@ const otherFunction = async(res, FinalData, callback) => {
 
 const updateBook = async(req, res) => {
     try {
-        await Book.findByIdAndUpdate({ _id: req.params.id }, req.body)
+        await Book.findByIdAndUpdate({ _id: req.params.book_id }, req.body)
+            .then(response => {
+                return res.status(201).json({
+                    message: "Book, Updated"
+                })
+            })
+            .catch(error => {
+                return res.status(500).json({
+                    message: "Error Found",
+                    errors: error.message
+                })
+            });
+
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+}
+const updateAllBook = async(req, res) => {
+    try {
+        await Book.updateMany({ sub_subject_id: req.params.sub_subject_id }, req.body)
             .then(response => {
                 return res.status(201).json({
                     message: "Book, Updated"
@@ -157,20 +178,53 @@ const updateBook = async(req, res) => {
     }
 }
 
+
 const getAllBook = async(req, res) => {
     try {
-
-        const subject_name = parseInt(req.query.subject_name);
-        const sub_subject_name = parseInt(req.query.sub_subject_name);
-        const page = parseInt(req.query.page);
-        const limit = parseInt(req.query.limit);
-
-        const Books = await Book.find({ status: true }, { __v: 0 }).sort({created_at: -1}).limit(20);
-        
-        return res.status(200).json({
-            total: Books.length,
-            data: Books
+        // return res.json(req.params);
+        let pageno = parseInt(req.params.pageno);
+        let limit = parseInt(req.params.limit);
+        const myCustomLabels = {
+            totalDocs: 'itemCount',
+            docs: 'itemsList',
+            limit: 'perPage',
+            page: 'currentPage',
+            nextPage: 'next',
+            prevPage: 'prev',
+            totalPages: 'pageCount',
+            pagingCounter: 'slNo',
+            meta: 'paginator',
+          };
+        const options = {
+            page: pageno,
+            limit: limit,
+            customLabels: myCustomLabels,
+            collation: {
+              locale: 'en',
+            },
+          };
+          let query;
+        if(req.params.sub_subject_id){
+            query = {sub_subject_id: req.params.sub_subject_id}    
+        }else{
+            query = {}    
+        }
+        await Book.paginate(query, options).then(result => {
+            return res.status(200).json({
+                data: result.itemsList,
+                itemCount: result.paginator.itemCount,
+                perPage: result.paginator.perPage,
+                currentPage: result.paginator.currentPage,
+                pageCount: result.paginator.pageCount,
+                next: result.paginator.next,
+                prev: result.paginator.prev,
+                slNo: result.paginator.slNo,
+                hasNextPage: result.paginator.hasNextPage,
+                hasPrevPage: result.paginator.hasPrevPage
+            });
         });
+        
+        
     } catch (error) {
         res.status(409).json({
             message: "Error occured",
@@ -212,9 +266,9 @@ const deleteBook = async(req, res) => {
 
 const viewBook = async(req, res) => {
     try {
-        const Subject = await Book.findOne({ _id: req.params.id }, { __v: 0 });
+        const SingleBook = await Book.findOne({ _id: req.params.id }, { __v: 0 });
         return res.status(200).json({
-            data: Subject
+            data: SingleBook
         });
     } catch (error) {
         res.status(409).json({
@@ -243,7 +297,9 @@ const searchBook = async(req, res) => {
             ,{
                 $project: {
                     sub_subject_name: 1,
+                    sub_subject_id: 1,
                     subject_name: 1,
+                    subject_id: 1,
                     BookName: 1,
                     ISBN13: 1,
                     Edition: 1,
@@ -272,6 +328,7 @@ module.exports = {
     uploadBook,
     BulkUploadBook,
     updateBook,
+    updateAllBook,
     deleteBook,
     deleteBookAll,
     viewBook,

@@ -2,10 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import "../mainDash.css";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
-import * as api from "../../Helper/ApiHelper.jsx";
-import useAxios from "../../hooks/useAxios";
+
 import { AuthContext } from "../../context/AuthContext";
-import { Notification } from "../../components/Notification";
 import { ErrorContext } from "../../context/ErrorContext";
 import { SubjectContext } from "../../context/SubjectContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,9 +11,12 @@ import { faHandPointLeft } from "@fortawesome/free-solid-svg-icons";
 
 import useAllSubjects from '../../hooks/useAllSubjects';
 import useGetSubSubjects from '../../hooks/useGetSubSubjects';
+import useSingleBook from '../../hooks/useSingleBook';
 import { MakeSlug } from '../../utils/MakeSlug';
+import axios from 'axios'
+import * as cons from '../../Helper/Cons.jsx'
 
-export default function UploadBooks() {
+export default function CreateBooks() {
   const history = useHistory();
   const params = useParams();
   const { state } = useContext(AuthContext);
@@ -25,6 +26,7 @@ export default function UploadBooks() {
   const { state: sState, dispatch: sDispatch } = useContext(SubjectContext);
   const {data, isLoading, error} = useAllSubjects();
   const {data:SubSubjects} = useGetSubSubjects();
+  const {data:SingleBook} = useSingleBook();
 
   const formDataUpload = new FormData();
   const [formData, setFormData] = useState({});
@@ -32,6 +34,18 @@ export default function UploadBooks() {
   const [subSubjectId, setSubSubjectId] = useState(null);
   const [btnDisabled, setBtnDisbaled] = useState(true);
   
+  let API_URL = '';
+  if(process.env.NODE_ENV === 'development'){
+      API_URL = cons.LOCAL_API_URL;
+  }else{
+      API_URL = cons.LIVE_API_URL;
+  }
+  const options = {
+      headers: {
+          'Content-Type': 'Application/json',
+          'Authorization':'Bearer '+state.access_token
+      }
+  };
   
   async function handleSubmit(e) {
     e.preventDefault();
@@ -46,8 +60,13 @@ export default function UploadBooks() {
       formData['subject_id'] = params.subject_id
       formData['sub_subject_name'] = subSubjectName;
       formData['sub_subject_id'] = subSubjectId;
+      let book_id = params.book_id
       console.log(formData);
-      response = await api.post("books/create", formData);
+      if(book_id){
+        response = await axios.patch(`${API_URL}books/update/${book_id}`, formData,options);
+      }else{
+        response = await axios.post(`${API_URL}books/create`, formData, options);
+      }
       errorDispatch({ type: "SET_SUCCESS", payload: response.message });
       history.push(`/books`);
     }
@@ -56,6 +75,8 @@ export default function UploadBooks() {
     async function handleFormField(e){
       setFormData({...formData, [e.target.name]: e.target.value});
     }
+
+
   return (
     <>
       {state.isLoggedIn && (
@@ -97,7 +118,7 @@ export default function UploadBooks() {
                         <div className="col-md-4">
                         <Form.Group style={{ position: 'relative' }}>
                           <Form.Label>Subject Name</Form.Label>
-                          {params.subject_name ? (
+                          {params.subject_name && !params.book_id ? (
                             <>
                             <Form.Control
                               name="subject"
@@ -130,9 +151,14 @@ export default function UploadBooks() {
                                 const value = event.target.value;
                                 const subject_name = MakeSlug(value.split("_")[0]);
                                 const subject_id = value.split("_")[1];
-                                
+                                let url = '';
+                                if(params.book_id === SingleBook._id){
+                                  url = `/books-create/${subject_name}/${subject_id}/${params.book_id}`
+                                }else{
+                                  url = `/books-create/${subject_name}/${subject_id}`
+                                }
                                 history.push(
-                                  `/books-create/${subject_name}/${subject_id}`
+                                  `${url}`
                                 );
                               }}
                             >
@@ -142,6 +168,7 @@ export default function UploadBooks() {
                                   <option
                                     key={sub._id}
                                     value={sub.subject + "_" + sub._id}
+                                    selected={SingleBook && SingleBook.subject_id === sub._id ? 'selected':''}
                                   >
                                     {sub.subject}
                                   </option>
@@ -182,6 +209,7 @@ export default function UploadBooks() {
                                     <option
                                       key={subsubject._id}
                                       value={subSubjectId}
+                                      selected={SingleBook && SingleBook.sub_subject_id == subsubject._id ? 'selected':''}
                                     >
                                       {sub_subject}
                                     </option>
@@ -197,6 +225,7 @@ export default function UploadBooks() {
                             type="text"
                             autoComplete="off"
                             className="form-control"
+                            defaultValue={SingleBook && SingleBook.BookName}
                             name="BookName"
                             onChange={handleFormField}
                           />
@@ -210,6 +239,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Edition"
+                            defaultValue={SingleBook && SingleBook.Edition}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -223,6 +253,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="ISBN13"
+                            defaultValue={SingleBook && SingleBook.ISBN13}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -233,6 +264,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="ISBN10"
+                            defaultValue={SingleBook && SingleBook.ISBN10}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -244,6 +276,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author1"
+                            defaultValue={SingleBook && SingleBook.Author1}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -254,6 +287,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author2"
+                            defaultValue={SingleBook && SingleBook.Author2}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -268,6 +302,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Author3"
+                            defaultValue={SingleBook && SingleBook.Author3}
                             onChange={handleFormField}
                           />
                         </Form.Group>
@@ -278,6 +313,7 @@ export default function UploadBooks() {
                             autoComplete="off"
                             className="form-control"
                             name="Description"
+                            defaultValue={SingleBook && SingleBook.Description}
                             style={{ height: '190px' }}
                             onChange={handleFormField}
                           />
@@ -288,11 +324,13 @@ export default function UploadBooks() {
                       <Form.Group>
                         <Button
                           onClick={handleSubmit}
-                          disabled={btnDisabled}
+                          defaultValue={SingleBook && SingleBook.Author1}
+                          disabled={SingleBook && SingleBook._id ? '' :btnDisabled}
                           className="btn dark btn-sm"
                         >
-                          Save Book
+                          {SingleBook && SingleBook._id ? 'Update Book' : 'Save Book'}
                         </Button>
+                        
                       </Form.Group>
                     </Form>
                   </div>

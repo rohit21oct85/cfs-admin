@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect, useRef} from 'react'
 import '../mainDash.css';
-import {  useParams, Link  } from "react-router-dom";
+import {  useParams, Link, useHistory  } from "react-router-dom";
 import {ListGroup} from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons'
@@ -17,7 +17,7 @@ import {useQuery} from 'react-query'
 import Highlighter from "react-highlight-words";
 
 export default function BooksChapters() {
-
+const history = useHistory();
 const params = useParams();
     
 const {state} = useContext(AuthContext);
@@ -46,12 +46,28 @@ const section_no = useRef();
 const excerise_no = useRef();
 const problem_no = useRef();
 
-
+const [selectedChapter, setSelectedChapter] = useState('');
+const [selectedSection, setSelectedSection] = useState('');
+const [selectedExe, setSelectedExe] = useState('');
+const [selectedProblem, setSelectedProblem] = useState('');
 useEffect(() => {
     setChapters(data && data.chapters);
     setSections(data && data.sections);
     setExcerise(data && data.excerise);
     setProblems(data && data.problems);   
+    if(data && data.chapters){
+        setSelectedChapter(data && data.chapters.length > 0 && data.chapters[0].chapter_no);
+    }
+    if(data && data.sections){
+        setSelectedSection(data && data.sections.length > 0 && data.sections[0].section_no);
+    }
+    if(data && data.excerise){
+        setSelectedExe(data && data.excerise.length > 0 &&  data.excerise[0].excerise);
+    }
+    if(data && data.problems){
+        setSelectedProblem(data && data.problems.length > 0 && data.problems[0].problem_no);
+    }
+    
 },[data, isLoading])
 
 
@@ -62,8 +78,14 @@ const handleChapter = async (e) => {
     setFproblems([]);
     setSearch('');
     const c_no = chapter_no.current.value
-    const result = await axios.get(`${API_URL}chapter/section/${params.isbn}/${c_no}`,options);
-    setSections(result.data.sections);
+    if(section_no.current === undefined){
+        const result = await axios.get(`${API_URL}chapter/only-problem/${params.isbn}/${c_no}`,options);
+        setProblems(result.data.problems);
+    }else{
+        const result = await axios.get(`${API_URL}chapter/section/${params.isbn}/${c_no}`,options);
+        setSections(result.data.sections);
+    }
+    
 }
 // const {data} = useQuery(['chapters',params.isbn], )
 const handleSection = async (e) => {
@@ -101,10 +123,7 @@ const searchQuestion = async (search) => {
     setFproblems(result.data.problems);
 }
 useEffect(() => {
-    
     const delayDebounceFn = setTimeout(() => {
-        console.log(search)
-        // Send Axios request here
         if(search.length > 5 && search != ''){
             searchQuestion(search);
         }
@@ -117,6 +136,9 @@ useEffect(() => {
     }
     return () => clearTimeout(delayDebounceFn)
 },[search])
+const manageQuestion = (e) => {
+    history.push(`/book-chapter-add-question/${e.q_id}`)
+}
 return (
 <>
 {state.isLoggedIn && (
@@ -153,13 +175,14 @@ return (
                             <option 
                             key={chapter.chapter_name}
                             value={chapter.chapter_no}
+                            selected={chapter.chapter_no == selectedChapter ? 'selected':''}
                             >{chapter.chapter_no} - {chapter.chapter_name}</option>
                         );
                     })}
                     </select>
                     </div>
                   )}
-                {sections && (    
+                {sections && sections.length > 0 && (    
                 <div className="col-md-3 pr-0">
                   <select className="form-control" name="section_no"
                   ref={section_no}
@@ -172,13 +195,14 @@ return (
                             <option 
                             key={section.section_no}
                             value={section.section_no}
+                            selected={section.section_no == selectedSection ? 'selected':''}
                             >{section.section_no} - {section.section_name}</option>
                         );
                     })}
                   </select>  
                 </div>
                  )}
-                {excerise && ( 
+                {excerise && excerise.length > 0 &&   ( 
                 <div className="col-md-3 pr-0">
                   <select className="form-control" name="excerise"
                   ref={excerise_no}
@@ -191,6 +215,7 @@ return (
                             <option 
                             key={exe.excerise}
                             value={exe.excerise}
+                            selected={exe.excerise == selectedExe ? 'selected':''}
                             >{i} - {exe.excerise}</option>
                         );
                     })}
@@ -198,7 +223,7 @@ return (
                 </div>
                 )}
                 {problems && ( 
-                <div className="col-md-6 mt-2 pr-0">
+                <div className="col-md-6 pr-0">
                   <select className="form-control" name="excerise"
                   ref={problem_no}
                   onChange={handleProblems}
@@ -210,6 +235,7 @@ return (
                             <option 
                             key={problem.problem_no}
                             value={problem.problem_no}
+                            selected={problem.problem_no == selectedProblem ? 'selected':''}
                             >{problem.problem_no} - {problem.question}</option>
                         );
                     })}
@@ -217,7 +243,7 @@ return (
                 </div>
                 )}
 
-                <div className="col-md-6 pr-0 mt-2">
+                <div className="col-md-6 pr-0">
                     <input name="search" className="form-control" autoComplete="off" placeholder="search questions..." value={search} onChange={e => setSearch(e.target.value)}/>
                 </div>    
             </div>
@@ -230,50 +256,73 @@ return (
                 <>
                 <h3 className="mt-3">Question: </h3>  
                 <div className="clearfix"></div>      
-                <ListGroup>
                 {problems && problems.map(problem => {
                     return (
-                        <ListGroup.Item 
-                        key={problem.problem_no}
-                        id={problem.problem_no}
-                        style={{ display: "flex", flexContent: 'space-between'  }}> 
-                            <span className="problem_no">{problem.problem_no}: </span>
-                            
-                            <span className="question">{problem.question}</span>
-                        </ListGroup.Item>
+                        <>
+                        <div className="card col-md-12 mb-2" key={problem.problem_no}>
+                        <div className="card-title col-md-12" id={problem.problem_no}> 
+                            <div className="subject-card-heading pt-2"> 
+                                <div className="problem_no">Question ID: {problem.problem_no}: </div>
+                                
+                                <div>
+                                    <button className="btn btn-sm dark"
+                                    onClick={manageQuestion.bind(this,{q_id: problem.q_id})}>Manage Question</button>
+                                </div>    
+                                
+                            </div>
+                        </div>
+                        {problem && problem.question != '' && (
+                            <div className="card-body" style={{ padding: '0px 0px 20px 10px' }}>
+                            <hr />
+                            <span className="card-text">
+                                
+                                {problem.question}
+                            </span> 
+                            </div>
+                        )}
+                        
+                        </div>    
+                        </>
                     )
                 } )}
-                </ListGroup>    
                 </>
             )}
             {filter && (
                 <>
                 <h3>Question: {search}</h3>  
                 <div className="clearfix"></div>    
-                <ListGroup>
-                    {fproblems && fproblems.map(problem => {
+                {fproblems && fproblems.map(problem => {
                     return (
-                        <ListGroup.Item 
-                        key={problem.problem_no}
-                        id={problem.problem_no}
-                        > 
-                            {search && (
-                            <span className="chapter">Chapter: {problem.chapter_no} - {problem.chapter_name}</span>    
-                            )}
-                            <div style={{ display: "flex", flexContent: 'space-between'  }}>
-                                <span className="problem_no">{problem.problem_no}: </span>
-                                <span className="question">
-                                <Highlighter
+                        <>
+                        <div className="card col-md-12 mb-2" key={problem.problem_no}>
+                        <div className="card-title col-md-12" id={problem.problem_no}> 
+                            <div className="subject-card-heading pt-2"> 
+                                <div className="problem_no">Question ID: {problem.problem_no}: </div>
+                                <div>
+                                    <button className="btn btn-sm dark"
+                                    onClick={manageQuestion.bind(this,problem._id)}>Manage Question</button>
+                                </div> 
+                            </div>
+                            <hr />
+                        </div>
+                        {problem && problem.question != '' && (
+                            <div className="card-body" style={{ padding: '0px 0px 20px 10px' }}>
+                            <span className="card-text">
+                            <Highlighter
                                     highlightClassName="highlight"
                                     searchWords={[search]}
                                     autoEscape={true}
                                     textToHighlight={problem.question}
-                                /> </span>
+                                />
+                            </span> 
                             </div>
-                        </ListGroup.Item>
+                        )}
+                        
+                        </div>    
+                        </>
+                        
                     )
-                } )}
-                </ListGroup>    
+                } )}   
                 </>
             )}
             

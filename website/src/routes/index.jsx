@@ -9,7 +9,6 @@ import CreateSubSubject from '../Pages/subject/CreateSubSubject.jsx';
 import AllSubSubjectList from '../Pages/subject/AllSubSubjectList.jsx';
 import UploadSubSubject from '../Pages/subject/UploadSubSubject.jsx';
 import AllBookList from '../Pages/Books/AllBookList.jsx';
-import SubSubjectBooks from '../Pages/Books/SubSubjectBooks.jsx';
 import UploadBooks from '../Pages/Books/UploadBooks.jsx';
 import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
@@ -29,8 +28,9 @@ import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.js
 import RolePermissionList from '../Pages/Permission/RolePermissionList.jsx';
 import RolePermissions from '../Pages/Role/RolePermissions.jsx';
 import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
-
 import UploadChapters from '../Pages/Chapters/UploadChapters.jsx';
+import ModifyChapters from '../Pages/Chapters/ModifyChapters.jsx';
+
 
 export const guestRoutes =  [
     { 
@@ -102,14 +102,8 @@ export const privateRoutes = [
         path: '/view-data/:module/:rmodule/:method/:id',
         component: ViewData
     },
-    
     {
-        path: '/sub-subject/books/:sub_subject_name/:sub_subject_id',
-        component: SubSubjectBooks
-    },
-
-    {
-        path: '/books',
+        path: '/books/:subject?/:sub_subject_name?/:sub_subject_id?',
         component: AllBookList
     },
     {
@@ -125,18 +119,19 @@ export const privateRoutes = [
         path: '/books-create',
         component: CreateBooks
     },
+
     {
-        path: '/books-create/:subject_name/:subject_id',
+        path: '/books-create/:subject_name/:subject_id/:book_id?',
         component: CreateBooks
     },
     
     {
-        path: '/books-upload/:subject_name/:subject_id',
+        path: '/books-upload/:subject_name?/:subject_id?',
         component: UploadBooks
     },
     
     {
-        path: '/view-books-chapters/:isbn/:book_name/:book_id',
+        path: '/book-chapters/:isbn/:book_name/:book_id',
         component: BooksChapters
     },
 
@@ -144,6 +139,13 @@ export const privateRoutes = [
         path: '/upload-chapters/:isbn/:book_name/:book_id',
         component: UploadChapters
     }
+    ,
+
+    {
+        path: '/book-chapter-add-question/:q_id',
+        component: ModifyChapters
+    }
+    
 
 
     

@@ -3,6 +3,7 @@ import {useHistory, Link} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+import * as util from '../../utils/MakeSlug';
 
 function SingleSubSubject({sub}) {
     const history = useHistory();
@@ -13,7 +14,7 @@ function SingleSubSubject({sub}) {
         <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
         <div className="subject-card-heading">
             <div>
-                <Link to={`/sub-subject/books/${sub.sub_subject.replace(' ', '-').toLowerCase()}/${sub._id}`}>
+                <Link to={`/books/${util.MakeSlug(sub.subject)}/${util.MakeSlug(sub.sub_subject)}/${sub._id}`}>
                 #{sub._id}
                 </Link></div>
             <div>

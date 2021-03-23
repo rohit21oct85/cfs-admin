@@ -362,7 +362,6 @@ p{
 }
 .form-control{
     border-radius: 0px;
-    height: calc(1.5em + .45rem + 0px);
     padding: 0px 12px;
 }
 .form-control:focus{
@@ -395,7 +394,7 @@ p{
 
 .subject-card-heading{
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
@@ -576,8 +575,8 @@ p{
     background: #efefef;
     border: 1px solid #ededed;
     box-shadow: 1px 2px 2px rgb(0 0 0 / 30%);
-    left: 25px;
-    top: 42px;
+    left: 10px;
+    top: 35px;
     padding:5px;
     z-index: 9999;
 }

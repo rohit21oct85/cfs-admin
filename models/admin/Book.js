@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const BookSchema = new mongoose.Schema({
     subject_id: {
@@ -82,5 +83,5 @@ const BookSchema = new mongoose.Schema({
         default: Date.now
     }
 });
-
+BookSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Book', BookSchema);

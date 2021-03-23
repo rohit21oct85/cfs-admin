@@ -7,7 +7,13 @@ function BookImage({isbn, width}) {
     useEffect(() => {
         async function fetchCoverImage(){
             try{
-                const response = await axios.get(`https://pictures.abebooks.com/isbn/${isbn}-us-300.jpg`);
+                const response = await axios.get(`https://pictures.abebooks.com/isbn/${isbn}-us-300.jpg`,{
+                    header: {
+                        "Cotnent-Type": 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                        "origin": "https://pictures.abebooks.com/"
+                     }
+                });
                 if(response.status === 200){
                   setImage(`https://pictures.abebooks.com/isbn/${isbn}-us-300.jpg`);
                 }

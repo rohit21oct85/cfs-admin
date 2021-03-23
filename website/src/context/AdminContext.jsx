@@ -80,11 +80,18 @@ const reducer = (state, action) => {
                 ...state,
                 AllBooks: action.payload
             }
+            
+        case 'Book_CurrentPage': 
+            return {
+                ...state,
+                CurrentPage: action.payload
+            }
+
         default:
             return state;
     }
 }
-
+const pageno =  localStorage.getItem('pageno');
 function AdminProvider({children}){
     const [state, dispatch] = useReducer(reducer, {
         Admins: [],
@@ -114,6 +121,7 @@ function AdminProvider({children}){
         superAdminRoutes: [],
         adminRoutes: [],
         AllBooks: [],
+        CurrentPage: 1
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>

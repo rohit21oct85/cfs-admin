@@ -5,7 +5,7 @@ import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 import {  useHistory, Link  } from "react-router-dom";
 
 import {AuthContext} from '../../context/AuthContext';
-
+import * as util from '../../utils/MakeSlug';
 
 function SingleSubject({sub}) {
     const {state} = useContext(AuthContext);
@@ -18,7 +18,7 @@ function SingleSubject({sub}) {
         <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
         <div className="subject-card-heading">
             <div>
-                <Link to={`sub-subject/${sub.subject.replaceAll(' ','-').toLowerCase().trim()}/${sub._id}`}>
+                <Link to={`sub-subject/${util.MakeSlug(sub.subject)}/${sub._id}`}>
                 #{sub._id}
                 </Link></div>
             <div>

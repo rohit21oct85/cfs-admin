@@ -33,11 +33,9 @@ const ChapterSchema = new mongoose.Schema({
     },
     problem_no:{
         type: String,
-        required: true,
     },
     question:{
         type: String,
-        required: true,
     },
     answers:{
         type: String,
