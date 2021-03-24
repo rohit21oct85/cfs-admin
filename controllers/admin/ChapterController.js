@@ -1,10 +1,13 @@
 const Chapter = require('../../models/admin/Chapter.js');
 const csv = require('csv-parser')
+const objectstocsv = require('objects-to-csv')
 const fs = require('fs')
+
+
+
 const checkValueIndex = (results, checkvalue) => {
     return results.findIndex( data => data.chapter_no === checkvalue);
 }
-
 const getChapters = async (isbn) => {
     const chapters = [];
     const map = new Map();
@@ -138,9 +141,6 @@ const getOnlyProblems = async (isbn, chapter_no) => {
     });
     return problems;
 }
-
-
-
 const GetChapterQuestions = async (req, res) => {
     try{
         let chapters = [];
@@ -188,6 +188,7 @@ const UploadChapters = async(req, res) => {
     const data = req.body;
     let FinalData = [];
     let chapter_no = '';
+    let chapter_name = '';
     let section_no = '';
     let section_name = '';
     let excerise = '';
@@ -196,20 +197,28 @@ const UploadChapters = async(req, res) => {
     try {
         let results = [];
         
-        fs.createReadStream(req.file.path,{encoding: 'binary'})
+        fs.createReadStream(req.file.path,{encoding: 'utf8'})
             .pipe(csv())
             .on('data', (data) => results.push(data))
             .on('end', () => {
                 results.forEach( (chapter, index) => {
+                    // console.log(chapter); return;
                     if(chapter.chapter_no !== '' ){
                         chapter_no = results[index].chapter_no
+                    }
+                    
+                    if(chapter.chapter_name !== '' ){
                         chapter_name = results[index].chapter_name
                     }
                     
                     if(chapter.section_no !== ''){
                         section_no = results[index].section_no
+                    }
+                    
+                    if(chapter.section_name !== ''){
                         section_name = results[index].section_name
                     }
+
                     
                     if(chapter.excerise !== ''){
                         excerise = results[index].excerise
@@ -222,8 +231,6 @@ const UploadChapters = async(req, res) => {
                     if(chapter.question !== ''){
                         question = results[index].question
                     }
-
-
                     FinalData.push({ 
                         book_id: data.book_id, 
                         book_name: data.book_name, 
@@ -249,6 +256,7 @@ const UploadChapters = async(req, res) => {
         });
     }
 }
+
 const otherFunction = async(res, FinalData, callback) => {
     // return res.send(FinalData);
     await Chapter.insertMany(FinalData).then(() => {
@@ -264,6 +272,94 @@ const otherFunction = async(res, FinalData, callback) => {
         });
     })
 }
+
+const UdateChaptersCSV = async(req, res) => {
+    const data = req.body;
+    let FinalData = [];
+    let section_no = '';
+    let section_name = '';
+    let excerise = '';
+    let question = '';
+    try {
+        let results = [];
+        
+        fs.createReadStream(req.file.path,{encoding: 'binary'})
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                results.forEach( (chapter, index) => {
+                    if(chapter.section_no !== ''){
+                        section_no = results[index].section_no
+                        section_name = results[index].section_name
+                    }
+                    
+                    if(chapter.excerise !== ''){
+                        excerise = results[index].excerise
+                    }
+                    
+                    if(chapter.question !== ''){
+                        question = results[index].question
+                    }
+                    FinalData.push({ 
+                        _id: chapter._id,
+                        book_isbn: chapter.book_isbn,
+                        section_no: section_no, 
+                        section_name: section_name, 
+                        excerise: excerise, 
+                        problem_no: chapter.problem_no, 
+                        question: question, 
+                    })
+                })
+                
+                UpdateotherFunction(res, FinalData, function() {
+                    fs.unlinkSync(req.file.path)
+                })
+            });
+    } catch (error) {
+        return res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+const UpdateotherFunction = async(res,FinalData, callback) => {
+    try{
+        var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
+        await FinalData.map( data => {
+            const id = data._id;
+            Chapter.findOneAndUpdate({_id: id},{$set: {
+                section_no: data.section_no,
+                section_name: data.section_name,
+                excerise: data.excerise,
+                problem_no: data.problem_no,
+                question: data.question,
+            }}, options, async (err, result) => {
+                if(err){
+                    return res.status(409).json({
+                        message: "Error occured",
+                        error: err.message
+                    }); 
+                }
+            });
+        })
+
+        return res.status(409).json({
+            error: false,
+            message: "Chapter Updated successfully"
+        })
+
+        callback();
+
+    }catch(err){
+        return res.status(409).json({
+            error: true,
+            message: err.message
+        })
+    }
+}
+
 
 const getBookChapters = async (req, res) => {
 
@@ -380,8 +476,6 @@ const getBookProblems = async (req, res) => {
         problems
     });
 }
-
-
 const getBookOnlyProblems = async (req, res) => {
     const results = await Chapter.find({
         "book_isbn": `${req.params.isbn}`,
@@ -442,7 +536,6 @@ const searchQuestion = async (req, res) => {
         problems
     });
 }
-
 const GetSingleQuestion = async (req, res) => {
     const results = await Chapter.findOne({
         "_id": `${req.params.q_id}`
@@ -472,9 +565,29 @@ const AddSingleQuestion = async (req, res) => {
         });
     }
 }
+const downloadBooks = async (req, res) => {
+    const book_isbn = req.params.isbn;
+    const books = await Chapter.find({book_isbn},{__v: 0, status: 0, created_at: 0});
+    return res.json({books});
+}
+
+const RemoveBookChapters = async (req, res) => {
+    try {
+        await Chapter.deleteMany({ "book_isbn": req.params.isbn}).then(response => {
+            return res.status(201).json({
+                message: "subject, deleted successfully"
+            })
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+}
 
 module.exports = {
     UploadChapters,
+    UdateChaptersCSV,
     GetChapterQuestions,
     getBookChapters,
     getBookSections,
@@ -483,5 +596,7 @@ module.exports = {
     GetSingleQuestion,
     AddSingleQuestion,
     getBookOnlyProblems,
-    searchQuestion
+    searchQuestion,
+    downloadBooks,
+    RemoveBookChapters
 }

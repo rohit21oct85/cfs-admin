@@ -43,14 +43,21 @@ app.use((req, res, next) => {
 });
 
 // DB Cofiguration
+const options = { 
+    useFindAndModify: false, 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
+    useCreateIndex: true
+};
+
 if (process.env.NODE_ENV === 'production') {
     const MONGO_URI = process.env.MONGO_URI
-    mongoose.connect(MONGO_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+    mongoose.connect(MONGO_URI, options)
         .then(() => console.log('Mongo DB Connected on Server'))
         .catch(err => console.log(err));
 } else {
     const db = require('./config/keys').MongoURI
-    mongoose.connect(db, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+    mongoose.connect(db, options)
         .then(() => console.log('Mongo DB Connected Locally'))
         .catch(err => console.log(err));
 }

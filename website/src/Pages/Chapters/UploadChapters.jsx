@@ -40,23 +40,47 @@ export default function UploadChapters() {
     };
     async  function handleSubmit(e){
         e.preventDefault();
-        
         let response = null;
-        
         formDataUpload.append('file',  file);
         formDataUpload.append('book_id',  params.book_id);
         formDataUpload.append('book_name',  params.book_name);
         formDataUpload.append('book_isbn',  params.isbn);
         setLoading(true);
         setBtnDisbaled(true);
-        response = await axios.post(`${API_URL}chapter/upload`,formDataUpload, options);
-        console.log(response);
-        errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-        setBtnDisbaled(false);
-        setLoading(false);
-        history.push(`/books`);
-    
+        try{
+            if(data && data.problems === undefined){
+                console.log("data created");
+                response = await axios.post(`${API_URL}chapter/upload`,formDataUpload, options);
+            }else{
+                console.log("data Updated");
+                response = await axios.post(`${API_URL}chapter/update-chapter-csv`,formDataUpload, options);
+            }
+            console.log(response);
+            return;
+            errorDispatch({type: 'SET_SUCCESS', payload: response.message});
+            setBtnDisbaled(false);
+            setLoading(false);
+            history.push(`/books`);
+        
+        }catch(error){
+            errorDispatch({type: 'SET_ERROR', payload: error.message});
+            setBtnDisbaled(false);
+            setLoading(false);
+        }
+        
     }
+
+    const downloadCsv = async (e) => {
+        try {
+            const response = await axios.get(`${API_URL}chapter/download/${e.isbn}`, options);    
+            const csvData = await util.ObjectToCsv(response.data.books);
+            await util.downloadData(csvData, e.isbn);
+        } catch (error) {
+            console.log(error.message);
+            errorDispatch({type: 'SET_ERROR', payload: error.messsage})
+        }
+    }
+
     const [btnDisabled, setBtnDisbaled] = useState(true)
     const [file, setFile] = useState(null);
     async function handelChangeUpload(e){
@@ -83,6 +107,7 @@ export default function UploadChapters() {
     },[errorState.error, errorState.success]);
 
     const {data, isLoading} = useChapters();
+    
 
 return (
 
@@ -124,7 +149,9 @@ return (
                     <div className="org-main-area">
                     <div className="col-md-12 row no-gutter p-0 mt-2">
                     <div className="col-md-6">
-                        <p style={{ fontWeight: 'bold', fontSize: '1rem' }}>Uploaded Content for {data && data.book_isbn}</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '1rem' }}>Uploaded Content for {data && data.book_isbn && (
+                            <Link to={`/book-chapters/${params.isbn}/${params.book_name}/${params.book_id}`}>View Question: {data && data.book_isbn}</Link>
+                        )}</p>
                         <hr />
                         {data && data.error === true && 
                             (<div>
@@ -158,9 +185,18 @@ return (
                             })}
                             </div>
                         </div>    
-                        {data && data.error === false && 
-                        <Button className="btn btn-sm dark mt-2">Download Uploaded CSV</Button> }
+                        {   data && 
+                            data.error === false &&  
+                            data.problems.length > 0 && 
+                            data.problems[0].question == '' &&
+                             
+                            <Button 
+                            className="btn btn-sm dark mt-2"
+                            onClick={downloadCsv.bind(this,{isbn: params.isbn} )}
+                            >Download Uploaded CSV</Button> 
+                        }
                     </div>  
+                    
                     {!isLoading && (
                         <Form method="POST" className="col-md-6 pl-2" encType="multipart/form-data">
                         <Form.Group className="col-md-12">
@@ -195,7 +231,7 @@ return (
                         <Form.Group className="col-md-6">
                             <Button 
                             onClick={handleSubmit}
-                            disabled={!loading && btnDisabled}
+                            disabled={btnDisabled}
                             className="btn dark btn-sm">
                                 {loading ? 'processing...': 'Upload Books'} 
                             </Button>

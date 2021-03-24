@@ -3,7 +3,7 @@ import '../mainDash.css';
 import {  useParams, Link, useHistory  } from "react-router-dom";
 import {ListGroup} from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons'
+import { faHandPointLeft, faCloud } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
@@ -119,7 +119,6 @@ const [search, setSearch] = useState('');
 
 const searchQuestion = async (search) => {
     const result = await axios.get(`${API_URL}chapter/search-question/${params.isbn}/${search}`);
-    console.log(result);
     setFproblems(result.data.problems);
 }
 useEffect(() => {
@@ -135,7 +134,8 @@ useEffect(() => {
         setProblems(data && data.problems)
     }
     return () => clearTimeout(delayDebounceFn)
-},[search])
+},[search]);
+
 const manageQuestion = (e) => {
     history.push(`/book-chapter-add-question/${e.q_id}`)
 }
@@ -161,6 +161,15 @@ return (
                     varient="solid"
                 />
                 </Link>
+                <br />
+                <Link to={`/upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`} className="btn btn-sm mt-2 dark">
+                <FontAwesomeIcon
+                    icon={faCloud}
+                    className="text-white mr-2"
+                    varient="solid"
+                />
+                </Link>
+
                 </div>
                 <div className="row col-md-10">
                 {chapters && (
@@ -193,7 +202,7 @@ return (
                         let i = index+1
                         return (
                             <option 
-                            key={section.section_no}
+                            key={i}
                             value={section.section_no}
                             selected={section.section_no == selectedSection ? 'selected':''}
                             >{section.section_no} - {section.section_name}</option>
