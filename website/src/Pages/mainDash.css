@@ -647,21 +647,20 @@ p{
     top: 34.5%;
     left: 25%;
 }
-span.problem_no {
-    font-size: 0.95rem;
+div.problem_no {
+    font-size: 0.85rem;
     margin-right: 15px;
     font-weight: 600;
     letter-spacing: 0.05em;
     margin-top: 5px;
 }
-span.question{
+div.question{
     letter-spacing: 0.02em;
     margin-top: 5px;
 }
 span.chapter {
     font-size: 0.95rem;
     margin-right: 15px;
-    
     color: #f00;
     font-weight: medium;
     letter-spacing: 0.02em;

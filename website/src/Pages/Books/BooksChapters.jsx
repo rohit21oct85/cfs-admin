@@ -131,7 +131,8 @@ useEffect(() => {
         setFilter(true);
     }else{
         setFilter(false);
-        setProblems(data && data.problems)
+        setSearch('');
+        setProblems(problems)
     }
     return () => clearTimeout(delayDebounceFn)
 },[search]);
@@ -260,19 +261,18 @@ return (
         </div>
         {!isLoading && (
         <div className="dash-cont-start">
-        <div className="subject-main-container p-3">    
+        <div className="subject-main-container pl-0 pt-0 pr-0 pb-0">    
             {!filter && (
                 <>
-                <h3 className="mt-3">Question: </h3>  
+                <h3 className="mt-0">Question: </h3>  
                 <div className="clearfix"></div>      
                 {problems && problems.map(problem => {
                     return (
                         <>
                         <div className="card col-md-12 mb-2" key={problem.problem_no}>
-                        <div className="card-title col-md-12" id={problem.problem_no}> 
+                        <div className="card-title col-md-12 p-0 mb-0" id={problem.problem_no}> 
                             <div className="subject-card-heading pt-2"> 
-                                <div className="problem_no">Question ID: {problem.problem_no}: </div>
-                                
+                                <div className="problem_no">Q.No: {problem.problem_no} </div>
                                 <div>
                                     <button className="btn btn-sm dark"
                                     onClick={manageQuestion.bind(this,{q_id: problem.q_id})}>Manage Question</button>
@@ -281,8 +281,8 @@ return (
                             </div>
                         </div>
                         {problem && problem.question != '' && (
-                            <div className="card-body" style={{ padding: '0px 0px 20px 10px' }}>
-                            <hr />
+                            <div className="card-body" style={{ padding: '0px 0px 10px 0px' }}>
+                            <hr style={{ padding: '0px', margin: '5px 0px' }}/>
                             <span className="card-text">
                                 
                                 {problem.question}
@@ -304,18 +304,24 @@ return (
                     return (
                         <>
                         <div className="card col-md-12 mb-2" key={problem.problem_no}>
-                        <div className="card-title col-md-12" id={problem.problem_no}> 
+                        <div className="card-title col-md-12 p-0 mb-0" id={problem.problem_no}> 
                             <div className="subject-card-heading pt-2"> 
-                                <div className="problem_no">Question ID: {problem.problem_no}: </div>
+                                <div className="problem_no">
+                                    Q.No: {problem.problem_no} &nbsp;
+                                    {search && (
+                                        <span className="chapter"> &nbsp; Chapter: {problem.chapter_no}-{problem.chapter_name}</span>
+                                    )}
+                                </div>
                                 <div>
                                     <button className="btn btn-sm dark"
                                     onClick={manageQuestion.bind(this,problem._id)}>Manage Question</button>
                                 </div> 
                             </div>
-                            <hr />
+                            
+                            <hr style={{ padding: '0px', margin: '5px 0px' }}/>
                         </div>
                         {problem && problem.question != '' && (
-                            <div className="card-body" style={{ padding: '0px 0px 20px 10px' }}>
+                            <div className="card-body" style={{ padding: '0px 0px 10px 0px' }}>
                             <span className="card-text">
                             <Highlighter
                                     highlightClassName="highlight"

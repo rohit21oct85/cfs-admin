@@ -56,11 +56,10 @@ export default function UploadChapters() {
                 response = await axios.post(`${API_URL}chapter/update-chapter-csv`,formDataUpload, options);
             }
             console.log(response);
-            return;
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
             setBtnDisbaled(false);
             setLoading(false);
-            history.push(`/books`);
+            history.push(`/book-chapters/${params.isbn}/${params.book_name}/${params.book_id}`);
         
         }catch(error){
             errorDispatch({type: 'SET_ERROR', payload: error.message});
