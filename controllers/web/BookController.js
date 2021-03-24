@@ -14,6 +14,20 @@ const getAllBook = async(req, res) => {
         });
     }
 }
+const getBook = async(req, res) => {
+    // return res.send(req.params.isbn)
+    try {
+        const Books = await Book.find({ ISBN13: req.params.isbn, status: true }, { __v: 0 }).limit(1);
+        return res.status(200).json({
+            data: Books
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 
 const BooksBySubSubjectName = async(req, res) => {
     // console.log(req.params, req.body.pageno)
@@ -136,6 +150,7 @@ const searchBookNameIsbn = async (req, res) => {
 
 module.exports = {
     getAllBook,
+    getBook,
     BooksBySubSubjectName,
     searchSubSubject,
     PopularBooks,
