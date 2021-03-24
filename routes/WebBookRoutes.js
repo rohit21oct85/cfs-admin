@@ -7,5 +7,7 @@ router
     .post('/subject/:sub_subject_name', Book.BooksBySubSubjectName)
     .get('/subsubject/search/:subsubject/:isbn', Book.searchSubSubject)
     .get('/popular-books', Book.PopularBooks)
+    .get('/search-chapter-question/:search', Book.searchChapterQuestion)
+    .get('/search-book-name-isbn/:search', Book.searchBookNameIsbn)
     
 module.exports = router;
