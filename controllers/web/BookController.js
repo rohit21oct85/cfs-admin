@@ -14,10 +14,11 @@ const getAllBook = async(req, res) => {
         });
     }
 }
+
 const getBook = async(req, res) => {
     // return res.send(req.params.isbn)
     try {
-        const Books = await Book.find({ ISBN13: req.params.isbn, status: true }, { __v: 0 }).limit(1);
+        const Books = await Book.find({ ISBN13: req.params.isbn, status: true }, { __v: 0 });
         return res.status(200).json({
             data: Books
         });
@@ -133,6 +134,7 @@ const searchBookNameIsbn = async (req, res) => {
     // return res.send(isbn);
     const books = await Book.find({ 
         $or:
+        // [{ISBN13: { $regex: /^search$/i}},{BookName:{ $regex:/^search$/i }}]
         [{ISBN13: { $regex: search}},{BookName:{ $regex:search }}]
     },{
         _id:0,
@@ -148,6 +150,91 @@ const searchBookNameIsbn = async (req, res) => {
     });
 }
 
+const getBookChapters = async (req, res) => {
+
+    const chapters = [];
+    const map = new Map();
+    const results = await Chapter.find({
+        "book_isbn": `${req.params.isbn}`,
+    },{
+        _id: 0,
+        chapter_no: 1,
+        chapter_name: 1
+    });
+    results.forEach( item => {
+        if(!map.has(item.chapter_no)){
+            map.set(item.chapter_no, true);
+            chapters.push({
+                chapter_no: item.chapter_no, 
+                chapter_name: item.chapter_name, 
+            })
+        }
+    });
+    res.status(200).json({
+        isbn: req.params.isbn,
+        chapters
+    });
+}
+
+const getBookSections = async (req, res) => {
+    
+    const results = await Chapter.find({
+        "book_isbn": `${req.params.isbn}`,
+        "chapter_no": `${req.params.chapter_no}`,
+    },{
+        _id: 0,
+        section_no: 1,
+        section_name: 1
+    });
+
+    const sections = [];
+    
+    const map = new Map();
+    results.forEach( item => {
+        if(!map.has(item.section_no)){
+            map.set(item.section_no, true);
+            sections.push({
+                section_no: item.section_no, 
+                section_name: item.section_name, 
+            })
+        }
+    });
+    res.status(200).json({
+        isbn: req.params.isbn, 
+        chapter_no: req.body.chapter_no, 
+        sections});
+}
+
+const getBookExercises = async (req, res) => {
+    const results = await Chapter.find({
+        "book_isbn": `${req.params.isbn}`,
+        "chapter_no": `${req.params.chapter_no}`,
+        "section_no": `${req.params.section_no}`,
+    },{
+        _id: 0,
+        excerise: 1
+    });
+
+    let excerises = [];
+    
+    const map = new Map();
+    results.forEach( item => {
+        if(!map.has(item.excerise)){
+            map.set(item.excerise, true);
+            excerises.push({
+                excerise: item.excerise 
+            })
+        }
+    });
+    res.status(200).json({
+        isbn: req.params.isbn,
+        chapter_no: req.body.chapter_no,
+        section_no: req.body.section_no, 
+        excerises
+    });
+    
+}
+
 module.exports = {
     getAllBook,
     getBook,
@@ -156,4 +243,7 @@ module.exports = {
     PopularBooks,
     searchChapterQuestion,
     searchBookNameIsbn,
+    getBookChapters,
+    getBookSections,
+    getBookExercises,
 }
