@@ -27,18 +27,18 @@ function BookHeading({books}) {
         <div className="subject-card-heading">
             <div></div>
             <div>
-                <Button className="delBtn" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
+                <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <FontAwesomeIcon icon={faEye} title="View chapters" className="text-danger mr-2"  varient="solid"/>
                 </Button>
                 
-                <Button className="delBtn" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
+                <Button className="delBtn pl-1 pr-1" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <FontAwesomeIcon icon={faUpload} title="upload chapters" className="text-success mr-2"  varient="solid"/>
                 </Button>
 
-                <Button className="delBtn" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
+                <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
                     <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
                 </Button>
-                <Button className="delBtn" onClick={handleDelete.bind(this,books._id)}>
+                <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,books._id)}>
                     <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
                 </Button>
             </div>

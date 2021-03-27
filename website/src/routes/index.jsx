@@ -13,6 +13,7 @@ import UploadBooks from '../Pages/Books/UploadBooks.jsx';
 import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 import BooksChapters from '../Pages/Books/BooksChapters.jsx';
+import AllStudents from '../Pages/Student/AllStudents.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -144,7 +145,12 @@ export const privateRoutes = [
     {
         path: '/book-chapter-add-question/:q_id',
         component: ModifyChapters
-    }
+    },
+
+    {
+        path: '/all-students',
+        component: AllStudents
+    },
     
 
 

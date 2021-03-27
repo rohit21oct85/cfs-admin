@@ -3,7 +3,7 @@ import '../mainDash.css';
 import {  useHistory, Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faEdit, faPlus, faLock,faEye } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
@@ -12,6 +12,7 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
 import useAxios from '../../hooks/useAxios';
+import * as utils from '../../utils/MakeSlug'
 
 export default function ModuleList() {
 
@@ -19,6 +20,7 @@ export default function ModuleList() {
     const {state} = useContext(AuthContext);
     const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+    
     const {response, isLoading, error} = useAxios({
         method: 'get', url: 'master-module/view-all'
     });
@@ -26,12 +28,16 @@ export default function ModuleList() {
     const [appModule, setAppModule] = useState();
     const handleDelete = async (e) => {
         const module_id = e.id;
-        const module_name = e.module_name.toLowerCase().replace(' ','-');
         history.push(`delete-data/master-module/delete/${module_id}`) 
     }
     const handleUpdate = async (e) => {
         history.push(`/master-module/update/${e}`);
     }
+    
+    const handlePage = async (e) => {
+        history.push(`/${utils.MakeSlug(e)}`);
+    }
+
     
     const handleLock = async (e) => {
         const module_id = e.id;
@@ -67,44 +73,25 @@ return (
                 <div className="dash-main-head">
                     <h2>Module List</h2>
                 </div>
-                
+                {errorState.success && ( <Notification>{errorState.success}</Notification>)}
+                {isLoading && (<LoadingComp />)}
+                <div className="dash-con-heading">
+                    <div className="col-md-3 pl-0">
+                    <Link to={`/master-module/create`} className="btn btn-sm dark">
+                        <FontAwesomeIcon icon={faPlus} />
+                        Add New Module
+                    </Link>
+                    </div>    
+                </div>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
-                        <Link to={`/master-module/create`} className="btn btn-sm dark mb-3">
-                            <FontAwesomeIcon icon={faPlus} />
-                               Add New Module
-                        </Link>
-                        </div>
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
-                        {isLoading && (<LoadingComp />)}
+                        
+                        
                         {!isLoading && (
                         <div className="subject-main-container">
                             
                         {adminState.ModLists.map( module => (
-                            <div className="module-card" key={module._id} id={`card-${module._id}`}>
-                                <div className="subject-card-heading">
-                                    <div>
-                                        <Link to={`sub-subject/${module.module_name.replace(' ','-').toLowerCase().trim()}/${module._id}`}>
-                                        #{module._id}
-                                        </Link>
-                                    </div>
-                                    <div>
-                                        <Button className="delBtn" onClick={handleUpdate.bind(this,module._id)}>
-                                            <FontAwesomeIcon icon={faEdit} className="text-danger mr-2"  varient="solid"/>
-                                        </Button>
-                                        
-                                        <Button className="delBtn" onClick={handleLock.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <FontAwesomeIcon icon={faLock} className="text-success mr-2"  varient="solid"/>
-                                        </Button>
-                    
-                                        <Button className="delBtn" onClick={handleDelete.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                                        </Button>
-                                    </div>
-                                </div>
+                            <div className="subject-card" key={module._id} id={`card-${module._id}`}>
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
                                         <div className="name-label">
@@ -138,9 +125,31 @@ return (
                                             Description: 
                                         </div>
                                         <div className="name-main desc">
-                                            {module.description}
+                                            {utils.GetString(module.description,30)}
                                         </div>
                                     </div> 
+                                </div>
+
+                                <hr className="mt-1 mb-1"/>
+                                <div className="subject-card-heading">
+                                    <div></div>
+                                    <div>
+                                    
+                                        <Button className="delBtn pl-1 pr-1 " onClick={handlePage.bind(this,module.module_name)}>
+                                            <FontAwesomeIcon icon={faEye} className="text-success mr-2"  varient="solid"/>
+                                        </Button>
+                                        <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,module._id)}>
+                                            <FontAwesomeIcon icon={faEdit} className="text-danger mr-2"  varient="solid"/>
+                                        </Button>
+                                        
+                                        <Button className="delBtn pl-1 pr-1" onClick={handleLock.bind(this,{id: module._id,module_name: module.module_name})}>
+                                            <FontAwesomeIcon icon={faLock} className="text-success mr-2"  varient="solid"/>
+                                        </Button>
+                    
+                                        <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,{id: module._id,module_name: module.module_name})}>
+                                            <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

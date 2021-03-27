@@ -202,8 +202,8 @@ const getAllBook = async(req, res) => {
             collation: {
               locale: 'en',
             },
-          };
-          let query;
+        };
+        let query;
         if(req.params.sub_subject_id){
             query = {sub_subject_id: req.params.sub_subject_id}    
         }else{

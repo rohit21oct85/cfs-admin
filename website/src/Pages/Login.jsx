@@ -86,11 +86,11 @@ export default function Login() {
             <NavLink to="/">
                 <img className="logo" src="/logo.png" />
             </NavLink>
-            <div className="row no-gutter mt-5">
+            <div className="row no-gutter mt-3">
                 <div className="col-md-6 offset-1">
                     <img src="/bg_img.jpeg" style={{ width: '100%' }} />
                 </div>
-                <div className="col-md-3 card pl-3 pr-3 pt-5 pb-5">
+                <div className="col-md-3 card pl-3 pr-3 pt-3 pb-3">
                 <h4>Login </h4>    
                 {error && (<p style={{ color: 'red', margin: '0px' }}>{error}</p>)} 
                 <hr />

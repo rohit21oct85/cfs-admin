@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+*{
+    font-family: 'Open Sans', sans-serif;
+}
 .main_dash_area {
     height: 100vh;
     overflow: hidden;
@@ -341,11 +345,7 @@ label.form-lable.form-input{
 .create-new-org-form  input.form-loc.form-control:last-child {
     margin-right: 0px;
 }
-p{
-    font-size:1.2rem;
-    font-weight: 300;
-    color: #000;
-}
+
 .btn{
     width: auto;
     border-radius: 0px !important;
@@ -384,6 +384,7 @@ p{
     margin-bottom: 10px;
     box-shadow: 1px 3px 6px #ccccccd6;
 }
+
 .module-card {
     width: 49%;
     border: 1px solid #ccc;
@@ -679,4 +680,10 @@ span.chapter {
 
 .highlight{
     background: yellow;
+}
+.question {
+    color: #2a0009
+}
+.answer{
+    color: #000
 }

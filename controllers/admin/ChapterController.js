@@ -1,9 +1,6 @@
 const Chapter = require('../../models/admin/Chapter.js');
 const csv = require('csv-parser')
-const objectstocsv = require('objects-to-csv')
 const fs = require('fs')
-
-
 
 const checkValueIndex = (results, checkvalue) => {
     return results.findIndex( data => data.chapter_no === checkvalue);
@@ -97,6 +94,8 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
         _id: 1,
         problem_no: 1,
         question: 1,
+        answer: 1,
+        image: 1
     });
 
     const problems = [];
@@ -110,6 +109,8 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
                     q_id: item._id, 
                     problem_no: item.problem_no, 
                     question: item.question, 
+                    answer: item.answer, 
+                    image: item.image, 
                 })
             }
         }
@@ -124,6 +125,8 @@ const getOnlyProblems = async (isbn, chapter_no) => {
         _id: 1,
         problem_no: 1,
         question: 1,
+        answer: 1,
+        image: 1
     });
 
     const problems = [];
@@ -136,6 +139,8 @@ const getOnlyProblems = async (isbn, chapter_no) => {
                 q_id: item._id, 
                 problem_no: item.problem_no, 
                 question: item.question, 
+                answer: item.answer, 
+                image: item.image, 
             })
         }
     });
@@ -308,6 +313,7 @@ const UdateChaptersCSV = async(req, res) => {
                         excerise: excerise, 
                         problem_no: chapter.problem_no, 
                         question: question, 
+
                     })
                 })
                 
@@ -453,6 +459,8 @@ const getBookProblems = async (req, res) => {
         _id: 1,
         problem_no: 1,
         question: 1,
+        answer: 1,
+        image: 1
     });
 
     const problems = [];
@@ -465,6 +473,8 @@ const getBookProblems = async (req, res) => {
                 q_id: item._id, 
                 problem_no: item.problem_no, 
                 question: item.question, 
+                answer: item.answer, 
+                image: item.image, 
             })
         }
     });
@@ -484,6 +494,8 @@ const getBookOnlyProblems = async (req, res) => {
         _id: 1,
         problem_no: 1,
         question: 1,
+        answer: 1,
+        image: 1
     });
 
     const problems = [];
@@ -496,6 +508,8 @@ const getBookOnlyProblems = async (req, res) => {
                 q_id: item._id, 
                 problem_no: item.problem_no, 
                 question: item.question, 
+                answer: item.answer, 
+                image: item.image, 
             })
         }
     });
@@ -517,6 +531,8 @@ const searchQuestion = async (req, res) => {
         question: 1,
         chapter_no: 1,
         chapter_name: 1,
+        answer: 1,
+        image: 1
     }).limit( 10 );
     const problems = [];
     const map = new Map();
@@ -526,6 +542,8 @@ const searchQuestion = async (req, res) => {
             problems.push({
                 problem_no: item.problem_no, 
                 question: item.question, 
+                answer: item.answer, 
+                image: item.image, 
                 chapter_no: item.chapter_no, 
                 chapter_name: item.chapter_name, 
                 
@@ -547,17 +565,17 @@ const GetSingleQuestion = async (req, res) => {
 const AddSingleQuestion = async (req, res) => {
     try {
         await Chapter.findByIdAndUpdate({ _id: req.params.q_id }, req.body)
-            .then(response => {
-                return res.status(201).json({
-                    message: "Question, Updated"
-                })
-            })
-            .catch(error => {
-                return res.status(500).json({
-                    message: "Error Found",
-                    errors: error.message
-                })
-            });
+                    .then(response => {
+                        return res.status(201).json({
+                            message: "Question, Updated"
+                        })
+                    })
+                    .catch(error => {
+                        return res.status(500).json({
+                            message: "Error Found",
+                            errors: error.message
+                        })
+                    });
 
     } catch (error) {
         res.status(409).json({

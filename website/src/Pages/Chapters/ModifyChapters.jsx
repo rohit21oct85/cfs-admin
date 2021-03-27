@@ -15,6 +15,9 @@ import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
 import useGetQuestion from '../../hooks/useGetQuestion';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from 'ckeditor5-classic-with-mathtype';
+
 
 export default function ModifyChapters() {
     const history = useHistory();
@@ -37,19 +40,38 @@ export default function ModifyChapters() {
         }
     };
     const [btnDisabled, setBtnDisbaled] = useState(false);
+    let _URL = window.URL || window.webkitURL;
+    const [blogImage, setBlogImage] = useState("");
+    const uploadImage = (e) => {
+        e.preventDefault();
+        var file, img, base64,blob, reader;
+        if ((file = e.target.files[0])) {
+            img = new Image();
+            blob = new Blob([file],{ type: file.type })
+            img.src = _URL.createObjectURL(blob);
+            reader = new FileReader(); 
+            reader.readAsDataURL(blob); 
+            reader.onload = function () { 
+               base64 = reader.result;
+               setBlogImage(base64);
+               setFormData({...formData,image: base64}) 
+            }  
+        }
+    }
     const [formData, setFormData] = useState({});
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
         setLoading(true);
         setBtnDisbaled(true);
-        console.log(formData); return;
+        // console.log(formData); return;
         response = await axios.patch(`${API_URL}chapter/add-question/${params.q_id}`,formData, options);
         console.log(response);
         errorDispatch({type: 'SET_SUCCESS', payload: response.message});
         setBtnDisbaled(false);
         setLoading(false);
-        history.push(`/books`);
+
+        history.push(`/book-chapters/${data && data.book_isbn}/${data && data.book_name}/${data && data._id}`);
     
     }
     const {data, isLoading} = useGetQuestion();
@@ -63,7 +85,7 @@ export default function ModifyChapters() {
         }
     
     },[errorState.error, errorState.success]);
-
+    
 return (
 
     <>
@@ -96,34 +118,92 @@ return (
                     <div className="org-main-area">
                     <div className="col-md-12 row no-gutter p-0 mt-2">
                     {!isLoading && (
-                    <Form method="POST" className="col-md-6 pl-2" encType="multipart/form-data">
+                    <Form method="POST" className="col-md-12 pl-2" encType="multipart/form-data">
                        
-                    <Form.Group className="col-md-6">
+                    <Form.Group className="col-md-12">
                             <Form.Label>
                                 Question
                             </Form.Label>
-                            <textarea
-                            className="form-control" 
-                            style={{ width: '1070px' }}
-                            rows="6"
-                             onChange={e => setFormData({...formData, question: e.target.value})}
-                             onKeyDown={ 
-                                 event => {
-                                     if(event.key === 'Enter'){
-                                         event.preventDefault()
-                                     }
-                                 }
-                             }>
-                                {data.question}
-                            </textarea>
-                           
+                            
+                            <CKEditor
+                                editor={ ClassicEditor }
+                                config={{
+                                    toolbar: {
+                                        items: [
+                                            'MathType', 'ChemType','heading', 
+                                            '|',
+                                            'bold',
+                                            'italic',
+                                            'link',
+                                            'bulletedList',
+                                            'numberedList',
+                                            'imageUpload',
+                                            'mediaEmbed',
+                                            'insertTable',
+                                            'blockQuote',
+                                            'undo',
+                                            'redo'
+                                        ]
+                                    },
+                                }}
+                                data={data && data.question}
+                                onChange={ ( event, editor ) => {
+                                    const data = editor.getData();
+                                    setFormData( { ...formData, question: data } );
+                                } }
+                            />
+                            
                         </Form.Group>
-
-                        <Form.Group className="col-md-6">
+                        <Form.Group className="col-md-12">
+                            <Form.Label>
+                                Question Image
+                            </Form.Label> 
+                            <Form.Control name="image" type="file" 
+                            onChange={uploadImage}
+                            />  
+                            <div style={{ height: '130px', overflow: 'hidden', marginTop: '10px' }}>
+                                <img src={blogImage ? blogImage: data && data.image} />
+                            </div>
+                        </Form.Group>  
+                        <Form.Group className="col-md-12">
+                            <Form.Label>
+                                Question Answer
+                            </Form.Label>
+                            
+                            <CKEditor
+                                editor={ ClassicEditor }
+                                config={{
+                                    toolbar: {
+                                        items: [
+                                            'MathType', 'ChemType','heading', 
+                                            '|',
+                                            'bold',
+                                            'italic',
+                                            'link',
+                                            'bulletedList',
+                                            'numberedList',
+                                            'imageUpload',
+                                            'mediaEmbed',
+                                            'insertTable',
+                                            'blockQuote',
+                                            'undo',
+                                            'redo'
+                                        ]
+                                    },
+                                }}
+                                data={data && data.answer}
+                                onChange={ ( event, editor ) => {
+                                    const data = editor.getData();
+                                    setFormData( { ...formData, answer: data } );
+                                } }
+                            />
+                            
+                        </Form.Group>      
+                        <Form.Group className="col-md-12">
                             <Button 
                             onClick={handleSubmit}
                             disabled={!loading && btnDisabled}
-                            className="btn dark btn-sm">
+                            className="btn dark btn-md">
                                 {loading ? 'processing...': 'Update Question'} 
                             </Button>
                         </Form.Group>

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcrypt');
 
 const StudentSchema = new mongoose.Schema({
@@ -67,5 +68,5 @@ StudentSchema.pre('findOneAndUpdate', async function(next) {
 
 });
 
-
+StudentSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Student', StudentSchema);

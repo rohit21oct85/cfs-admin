@@ -36,8 +36,12 @@ const ChapterSchema = new mongoose.Schema({
     },
     question:{
         type: String,
+    }, 
+    image:{
+        type: String,
     },
-    answers:{
+
+    answer:{
         type: String,
     },
 

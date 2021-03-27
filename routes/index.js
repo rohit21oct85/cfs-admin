@@ -10,6 +10,7 @@ const SubSubjectRoutes = require('./SubSubjectRoutes.js');
 const removeDataRoutes = require('./RemoveDataRoutes.js');
 const BookRoutes = require('./BookRoutes.js');
 const ChapterRoutes = require('./ChapterRoutes.js');
+const StudentRoutes = require('./StudentRoutes.js');
 
 module.exports = {
     AdminAuthRoutes,
@@ -25,4 +26,5 @@ module.exports = {
     adminRoutes,
     BookRoutes,
     ChapterRoutes,
+    StudentRoutes
 }

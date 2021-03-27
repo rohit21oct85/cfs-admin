@@ -1,7 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300&display=swap');
 
-
 *{
     font-family: 'Open Sans', sans-serif;
 }
@@ -116,7 +115,7 @@ p{
     padding: 8px 10px;
     width: 100%;
     border: 0px;
-    font-size: 14px;
+    font-size: 16px;
 }
 .navbar_menus ul li:hover{
     background-color: #fff;

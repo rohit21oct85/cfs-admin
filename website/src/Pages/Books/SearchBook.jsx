@@ -6,7 +6,7 @@ import {Form} from 'react-bootstrap';
 import {MakeSlug, GetString} from '../../utils/MakeSlug';
 import BookImage from './BookImage';
 import BookHeading from './BookHeading';
-import Highlighter from "react-highlight-words";
+
 import {AuthContext} from '../../context/AuthContext.jsx';
 
 function SearchBook() {
@@ -103,12 +103,14 @@ function SearchBook() {
                                     <p className="book_item">
                                         <span>{data.Edition}</span>
                                         <span>ISBN-13: 
-                                        <Highlighter
-                                    highlightClassName="highlight"
-                                    searchWords={[search]}
-                                    autoEscape={true}
-                                    textToHighlight={data.ISBN13}
-                                /></span>
+                                        {/* <Highlighter
+                                            highlightClassName="highlight"
+                                            searchWords={[search]}
+                                            autoEscape={true}
+                                            textToHighlight={data.ISBN13}
+                                        /> */}
+                                        {data.ISBN13}
+                                        </span>
                                     </p>
                                     
                                     <p className="book_item">

@@ -6,10 +6,10 @@ import BookHeading from './BookHeading';
 export default function SingleBook({books}) {
     
     return (
-    <div className="module-card" key={books._id} id={`card-${books._id}`}>
+    <div className="subject-card" key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pr-0">
-            <BookImage isbn={books.ISBN13}  width="86%"/>
+            <BookImage isbn={books.ISBN13}  width="100%"/>
         </div>
         <div className="col-md-9">    
            
@@ -56,9 +56,12 @@ export default function SingleBook({books}) {
                     </div>
                 </div> 
         </div>
+        
+        </div>
+        </div>
+        
+        <hr className="mt-1 mb-1"/>
         <BookHeading books={books}/>
-        </div>
-        </div>
     </div>
     )
 }

@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react'
 import '../mainDash.css';
 import {  useParams, Link, useHistory  } from "react-router-dom";
-import {ListGroup} from "react-bootstrap"
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointLeft, faCloud } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,13 +10,13 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
 import useChapters from '../../hooks/useChapters';
-import {SameSlug} from '../../utils/MakeSlug';
 import axios from 'axios';
 import * as cons from '../../Helper/Cons.jsx'
-import {useQuery} from 'react-query'
-import Highlighter from "react-highlight-words";
+
+import Question from './Question';
 
 export default function BooksChapters() {
+
 const history = useHistory();
 const params = useParams();
     
@@ -46,36 +46,18 @@ const section_no = useRef();
 const excerise_no = useRef();
 const problem_no = useRef();
 
-const [selectedChapter, setSelectedChapter] = useState('');
-const [selectedSection, setSelectedSection] = useState('');
-const [selectedExe, setSelectedExe] = useState('');
-const [selectedProblem, setSelectedProblem] = useState('');
 useEffect(() => {
     setChapters(data && data.chapters);
     setSections(data && data.sections);
     setExcerise(data && data.excerise);
-    setProblems(data && data.problems);   
-    if(data && data.chapters){
-        setSelectedChapter(data && data.chapters.length > 0 && data.chapters[0].chapter_no);
-    }
-    if(data && data.sections){
-        setSelectedSection(data && data.sections.length > 0 && data.sections[0].section_no);
-    }
-    if(data && data.excerise){
-        setSelectedExe(data && data.excerise.length > 0 &&  data.excerise[0].excerise);
-    }
-    if(data && data.problems){
-        setSelectedProblem(data && data.problems.length > 0 && data.problems[0].problem_no);
-    }
+    setProblems(data && data.problems);  
     
-},[data, isLoading])
+},[data, isLoading, params])
 
 
 const handleChapter = async (e) => {
     setSections([]);
     setExcerise([]);
-    setProblems([]);
-    setFproblems([]);
     setSearch('');
     const c_no = chapter_no.current.value
     if(section_no.current === undefined){
@@ -87,11 +69,7 @@ const handleChapter = async (e) => {
     }
     
 }
-// const {data} = useQuery(['chapters',params.isbn], )
 const handleSection = async (e) => {
-    setExcerise([]);
-    setProblems([]);
-    setFproblems([]);
     setSearch('');
     const c_no = chapter_no.current.value
     const s_no = section_no.current.value
@@ -99,8 +77,6 @@ const handleSection = async (e) => {
     setExcerise(result.data.excerise);
 }
 const handleExcerise = async (e) => {
-    setProblems([]);
-    setFproblems([]);
     setSearch('');
     const c_no = chapter_no.current.value
     const s_no = section_no.current.value
@@ -132,14 +108,14 @@ useEffect(() => {
     }else{
         setFilter(false);
         setSearch('');
-        setProblems(problems)
+        if(search){
+            setProblems(problems)
+        }
     }
     return () => clearTimeout(delayDebounceFn)
 },[search]);
 
-const manageQuestion = (e) => {
-    history.push(`/book-chapter-add-question/${e.q_id}`)
-}
+
 return (
 <>
 {state.isLoggedIn && (
@@ -173,19 +149,18 @@ return (
 
                 </div>
                 <div className="row col-md-10">
-                {chapters && (
+                {chapters && chapters.length > 0 &&  (
                 <div className="col-md-6 pr-0">
                   <select className="form-control" name="chapter_no"
                       onChange={handleChapter}
                       ref={chapter_no}
                     >
-                    <option value="-1">Chapters</option>
                     {chapters && chapters.map(chapter => {
                         return (
                             <option 
                             key={chapter.chapter_name}
                             value={chapter.chapter_no}
-                            selected={chapter.chapter_no == selectedChapter ? 'selected':''}
+                            
                             >{chapter.chapter_no} - {chapter.chapter_name}</option>
                         );
                     })}
@@ -198,14 +173,12 @@ return (
                   ref={section_no}
                   onChange={handleSection}
                   >
-                    <option value="-1">Sections</option>
                     {sections && sections.map( (section, index) => {
                         let i = index+1
                         return (
                             <option 
                             key={i}
                             value={section.section_no}
-                            selected={section.section_no == selectedSection ? 'selected':''}
                             >{section.section_no} - {section.section_name}</option>
                         );
                     })}
@@ -218,34 +191,30 @@ return (
                   ref={excerise_no}
                   onChange={handleExcerise}
                   >
-                    <option value="-1">Excerise</option>
                     {excerise && excerise.map((exe, index) => {
                         let i = index+1
                         return (
                             <option 
                             key={exe.excerise}
                             value={exe.excerise}
-                            selected={exe.excerise == selectedExe ? 'selected':''}
                             >{i} - {exe.excerise}</option>
                         );
                     })}
                   </select>  
                 </div>
                 )}
-                {problems && ( 
+                {problems && problems.length > 0 && ( 
                 <div className="col-md-6 pr-0">
                   <select className="form-control" name="excerise"
                   ref={problem_no}
                   onChange={handleProblems}
                   >
-                    <option value="-1">Problems</option>
                     {problems && problems.map((problem, index) => {
                         let i = index+1
                         return (
                             <option 
                             key={problem.problem_no}
                             value={problem.problem_no}
-                            selected={problem.problem_no == selectedProblem ? 'selected':''}
                             >{problem.problem_no} - {problem.question}</option>
                         );
                     })}
@@ -268,30 +237,7 @@ return (
                 <div className="clearfix"></div>      
                 {problems && problems.map(problem => {
                     return (
-                        <>
-                        <div className="card col-md-12 mb-2" key={problem.problem_no}>
-                        <div className="card-title col-md-12 p-0 mb-0" id={problem.problem_no}> 
-                            <div className="subject-card-heading pt-2"> 
-                                <div className="problem_no">Q.No: {problem.problem_no} </div>
-                                <div>
-                                    <button className="btn btn-sm dark"
-                                    onClick={manageQuestion.bind(this,{q_id: problem.q_id})}>Manage Question</button>
-                                </div>    
-                                
-                            </div>
-                        </div>
-                        {problem && problem.question != '' && (
-                            <div className="card-body" style={{ padding: '0px 0px 10px 0px' }}>
-                            <hr style={{ padding: '0px', margin: '5px 0px' }}/>
-                            <span className="card-text">
-                                
-                                {problem.question}
-                            </span> 
-                            </div>
-                        )}
-                        
-                        </div>    
-                        </>
+                        <Question key={problem._id} problem={problem} search={search}/>
                     )
                 } )}
                 </>
@@ -302,39 +248,7 @@ return (
                 <div className="clearfix"></div>    
                 {fproblems && fproblems.map(problem => {
                     return (
-                        <>
-                        <div className="card col-md-12 mb-2" key={problem.problem_no}>
-                        <div className="card-title col-md-12 p-0 mb-0" id={problem.problem_no}> 
-                            <div className="subject-card-heading pt-2"> 
-                                <div className="problem_no">
-                                    Q.No: {problem.problem_no} &nbsp;
-                                    {search && (
-                                        <span className="chapter"> &nbsp; Chapter: {problem.chapter_no}-{problem.chapter_name}</span>
-                                    )}
-                                </div>
-                                <div>
-                                    <button className="btn btn-sm dark"
-                                    onClick={manageQuestion.bind(this,problem._id)}>Manage Question</button>
-                                </div> 
-                            </div>
-                            
-                            <hr style={{ padding: '0px', margin: '5px 0px' }}/>
-                        </div>
-                        {problem && problem.question != '' && (
-                            <div className="card-body" style={{ padding: '0px 0px 10px 0px' }}>
-                            <span className="card-text">
-                            <Highlighter
-                                    highlightClassName="highlight"
-                                    searchWords={[search]}
-                                    autoEscape={true}
-                                    textToHighlight={problem.question}
-                                />
-                            </span> 
-                            </div>
-                        )}
-                        
-                        </div>    
-                        </>
+                        <Question key={problem._id} problem={problem} search={search}/>
                         
                     )
                 } )}   
