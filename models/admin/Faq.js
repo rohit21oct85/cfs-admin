@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
-const FaqContentSchema = new Schema({ question: 'string', answer: 'string' });
+const FaqContentSchema = new mongoose.Schema({ question: 'string', answer: 'string' });
 
 const FaqSchema = new mongoose.Schema({
     faq_category: {
@@ -9,14 +10,12 @@ const FaqSchema = new mongoose.Schema({
     },
     faq_image: {
         type: String,
-        required: true,
     },
     faq_content: {
-        type: FaqContentSchema
+        type: [FaqContentSchema]
     },
     status: {
         type: Boolean,
-        required: true,
         default: true
     },
     created_at: {
@@ -24,5 +23,5 @@ const FaqSchema = new mongoose.Schema({
         default: Date.now
     }
 });
-
-module.exports = mongoose.model('SubSubject', FaqSchema);
+FaqSchema.plugin(mongoosePaginate);
+module.exports = mongoose.model('Faq', FaqSchema);

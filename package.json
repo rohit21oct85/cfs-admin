@@ -4,7 +4,7 @@
     "description": "this is backend acadmic search engine",
     "main": "app.js",
     "scripts": {
-        "start": "NODE_ENV='production' && node main.js",
+        "start": "NODE_ENV='production' && node app.js",
         "heroku-postbuild": "cd website && npm install && npm run build",
         "dev": "nodemon app.js"
     },

@@ -50,6 +50,7 @@ const downloadData = async (data,isbn) => {
     a.click();
     document.body.removeChild(a);
 }
+
 export {
     MakeSlug,
     SameSlug,

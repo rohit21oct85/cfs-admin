@@ -76,6 +76,7 @@ app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
 app.use("/api/v1/books", Routes.BookRoutes);
 app.use("/api/v1/chapter", Routes.ChapterRoutes);
 app.use("/api/v1/student", Routes.StudentRoutes);
+app.use("/api/v1/faq", Routes.FaqRoutes);
 
 
 app.use("/web/v1/books", WebRoutes.WebBookRoutes);

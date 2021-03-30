@@ -27,6 +27,7 @@ export default function ModifyChapters() {
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
 
     const [loading, setLoading] = useState(false);
+    
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
         API_URL = cons.LOCAL_API_URL;
@@ -40,6 +41,7 @@ export default function ModifyChapters() {
         }
     };
     const [btnDisabled, setBtnDisbaled] = useState(false);
+
     let _URL = window.URL || window.webkitURL;
     const [blogImage, setBlogImage] = useState("");
     const uploadImage = (e) => {

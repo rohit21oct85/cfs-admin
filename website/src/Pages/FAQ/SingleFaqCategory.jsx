@@ -1,51 +1,26 @@
 import React from 'react'
-import StudentHeading from './StudentHeading';
+import Heading from './Heading';
 
-function SingleStudent({student}) {
+function SingleFaqCategory({faq}) {
     return (
-        <div className="subject-card" key={student._id} id={`card-${student._id}`}>
-            <div className="subject-card-body">
-                <div className="admin-name"> 
-                    <div className="name-label">
-                        Name: 
-                    </div>
-                    <div className="name-main">
-                        {student.fullname}
-                    </div>
-                </div> 
-                
-                <div className="admin-name"> 
-                    <div className="name-label">
-                        Email: 
-                    </div>
-                    <div className="name-main">
-                        {student.email}
-                    </div>
-                </div>
-                 
-                <div className="admin-name"> 
-                    <div className="name-label">
-                        School / Colledge: 
-                    </div>
-                    <div className="name-main">
-                        {student.school}
-                    </div>
-                </div>
-                <div className="admin-name"> 
-                    <div className="name-label">
-                        Registered: 
-                    </div>
-                    <div className="name-main">
-                        {student.created_at}
-                    </div>
-                </div>
+        <div className="small-card" key={faq._id} id={`card-${faq._id}`}>
 
-                <hr className="mt-1 mb-1"/>
-                <StudentHeading student={student}/>
+            <div className="subject-card-body ">
+            <div className="admin-name"> 
+                <img src={faq.faq_image} style={{ width: '100px'}}/>
+                <div className="name-main">
+                    {faq.faq_category}
+                </div>
+            </div>     
             </div> 
+
+            
+            
+            <hr className="mt-1 mb-1"/>
+            <Heading faq={faq}/>
 
         </div>
     )
 }
 
-export default SingleStudent
+export default SingleFaqCategory

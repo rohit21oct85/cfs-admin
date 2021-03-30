@@ -1,13 +1,36 @@
 import React from 'react';
+import {  useHistory , useParams , Link} from "react-router-dom";
+import { Button } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faCloud ,faHandPointLeft} from '@fortawesome/free-solid-svg-icons'
+
 import Pagination from '../../components/Pagination';
 
 function TopMenu({data}) {
+    const history = useHistory();
+    const params = useParams();
     return (
         <div className="dash-con-heading">
             <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
-                <button className="dark mr-1">
+                <Button className="dark mr-1"
+                    onClick={e => {
+                        if(params && params.faq_id){
+                            history.push(`/add-faq-question/${params.faq_category}/${params.faq_id}`)
+                        }else{
+                            history.push('/manage-faq')
+                        }
+                    }}
+                >
+                    <FontAwesomeIcon icon={faHandPointLeft}/>
+                </Button>
+                <Button className="dark mr-1"
+                    onClick={e => history.push('/manage-faq-category')}
+                >
+                    <FontAwesomeIcon icon={faPlus}/>
+                    &nbsp; 
                     Add Faq Category
-                </button>
+                </Button>
+
                 <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
                     <Pagination pagination={data && data.pagination}/>
                 </div>    

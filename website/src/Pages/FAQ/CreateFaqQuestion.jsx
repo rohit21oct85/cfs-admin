@@ -4,18 +4,17 @@ import '../mainDash.css';
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
-
-import useFaq from '../../hooks/useFaq';
-import SingleFaqCategory from './SingleFaqCategory';
+import useSingleFaq from '../../hooks/useSingleFaq'
 
 import TopMenu from './TopMenu';
+import AddQuestionForm from './AddQuestionForm';
+import QuestionList from './QuestionList';
 
-export default function AllFaq() {
+
+export default function CreateFaqQuestion() {
 
 const {state} = useContext(AuthContext);
-
-const {data, isLoading, error} = useFaq();
-
+const {data, isLoading, error} = useSingleFaq();
 
 return (
 
@@ -25,7 +24,7 @@ return (
 <div className="main-area-all">
     <div className="dashboard_main-container">
         <div className="dash-main-head">
-            <h2 style={{ textTransform : 'capitalize' }}>All Faq Category </h2>
+            <h2 style={{ textTransform : 'capitalize' }}> Create Faq Category </h2>
         </div>
         {error && <Notification>{error.message}</Notification>}
         {isLoading && <LoadingComp />}
@@ -35,14 +34,14 @@ return (
         {!isLoading && (
         <div className="dash-cont-start">
         <div className="subject-main-container">  
-        
-        {data.data.map(faq => <SingleFaqCategory faq={faq} key={faq._id}/> )}
-
-        {data.pagination && data.pagination.itemCount === 0 && (
-            <div className="col-md-6 pt-1">
-                <h2 style={{ fontSize: '1.2em', color: '#f00' }}>No Faq Category Registered yet</h2>
+            <div className="col-md-4">
+                <AddQuestionForm />    
             </div>
-        )}    
+            
+            <div className="col-md-8">
+                <QuestionList faqLists={data.data.faq_content}/>    
+            </div>
+
         </div>
         </div>
         )}
