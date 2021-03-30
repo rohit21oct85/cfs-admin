@@ -14,6 +14,7 @@ import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import AllStudents from '../Pages/Student/AllStudents.jsx';
+import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -152,7 +153,10 @@ export const privateRoutes = [
         component: AllStudents
     },
     
-
+    {
+        path: '/manage-faq',
+        component: FaqComponent
+    }
 
     
 ];
