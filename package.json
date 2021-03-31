@@ -31,8 +31,5 @@
         "nodemon": "^2.0.7",
         "objects-to-csv": "^1.3.6",
         "randombytes": "^2.1.0"
-    },
-    "engines": {
-        "node": "14.*"
     }
 }
