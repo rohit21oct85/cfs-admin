@@ -19,6 +19,8 @@ const getBook = async(req, res) => {
     // return res.send(req.params.isbn)
     try {
         const Books = await Book.find({ ISBN13: req.params.isbn, status: true }, { __v: 0 });
+        // const ratingAverage = Books[0].reviews.length;
+        // return res.send(Books[0].reviews.length)
         return res.status(200).json({
             data: Books
         });
@@ -104,8 +106,8 @@ const popularBooks = async(req, res) => {
 const searchChapterQuestion = async (req, res) => {
     const search = req.params.search;
     const limit = parseInt(req.params.limit);
+    // return res.send(req.params)
 
-    // return res.send(isbn);
     const questions = await Chapter.find({ 
         $or:
         // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]
@@ -132,7 +134,7 @@ const searchChapterQuestion = async (req, res) => {
 const searchBookNameIsbn = async (req, res) => {
     const search = req.params.search;
     const limit = parseInt(req.params.limit);
-
+    // return res.send(req.params)
     const books = await Book.find({ 
         $or:
         // [{ISBN13: { $regex: /^search$/i}},{BookName:{ $regex:/^search$/i }}]
