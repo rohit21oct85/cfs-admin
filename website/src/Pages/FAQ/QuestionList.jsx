@@ -1,5 +1,6 @@
 import React from 'react'
 import {useParams} from 'react-router-dom'
+import QuestionHeading from './QuestionHeading';
 
 function QuestionList({faqLists}) {
     const params = useParams();
@@ -17,6 +18,8 @@ function QuestionList({faqLists}) {
                         <div className="card-body p-0">
                             <strong>Answer</strong>: {content.answer}
                         </div>
+                        <hr style={{ margin: '5px 0px'}}/>
+                        <QuestionHeading content={content}/>
                     </div> 
                 );
             })}
