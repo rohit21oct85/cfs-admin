@@ -13,13 +13,7 @@ function TopMenu({data}) {
         <div className="dash-con-heading">
             <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
                 <Button className="dark mr-1"
-                    onClick={e => {
-                        if(params && params.faq_id){
-                            history.push(`/add-faq-question/${params.faq_category}/${params.faq_id}`)
-                        }else{
-                            history.push('/manage-faq')
-                        }
-                    }}
+                    onClick={e => history.push('/manage-faq')}
                 >
                     <FontAwesomeIcon icon={faHandPointLeft}/>
                 </Button>

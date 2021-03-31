@@ -79,27 +79,16 @@ const AddCategory = async (req, res) => {
 
 const AddFaqQuestion = async (req, res) => {
     try {
-        await Faq.updateOne({
-            _id: req.params.faq_id,
-        },{ $push: {
-            faq_content: {
-                question: req.body.question,
-                answer: req.body.answer,
-            }
-        }}, async (err, doc) => {
-            if(err) {
-                return res.status(409).json({
-                    message: "Error occured",
-                    error: err.message
-                });
-            }else{
-                return res.status(201).json({
-                    status: 200,
-                    message: "Created, Successfully"
-                });
-            }
-        });
+        const content = {question: req.body.question,answer: req.body.answer};
+        const filter = {_id: req.params.faq_id};
+        var Content = await Faq.findOne(filter);
+        Content.faq_content.push(content);
+        await Content.save();
 
+        return res.status(201).json({
+            error: false,
+            message: "Created Question"
+        });
     } catch (error) {
         res.status(409).json({
             message: "Error occured",

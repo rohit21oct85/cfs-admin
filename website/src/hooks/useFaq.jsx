@@ -26,7 +26,7 @@ export default function useStudent() {
                 'Content-Type': 'Application/json',
                 'Authorization':'Bearer '+state.access_token
             }
-        },{staleTime: Infinity});
+        });
         
         return {
             data: result.data.data, 

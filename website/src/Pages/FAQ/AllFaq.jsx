@@ -15,8 +15,7 @@ export default function AllFaq() {
 const {state} = useContext(AuthContext);
 
 const {data, isLoading, error} = useFaq();
-
-
+console.log('data back', data)
 return (
 
 <>
@@ -35,8 +34,7 @@ return (
         {!isLoading && (
         <div className="dash-cont-start">
         <div className="subject-main-container">  
-        
-        {data.data.map(faq => <SingleFaqCategory faq={faq} key={faq._id}/> )}
+        {data && data.data.map(faq => <SingleFaqCategory faq={faq} key={faq._id}/> )}
 
         {data.pagination && data.pagination.itemCount === 0 && (
             <div className="col-md-6 pt-1">

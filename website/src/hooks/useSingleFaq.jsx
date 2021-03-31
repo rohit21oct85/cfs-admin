@@ -20,7 +20,7 @@ export default function useSingleFaq() {
     }
     let limit = 10;
     let pageno = (adminState.CurrentPage === null ) ? 1 : adminState.CurrentPage;
-    return useQuery(['faq',pageno], async () => {
+    return useQuery(['singlefaq',pageno], async () => {
         const result = await axios.get(`${API_URL}faq/single/${params.faq_id}`,{
             headers: {
                 'Content-Type': 'Application/json',
