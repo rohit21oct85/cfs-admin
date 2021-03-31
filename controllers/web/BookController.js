@@ -102,8 +102,9 @@ const popularBooks = async(req, res) => {
 }
 
 const searchChapterQuestion = async (req, res) => {
-    // return res.send(req.params);
     const search = req.params.search;
+    const limit = parseInt(req.params.limit);
+
     // return res.send(isbn);
     const questions = await Chapter.find({ 
         $or:
@@ -121,7 +122,7 @@ const searchChapterQuestion = async (req, res) => {
         problem_no:1,
         question:1,
         book_isbn:1,
-    }).limit(3);
+    }).limit(limit);
 
     res.status(200).json({
         questions
@@ -130,7 +131,8 @@ const searchChapterQuestion = async (req, res) => {
 
 const searchBookNameIsbn = async (req, res) => {
     const search = req.params.search;
-    // return res.send(isbn);
+    const limit = parseInt(req.params.limit);
+
     const books = await Book.find({ 
         $or:
         // [{ISBN13: { $regex: /^search$/i}},{BookName:{ $regex:/^search$/i }}]
@@ -142,7 +144,7 @@ const searchBookNameIsbn = async (req, res) => {
         Edition:1,
         Author1:1,
         ISBN10:1,
-    }).limit(3);
+    }).limit(limit);
 
     res.status(200).json({
         books

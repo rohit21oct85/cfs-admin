@@ -7,8 +7,8 @@ router
     .post('/subject/:sub_subject_name', Book.BooksBySubSubjectName)
     .get('/subsubject/search/:subsubject/:isbn', Book.searchSubSubject)
     .get('/popular-books', Book.popularBooks)
-    .get('/search-chapter-question/:search', Book.searchChapterQuestion)
-    .get('/search-book-name-isbn/:search', Book.searchBookNameIsbn)
+    .get('/search-chapter-question/:search/:limit', Book.searchChapterQuestion)
+    .get('/search-book-name-isbn/:search/:limit', Book.searchBookNameIsbn)
 
     //used on book detail page
     .get('/related-books/:sub_subject', Book.relatedBooks)
