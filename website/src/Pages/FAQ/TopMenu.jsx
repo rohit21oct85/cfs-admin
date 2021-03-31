@@ -24,10 +24,11 @@ function TopMenu({data}) {
                     &nbsp; 
                     Add Faq Category
                 </Button>
-
-                <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
-                    <Pagination pagination={data && data.pagination}/>
-                </div>    
+                {!params.faq_id && (
+                    <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
+                        <Pagination pagination={data && data.pagination}/>
+                    </div>    
+                )}
             </div>
         </div>
     )
