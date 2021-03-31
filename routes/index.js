@@ -11,6 +11,7 @@ const removeDataRoutes = require('./RemoveDataRoutes.js');
 const BookRoutes = require('./BookRoutes.js');
 const ChapterRoutes = require('./ChapterRoutes.js');
 const StudentRoutes = require('./StudentRoutes.js');
+const FaqRoutes = require('./FaqRoutes.js');
 
 module.exports = {
     AdminAuthRoutes,
@@ -26,5 +27,6 @@ module.exports = {
     adminRoutes,
     BookRoutes,
     ChapterRoutes,
-    StudentRoutes
+    StudentRoutes,
+    FaqRoutes
 }

@@ -15,6 +15,8 @@ import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
+import CreateFaq from '../Pages/FAQ/CreateFaq.jsx';
+import CreateFaqQuestion from '../Pages/FAQ/CreateFaqQuestion.jsx';
 
 import DeleteData from '../Pages/DeleteData.jsx';
 import ViewData from '../Pages/ViewData.jsx';
@@ -156,7 +158,18 @@ export const privateRoutes = [
     {
         path: '/manage-faq',
         component: FaqComponent
-    }
+    },
+    
+    {
+        path: '/manage-faq-category',
+        component: CreateFaq
+    },
+    
+    {
+        path: '/add-faq-question/:faq_category?/:faq_id',
+        component: CreateFaqQuestion
+    },
+
 
     
 ];

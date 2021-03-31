@@ -4,7 +4,7 @@
     "description": "this is backend acadmic search engine",
     "main": "app.js",
     "scripts": {
-        "start": "NODE_ENV='production' && node main.js",
+        "start": "NODE_ENV='production' && node app.js",
         "heroku-postbuild": "cd website && npm install && npm run build",
         "dev": "nodemon app.js"
     },
@@ -34,6 +34,6 @@
         "react-query": "^3.12.0"
     },
     "engines": {
-        "node": "14.15.4"
+        "node": "14.16.0"
     }
 }
