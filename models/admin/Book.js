@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+const ReviewSchema = new mongoose.Schema({ rating: 'Number', review: 'string', userName: 'string' });
+
 const BookSchema = new mongoose.Schema({
     subject_id: {
         type: Object,
@@ -35,6 +37,9 @@ const BookSchema = new mongoose.Schema({
     ISBN10: {
         type: String,
         
+    },
+    reviews: {
+        type: [ReviewSchema]
     },
     image: {
         type: String,
@@ -83,5 +88,6 @@ const BookSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
 BookSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Book', BookSchema);

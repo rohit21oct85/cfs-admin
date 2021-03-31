@@ -9,3 +9,4 @@ config/
 .pk
 .pem
 .pub
+.vercel
