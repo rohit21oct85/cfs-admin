@@ -1,8 +1,6 @@
 import React from 'react';
 import {  useHistory , useParams , Link} from "react-router-dom";
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faCloud ,faHandPointLeft} from '@fortawesome/free-solid-svg-icons'
 
 import Pagination from '../../components/Pagination';
 
@@ -15,12 +13,12 @@ function TopMenu({data}) {
                 <Button className="dark mr-1"
                     onClick={e => history.push('/manage-faq')}
                 >
-                    <FontAwesomeIcon icon={faHandPointLeft}/>
+                    <span className="fa fa-arrow-left"></span>
                 </Button>
                 <Button className="dark mr-1"
                     onClick={e => history.push('/manage-faq-category')}
                 >
-                    <FontAwesomeIcon icon={faPlus}/>
+                    <span className="fa fa-plus-circle"></span>   
                     &nbsp; 
                     Add Faq Category
                 </Button>

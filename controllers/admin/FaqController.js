@@ -1,3 +1,4 @@
+const { ObjectId } = require('bson');
 const Faq = require('../../models/admin/Faq.js');
 
 const getAllFaqs = async (req, res) => {
@@ -79,16 +80,48 @@ const AddCategory = async (req, res) => {
 
 const AddFaqQuestion = async (req, res) => {
     try {
-        const content = {question: req.body.question,answer: req.body.answer};
         const filter = {_id: req.params.faq_id};
-        var Content = await Faq.findOne(filter);
-        Content.faq_content.push(content);
-        await Content.save();
+        const content = {question: req.body.question,answer: req.body.answer};
+        if(req.body.question_id){
+            let Question = await Faq.findOne(filter);
+            let singleQuestion = await Question.faq_content.id(req.body.question_id);
+            singleQuestion.set(content);
+            await Question.save();
+            return res.status(201).json({
+                error: false,
+                message: "Question Updated",
+                singleQuestion
+            });
+        }else{
+            var Content = await Faq.findOne(filter);
+            Content.faq_content.push(content);
+            await Content.save();
+            return res.status(201).json({
+                error: false,
+                message: "Created Question"
+            });
+        }
+        
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 
+const DeleteFaqQuestion = async(req, res) => {
+    try {
+        
+        let Question = await Faq.findOne({_id: req.params.faq_id});
+        await Question.faq_content.id(req.params.q_id).remove();
+        await Question.save();
         return res.status(201).json({
             error: false,
-            message: "Created Question"
+            message: "Question Deleted",
         });
+       
     } catch (error) {
         res.status(409).json({
             message: "Error occured",
@@ -119,5 +152,6 @@ module.exports = {
     getAllFaqs,
     AddCategory,
     AddFaqQuestion,
+    DeleteFaqQuestion,
     getSingleFaqs
 }

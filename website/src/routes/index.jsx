@@ -166,10 +166,9 @@ export const privateRoutes = [
     },
     
     {
-        path: '/add-faq-question/:faq_category?/:faq_id',
+        path: '/add-faq-question/:faq_category?/:faq_id/:question_id?',
         component: CreateFaqQuestion
     },
-
 
     
 ];

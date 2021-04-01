@@ -26,7 +26,7 @@ function Pagination({pagination}) {
             disabled={pagination && !pagination.hasPrevPage}
             value={pagination && pagination.prev}
             onClick={e => setPageNo(e.target.value)}
-            > Prev</Button>
+            > <span className="fa fa-arrow-circle-o-left text-success"></span></Button>
             <select className="form-control" 
             onChange={e => setPageNo(e.target.value)}
             >
@@ -45,7 +45,7 @@ function Pagination({pagination}) {
             value={pagination && pagination.next}
             disabled={pagination && !pagination.hasNextPage}
             onClick={e => setPageNo(e.target.value)}
-            > Next</Button>
+            > <span className="fa fa-arrow-circle-o-right text-success"></span></Button>
         </div>
     )
 }

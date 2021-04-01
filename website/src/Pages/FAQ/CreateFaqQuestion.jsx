@@ -35,7 +35,7 @@ return (
         <div className="dash-cont-start">
         <div className="subject-main-container">  
             <div className="col-md-4">
-                <AddQuestionForm />    
+                <AddQuestionForm data={data.data.faq_content}/>    
             </div>
             
             <div className="col-md-8">

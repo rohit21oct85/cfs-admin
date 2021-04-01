@@ -71,10 +71,14 @@ return (
                 <li>|</li>
                 <li as={Link}>
                     <span className="badge-success p-1 pt-0 pb-0 m-0" style={{ borderRadius: '3px' }}>
-                    {(state.role == 1) ? ' S Admin':' Admin'}</span></li>
+                    {(state.role == 1) ? (
+                        <>
+                        <span className="fa fa-lock"></span> S Admin
+                        </>
+                    ):' Admin'}</span></li>
                 <li>|</li>
                 <li as={Link} onClick={logout} alt="Logout">
-                    <FontAwesomeIcon icon={faPowerOff}/>
+                    <span className="fa fa-power-off"></span>
                 </li>
             </ul>
         </div>
@@ -83,7 +87,7 @@ return (
         <ul>
             <li>
                 <Nav className="ml-auto">
-                    <NavLink to="/dashboard" >Dashboard</NavLink>
+                    <NavLink to="/dashboard" > <span className="fa fa-dashboard"></span> Dashboard</NavLink>
                 </Nav>
             </li>
             {state.role == 1 && adminState.superAdminRoutes.map(routes => {

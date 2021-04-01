@@ -87,7 +87,7 @@ app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('website/build'));
-    app.get('*', (req, res) => {
+    app.get('/*', (req, res) => {
         const index = path.join(__dirname, 'website', 'build', 'index.html');
         res.sendFile(index);
     });

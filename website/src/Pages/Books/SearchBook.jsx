@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom'
 import axios from 'axios';
 import * as cons from '../../Helper/Cons.jsx'
 import {Form} from 'react-bootstrap';
-import {MakeSlug, GetString} from '../../utils/MakeSlug';
+import * as utils from '../../utils/MakeSlug';
 import BookImage from './BookImage';
 import BookHeading from './BookHeading';
 
@@ -54,7 +54,7 @@ function SearchBook() {
         searchResult(search)
     },[search,searchData.length])
     const handleAdd = async (isbn, book, id) => {
-        const book_name = await MakeSlug(book);
+        const book_name = await utils.MakeSlug(book);
         
         history.push(`/upload-chapters/${isbn}/${book_name}/${id}`);
     }
@@ -85,41 +85,64 @@ function SearchBook() {
             {!isLoading && (
             <div className="search-result">
                 <ul>
-                    {searchData && searchData.map(data => (
-                        <li className="items" key={data._id}>
+                    {searchData && searchData.map(books => (
+                        
+                        <li className="items pb-2" key={books._id}>
                             <div className="row p-2">
-                                <div className="col-md-3 pl-0 pr-0">
-                                    <BookImage width="78%" isbn={data.ISBN13}/>
+                                <div className="col-md-3 pl-0">
+                                    <BookImage isbn={books.ISBN13}  width="100%"/>
                                 </div>
-                                <div className="col-md-9 pl-0">
-                                   
-                                   <strong>
-                                       {GetString(data.BookName,35)}
-                                   </strong>
-                                   <p className="book_item">
-                                        <span>{data.subject_name} :  
-                                        ({data.sub_subject_name})</span>
-                                    </p>
-                                    <p className="book_item">
-                                        <span>{data.Edition}</span>
-                                        <span>ISBN-13: 
-                                        {/* <Highlighter
-                                            highlightClassName="highlight"
-                                            searchWords={[search]}
-                                            autoEscape={true}
-                                            textToHighlight={data.ISBN13}
-                                        /> */}
-                                        {data.ISBN13}
-                                        </span>
-                                    </p>
-                                    
-                                    <p className="book_item">
-                                        <span>Author: </span>
-                                        <span>{GetString(data.Author1,20)}</span>
-                                    </p>
-                                    <BookHeading books={data}/>
-                                </div>
+                                <div className="col-md-9">    
+           
+            <div className="subject-card-body">
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        BookName: 
+                    </div>
+                    <div className="name-main">
+                        {utils.GetString(books.BookName,20)}
+                    </div>
+                </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Subject: 
+                    </div>
+                    <div className="name-main">
+                        {books.subject_name}
+                    </div>
+                </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Sub Subject: 
+                    </div>
+                    <div className="name-main">
+                        {utils.GetName(books.sub_subject_name)}
+                    </div>
+                </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        ISBN13: 
+                    </div>
+                    <div className="name-main">
+                        {books.ISBN13}
+                    </div>
+                </div> 
+                
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Book Edition: 
+                    </div>
+                    <div className="name-main">
+                        {books.Edition}
+                    </div>
+                </div> 
+        </div>
+        
+        </div>
+                                
                             </div>
+                            <hr className="mt-1 mb-1"/>
+                            <BookHeading books={books}/>
                             
                         </li>
                     ))}

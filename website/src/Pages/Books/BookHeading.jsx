@@ -29,17 +29,18 @@ function BookHeading({books}) {
             <div>
                 <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <FontAwesomeIcon icon={faEye} title="View chapters" className="text-danger mr-2"  varient="solid"/>
+                    <span className="fa fa-eye-o text-secondary mr-2"></span>
                 </Button>
                 
                 <Button className="delBtn pl-1 pr-1" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
-                    <FontAwesomeIcon icon={faUpload} title="upload chapters" className="text-success mr-2"  varient="solid"/>
+                    <span className="fa fa-cloud text-success mr-2"></span>
                 </Button>
 
                 <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
-                    <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
+                    <span className="fa fa-pencil-square-o text-secondary mr-2"></span>
                 </Button>
                 <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,books._id)}>
-                    <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
+                    <span className="fa fa-trash text-danger mr-2"></span>
                 </Button>
             </div>
         </div>

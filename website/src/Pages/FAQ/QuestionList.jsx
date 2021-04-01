@@ -8,7 +8,7 @@ function QuestionList({faqLists}) {
         <div className="col-md-12">
             <h4>All Faq Question - {params.faq_category}</h4>
             <hr />
-            <div style={{ height: '400px', overflow: 'scroll', paddingRight:'15px' }}>
+            <div id="questionDiv" style={{ height: '400px', overflow: 'scroll', paddingRight:'15px' }}>
             {faqLists && faqLists.map(content => {
                 return(
                     <div className="card p-2 mb-2" key={content._id}>

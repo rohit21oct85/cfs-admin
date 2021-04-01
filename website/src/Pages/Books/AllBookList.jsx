@@ -48,16 +48,17 @@ return (
                 <Button 
                 onClick={ e => history.push('/books-create')}
                 className="btn btn-sm dark">
-                    <FontAwesomeIcon icon={faPlus} /> Add books</Button>
+                    <span className="fa fa-plus-circle text-success mr-2"></span> Add books</Button>
+                    
                     
                 <Button 
                 onClick={ e => history.push('/books-upload')}
                 className="btn btn-sm dark ml-2">
-                    <FontAwesomeIcon icon={faCloud} /> Upload books</Button>
+                    <span className="fa fa-cloud text-success mr-2"></span> Upload books</Button>
                 <Button 
                 onClick={ e => history.push('/books-bulk-upload')}
                 className="btn btn-sm dark ml-2">
-                    <FontAwesomeIcon icon={faCloud} /> Bulk Uploads books</Button>
+                    <span className="fa fa-cloud text-success mr-2"></span> Bulk Uploads books</Button>
 
                 <SearchBook />
 
