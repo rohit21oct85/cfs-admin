@@ -26,7 +26,7 @@ function BookHeading({books}) {
             <div></div>
             <div>
                 <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
-                    <span className="fa fa-eye-o text-secondary mr-2"></span>
+                    <span className="fa fa-eye text-secondary mr-2"></span>
                 </Button>
                 
                 <Button className="delBtn pl-1 pr-1" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
