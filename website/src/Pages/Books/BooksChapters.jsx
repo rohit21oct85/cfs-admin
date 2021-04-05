@@ -133,7 +133,7 @@ return (
                 </Link>
                 <br />
                 <Link to={`/upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`} className="btn btn-sm mt-2 dark">
-                <span className="fa fa-arrow-left"></span>
+                <span className="fa fa-cloud"></span>
                 </Link>
 
                 </div>
