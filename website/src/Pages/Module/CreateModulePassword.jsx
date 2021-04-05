@@ -9,8 +9,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {AdminContext} from '../../context/AdminContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft, faTrash, faEdit, faEye,faEyeSlash, faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateModulePassword() {
     const history = useHistory();
@@ -114,7 +112,7 @@ return (
                 <div className="row">
                     <div className="col-md-4">
                     <Link to={`/master-module`} className="btn btn-sm dark">
-                    <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                        <span className="fa fa-arrow-left"></span>
                     </Link>
                     </div>
                     <div className="col-md-8 pl-0">
@@ -222,11 +220,11 @@ return (
                             </div>
                             <div>
                                 <Button className="delBtn" onClick={handleUpdate.bind(this,{id: removeData._id, module_method: removeData.module_method})}>
-                                    <FontAwesomeIcon icon={faEdit} className="text-danger mr-2"  varient="solid"/>
+                                <span className="fa fa-edit text-muted mr-2"></span>
                                 </Button>
                                 
                                 <Button className="delBtn" onClick={handleDelete.bind(this,removeData._id)}>
-                                    <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
+                                <span className="fa fa-trash text-danger mr-2"></span>
                                 </Button>
                             </div>
                         </div>

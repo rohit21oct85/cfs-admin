@@ -2,9 +2,6 @@ import React, {useContext, useState, useEffect, useRef} from 'react'
 import '../mainDash.css';
 import {  useParams, Link, useHistory  } from "react-router-dom";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft, faCloud } from '@fortawesome/free-solid-svg-icons'
-
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
@@ -132,19 +129,11 @@ return (
             <div className="col-md-12 row">
                 <div className="p-0">
                 <Link to={`/books`} className="btn btn-sm dark">
-                <FontAwesomeIcon
-                    icon={faHandPointLeft}
-                    className="text-white mr-2"
-                    varient="solid"
-                />
+                <span className="fa fa-arrow-left"></span>
                 </Link>
                 <br />
                 <Link to={`/upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`} className="btn btn-sm mt-2 dark">
-                <FontAwesomeIcon
-                    icon={faCloud}
-                    className="text-white mr-2"
-                    varient="solid"
-                />
+                <span className="fa fa-arrow-left"></span>
                 </Link>
 
                 </div>

@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react'
 import {Button} from 'react-bootstrap'
 import {Link, useHistory, useParams} from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit} from '@fortawesome/free-solid-svg-icons'
 
 function SinglePermission({permission_group}) {
     const history = useHistory();

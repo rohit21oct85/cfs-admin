@@ -1,7 +1,5 @@
 import React,{useContext} from 'react'
 import './mainDash.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../context/AuthContext.jsx';
 
@@ -29,7 +27,7 @@ return (
                             <div className="box-head">
                                 <h4>Admin</h4>
                                 <div className="box-icon">
-                                    <FontAwesomeIcon icon={faUsers} />
+                                <span className="fa fa-users"></span>
                                 </div>
                             </div>
                             <div className="main-box-text">

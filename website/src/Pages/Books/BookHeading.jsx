@@ -28,7 +28,6 @@ function BookHeading({books}) {
             <div></div>
             <div>
                 <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
-                    <FontAwesomeIcon icon={faEye} title="View chapters" className="text-danger mr-2"  varient="solid"/>
                     <span className="fa fa-eye-o text-secondary mr-2"></span>
                 </Button>
                 

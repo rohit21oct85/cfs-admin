@@ -8,8 +8,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {SubjectContext} from '../../context/SubjectContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
 
@@ -139,11 +137,11 @@ return (
                     <div className="col-md-1 pl-3">
                     {params.subject_name ? (
                             <Link to={`/books-upload`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left"></span>
                             </Link>
                         ):(
                             <Link to={`/books`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left"></span>
                             </Link>
                         )}     
                     </div>

@@ -6,8 +6,6 @@ import { Button, Form } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
 import { ErrorContext } from "../../context/ErrorContext";
 import { SubjectContext } from "../../context/SubjectContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandPointLeft } from "@fortawesome/free-solid-svg-icons";
 
 import useAllSubjects from '../../hooks/useAllSubjects';
 import useGetSubSubjects from '../../hooks/useGetSubSubjects';

@@ -4,8 +4,6 @@ import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
 
 import useGeneratePassword from '../hooks/useGeneratePassword'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 import {AuthContext} from '../context/AuthContext';
 import {ErrorContext} from '../context/ErrorContext';
@@ -62,7 +60,7 @@ return (
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
                         <Link to={`/${params.module}`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                        <span className="fa fa-arrow-left"></span>
                         </Link>
                         </div>
 

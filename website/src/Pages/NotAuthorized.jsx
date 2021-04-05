@@ -1,7 +1,5 @@
 import React , {useContext} from 'react';
 import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
 import './login.css';
 import {AuthContext} from '../context/AuthContext.jsx';
 
@@ -16,7 +14,7 @@ export default function NotAuthorized() {
                     <img src="/403.jpg" />
                     <p>You are not authorized to access this resource</p>
                     <Link to={`/dashboard`}>
-                        <FontAwesomeIcon icon={faHome}/>
+                        <span className="fa fa-home"></span>
                         <span className="ml-3">
                             Go to Dashboard
                         </span>

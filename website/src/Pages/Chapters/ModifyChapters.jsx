@@ -8,8 +8,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 import * as util from '../../utils/MakeSlug';
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
@@ -111,7 +109,7 @@ return (
                     <div className="col-md-1 pl-3">
                     
                     <Link to={`/book-chapters/${data && data.book_isbn}/${data && data.book_name}/${data && data._id}`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                    <span className="fa fa-arrow-left"></span>
                     </Link>
                     </div>
                     </div>

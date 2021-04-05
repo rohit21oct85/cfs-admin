@@ -3,8 +3,6 @@ import '../mainDash.css';
 import {  useHistory, Link, useParams  } from "react-router-dom";
 
 import * as api from '../../Helper/ApiHelper.jsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faHandPointLeft } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
@@ -40,13 +38,13 @@ return (
                 <div className="dash-con-heading">
                 <div className="col-md-12 pl-0">
                     <Link to={`/subject`} className="btn btn-sm dark  mr-2">
-                        <FontAwesomeIcon icon={faHandPointLeft}></FontAwesomeIcon>
+                        <span className="fa fa-arrow-left"></span>
                     </Link>
                     <Link to={`/sub-subject/${params.subject_name}/create/${params.subject_id}`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add Sub Subject
+                    <span className="fa fa-plus"></span>
                     </Link>
                     <Link to={`/sub-subject/upload`} className="btn btn-sm dark ml-2">
-                        <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Upload CSV Sub Subject
+                    <span className="fa fa-plus"></span>
                     </Link>
                     </div>
                 </div>

@@ -2,8 +2,6 @@ import React, {useContext} from 'react'
 import '../mainDash.css';
 import {  useHistory , useParams , Link} from "react-router-dom";
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faCloud } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';

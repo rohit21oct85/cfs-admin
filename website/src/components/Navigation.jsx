@@ -5,8 +5,6 @@ import { Navbar,Nav} from 'react-bootstrap'
 import {AuthContext} from '../context/AuthContext.jsx';
 import {AdminContext} from '../context/AdminContext.jsx';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 import * as cons from '../Helper/Cons'
 

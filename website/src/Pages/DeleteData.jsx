@@ -5,8 +5,6 @@ import { Button,Form } from 'react-bootstrap'
 import * as api from '../Helper/ApiHelper.jsx';
 
 import useGeneratePassword from '../hooks/useGeneratePassword'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 import {AuthContext} from '../context/AuthContext';
 import {AdminContext} from '../context/AdminContext';
@@ -74,7 +72,7 @@ return (
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
                         <Link to={`/${params.module}`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                        <span className="fa fa-arrow-left"></span>
                         </Link>
                         </div>
 
