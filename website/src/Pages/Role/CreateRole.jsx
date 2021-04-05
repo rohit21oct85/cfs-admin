@@ -78,7 +78,7 @@ return (
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
                         <Link to={`/master-role`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                            <span className="fa fa-arrow-left"></span>
                         </Link>
                         </div>
                         <div className="col-md-12 no-gutter p-0 mt-2">

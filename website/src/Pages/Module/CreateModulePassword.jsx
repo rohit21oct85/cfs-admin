@@ -169,10 +169,7 @@ return (
                             style={{ cursor: 'pointer', fontWeight: 'bold'}}
                             onClick={generateRandomPassword}
                             >
-                            <FontAwesomeIcon 
-                                icon={faLock} 
-                                className="mr-2"  varient="solid"
-                            />
+                            <span className="fa fa-lock ml-2 text-success"></span>
                              Generate Random password
                             </p>
                         </Form.Label>
@@ -253,16 +250,15 @@ return (
                                  
                                  <div className="name-main">
                                      <span>*************</span>
-                                     <FontAwesomeIcon 
-                                         className="ml-2"
+                                     <span 
+                                         className="fa fa-eys ml-2"
                                          style={{ cursor: 'pointer' }}
                                          onClick={ e => {
                                              setPasswordValidity(true);
                                              setMaskedPassword(false);
                                              setViewPassword('');
                                          }}
-                                         icon={faEye}
-                                     />
+                                     ></span>
                                  </div>
                                  )}
                                 {showPassword && (
@@ -272,15 +268,15 @@ return (
                                          {removeData.module_plain_password}
                                      </span>
                                      <div className="update-icons col-md-3 pr-2">
-                                         <FontAwesomeIcon 
-                                             className="ml-2"
+                                         <span 
+                                             className=" fa fatimes ml-2"
                                              style={{ cursor: 'pointer' }}
                                              onClick={ e => {
                                                  setPasswordValidity(false);
                                                  setShowPassword(false);
                                                  setMaskedPassword(true);
                                              }}
-                                             icon={faTimes}/>
+                                             ></span>
                                      </div>
                                  </div>
                                  )}
@@ -288,20 +284,20 @@ return (
                                 <div className="name-main">
                                     <input type="password" name='password' autoComplete="off" value={viewPassword} onChange={ e => setViewPassword(e.target.value)}  className="col-md-9 form-control" style={{  height: '25px' }} />
                                     <div className="update-icons col-md-3 pr-2">
-                                        <FontAwesomeIcon 
-                                            className="ml-2"
+                                        <span 
+                                            className="ml-2 fa fa-eye-slash"
                                             style={{ cursor: 'pointer' }}
                                             onClick={handlePasswordVerify}
-                                            icon={faEyeSlash}/>
+                                            ></span>
                                             
-                                        <FontAwesomeIcon 
-                                            className="ml-2"
+                                        <span 
+                                            className="ml-2 fa fa-times"
                                             style={{ cursor: 'pointer' }}
                                             onClick={ e => {
                                                 setPasswordValidity(false);
                                                 setMaskedPassword(true);
                                             }}
-                                            icon={faTimes}/>
+                                            ></span>
                                     </div>
                                     
 

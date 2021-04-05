@@ -88,19 +88,11 @@ export default function CreateBooks() {
               <div className="dash-con-heading">
                 {params.subject_name ? (
                   <Link to={`/books-create`} className="btn btn-sm dark">
-                    <FontAwesomeIcon
-                      icon={faHandPointLeft}
-                      className="text-white mr-2"
-                      varient="solid"
-                    />
+                    <span className="fa fa-arrow-left text-success mr-2"></span>
                   </Link>
                 ) : (
                   <Link to={`/books`} className="btn btn-sm dark">
-                    <FontAwesomeIcon
-                      icon={faHandPointLeft}
-                      className="text-white mr-2"
-                      varient="solid"
-                    />
+                    <span className="fa fa-arrow-left text-success mr-2"></span>
                   </Link>
                 )}
               </div>

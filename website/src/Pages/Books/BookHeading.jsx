@@ -2,8 +2,6 @@ import React from 'react'
 import {MakeSlug, GetString} from '../../utils/MakeSlug';
 import {useHistory, Link} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload, faTrash, faEdit, faEye } from '@fortawesome/free-solid-svg-icons'
 
 function BookHeading({books}) {
     const history = useHistory();
