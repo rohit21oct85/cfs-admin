@@ -35,7 +35,7 @@ return (
                 <div className="dash-con-heading">
                     <div className="col-md-12 row">
                     <Link to={`/subject-create`} className="btn btn-sm dark">
-                            Add New Subject
+                           <span className="fa fa-plus-circle"></span> &nbsp; Add New Subject
                     </Link>
                     </div>    
                 </div>

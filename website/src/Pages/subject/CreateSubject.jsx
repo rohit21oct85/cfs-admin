@@ -8,8 +8,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {SubjectContext} from '../../context/SubjectContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateSubject() {
     const history = useHistory();
@@ -78,7 +76,7 @@ return (
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
                         <Link to={`/subject`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                            <span className="fa fa-arrow-left text-success mr-2"></span>
                         </Link>
                         </div>
                         <div className="col-md-12 no-gutter p-0 mt-2">

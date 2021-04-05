@@ -6,7 +6,9 @@
     "scripts": {
         "start": "NODE_ENV='production' && node index.js",
         "heroku-postbuild": "cd website && npm install && npm run build",
-        "dev": "nodemon index.js"
+        "client":"cd website && npm run start",
+        "backend":"nodemon index.js",
+        "dev": "npm-run-all --parallel client backend"
     },
     "keywords": [
         "acadmic search engine, nodejs, mongodb, react js"

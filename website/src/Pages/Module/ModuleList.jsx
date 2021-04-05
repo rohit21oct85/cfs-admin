@@ -2,8 +2,6 @@ import React, {useContext, useEffect, useState} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus, faLock,faEye } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
@@ -78,7 +76,8 @@ return (
                 <div className="dash-con-heading">
                     <div className="col-md-3 pl-0">
                     <Link to={`/master-module/create`} className="btn btn-sm dark">
-                        <FontAwesomeIcon icon={faPlus} />
+                        <span className="fa fa-plus-circle"></span>   
+                        &nbsp;
                         Add New Module
                     </Link>
                     </div>    
@@ -91,7 +90,7 @@ return (
                         <div className="subject-main-container">
                             
                         {adminState.ModLists.map( module => (
-                            <div className="subject-card" key={module._id} id={`card-${module._id}`}>
+                            <div className="small-card" key={module._id} id={`card-${module._id}`}>
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
                                         <div className="name-label">
@@ -134,20 +133,19 @@ return (
                                 <div className="subject-card-heading">
                                     <div></div>
                                     <div>
-                                    
                                         <Button className="delBtn pl-1 pr-1 " onClick={handlePage.bind(this,module.module_name)}>
-                                            <FontAwesomeIcon icon={faEye} className="text-success mr-2"  varient="solid"/>
+                                            <span className="fa fa-eye mr-2 text-success"></span>
                                         </Button>
                                         <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,module._id)}>
-                                            <FontAwesomeIcon icon={faEdit} className="text-danger mr-2"  varient="solid"/>
+                                            <span className="fa fa-edit mr-2 text-danger"></span>
                                         </Button>
                                         
                                         <Button className="delBtn pl-1 pr-1" onClick={handleLock.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <FontAwesomeIcon icon={faLock} className="text-success mr-2"  varient="solid"/>
+                                            <span className="fa fa-lock mr-2 text-success"></span>
                                         </Button>
                     
                                         <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
+                                            <span className="fa fa-trash mr-2 text-danger"></span>
                                         </Button>
                                     </div>
                                 </div>

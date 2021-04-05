@@ -2,9 +2,6 @@ import React, {useContext, useEffect, useState} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
-import * as api from '../../Helper/ApiHelper.jsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
@@ -59,36 +56,24 @@ return (
                 <div className="dash-main-head">
                     <h2>Role List</h2>
                 </div>
-                
-                <div className="dash-cont-start">
-                    <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
-                        <Link to={`/master-role/create`} className="btn btn-sm dark mb-3">
-                            <FontAwesomeIcon icon={faPlus} />
-                               Add New Role
-                        </Link>
-                        </div>
-                        {errorState.success && ( <Notification>{errorState.success}</Notification>)}
+                {errorState.success && ( <Notification>{errorState.success}</Notification>)}
                         {errorState.error && ( <Notification>{errorState.error}</Notification>)}
                         {isLoading && (<LoadingComp />)}
+                        
+                <div className="dash-con-heading">
+                        <Link to={`/master-role/create`} className="btn btn-sm dark">
+                        <span className="fa fa-plus-circle"></span>   
+                            &nbsp;
+                            Add New Role
+                        </Link>
+                    </div>
+                <div className="dash-cont-start">
+                    <div className="org-main-area">
+                        
                         {!isLoading && (
                         <div className="subject-main-container">
                         {adminState.Roles.map( role => (
                             <div className="subject-card" key={role._id} id={`card-${role._id}`}>
-                                <div className="subject-card-heading">
-                                    <div>
-                                        <Link to={`view-permission/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
-                                        #{role._id}
-                                        </Link></div>
-                                    <div>
-                                        <Button className="delBtn" onClick={handleUpdate.bind(this,role._id)}>
-                                            <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                                        </Button>
-                                        <Button className="delBtn" onClick={handleDelete.bind(this,role._id)}>
-                                            <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                                        </Button>
-                                    </div>
-                                </div>
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
                                         <div className="name-label">
@@ -134,6 +119,21 @@ return (
                                             {role.description}
                                         </div>
                                     </div> 
+                                </div>
+                                <hr className="mt-1 mb-1"/>
+                                <div className="subject-card-heading">
+                                    <div></div>
+                                    <div>
+                                        <Link to={`view-permission/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
+                                            <span className="fa fa-lock text-warning mr-2"></span>
+                                        </Link>
+                                        <Button className="delBtn" onClick={handleUpdate.bind(this,role._id)}>
+                                            <span className="fa fa-pencil-square-o text-success mr-2"></span>
+                                        </Button>
+                                        <Button className="delBtn" onClick={handleDelete.bind(this,role._id)}>
+                                            <span className="fa fa-trash text-danger"></span>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

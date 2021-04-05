@@ -2,9 +2,6 @@ import React, {useContext, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
-import * as api from '../../Helper/ApiHelper.jsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 import {AuthContext} from '../../context/AuthContext';
 import {AdminContext} from '../../context/AdminContext';
@@ -13,6 +10,7 @@ import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
 import useAxios from '../../hooks/useAxios';
+import TopMenu from './TopMenu';
 
 export default function AdminList() {
     const history = useHistory();
@@ -55,42 +53,19 @@ return (
                 <div className="dash-main-head">
                     <h2>Admin List</h2>
                 </div>
-                
+                {errorState.success && ( <Notification>{errorState.success}</Notification>)}        
+                {errorState.error && ( <Notification>{errorState.error}</Notification>)}
+                {isLoading && (<LoadingComp />)}
+                <TopMenu data={adminState.Admins}/>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
-                        <Link to={`/master-admin/create`} className="btn btn-sm dark mb-3">
-                            <FontAwesomeIcon icon={faPlus} />
-                               Add New Admin
-                        </Link>
-                        </div>
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
                         
-                        {errorState.error && ( 
-                            <Notification>{errorState.error}</Notification>
-                        )}
-
-                        {isLoading && (<LoadingComp />)}
+                       
                         {!isLoading && (
                         <div className="subject-main-container">
                         {adminState.Admins.map( admin => (
-                            <div className="subject-card" key={admin._id} id={`card-${admin._id}`}>
-                                <div className="subject-card-heading">
-                                    <div>
-                                        <Link to={`sub-subject/${admin.fullname.replace(' ','-').toLowerCase().trim()}/${admin._id}`}>
-                                        #{admin._id}
-                                        </Link></div>
-                                    <div>
-                                        <Button className="delBtn" onClick={handleUpdate.bind(this,admin._id)}>
-                                            <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                                        </Button>
-                                        <Button className="delBtn" onClick={handleDelete.bind(this,admin._id)}>
-                                            <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                                        </Button>
-                                    </div>
-                                </div>
+                            <div className="small-card" key={admin._id} id={`card-${admin._id}`}>
+                                
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
                                         <div className="name-label">
@@ -128,6 +103,19 @@ return (
                                             {admin.created_at.split('T')[0]}
                                         </div>
                                     </div> 
+                                </div>
+                                <hr className="mt-1 mb-1"/>
+                                <div className="subject-card-heading">
+                                    <div>
+                                    </div>
+                                    <div>
+                                        <Button className="delBtn" onClick={handleUpdate.bind(this,admin._id)}>
+                                            <span className="fa fa-pencil-square-o text-primary mr-2"></span>
+                                        </Button>
+                                        <Button className="delBtn" onClick={handleDelete.bind(this,admin._id)}>
+                                        <span className="fa fa-trash text-danger ml-2"></span>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

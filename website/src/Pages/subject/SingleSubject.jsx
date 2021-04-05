@@ -1,7 +1,5 @@
 import React, {useContext, useEffect} from 'react'
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 import {  useHistory, Link  } from "react-router-dom";
 
 import {AuthContext} from '../../context/AuthContext';
@@ -15,25 +13,8 @@ function SingleSubject({sub}) {
     }
 
     return (
-        <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
-        <div className="subject-card-heading">
-            <div>
-                <Link to={`sub-subject/${util.MakeSlug(sub.subject)}/${sub._id}`}>
-                #{sub._id}
-                </Link></div>
-            <div>
-                <Link to={`/subject-update/${sub._id}`}>
-                    <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                </Link>
-                {(state.role == 1) && (
-                <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
-                    <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                </Button>
-                )}
-                
-            </div>
-        </div>
-        <div className="subject-card-body mt-2">
+        <div className="small-card" key={sub._id} id={`card-${sub._id}`}>
+        <div className="subject-card-body">
             <div className="admin-name"> 
                 <div className="name-label">
                     Subject Name: 
@@ -60,6 +41,24 @@ function SingleSubject({sub}) {
                     {(sub.status == 1) ? 'Active':'Inactive'}
                 </div>
             </div> 
+        </div>
+        <hr className="mt-1 mb-1"/>
+        <div className="subject-card-heading">
+            <div></div>
+            <div>
+                <Button className="delBtn" onClick={e => history.push(`sub-subject/${util.MakeSlug(sub.subject)}/${sub._id}`)}>
+                    <span className="fa fa-eye text-success mr-2"></span>
+                </Button>
+                <Button className="delBtn" onClick={e => history.push(`/subject-update/${sub._id}`)}>
+                    <span className="fa fa-edit text-success mr-2"></span>
+                </Button>
+                {(state.role == 1) && (
+                <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
+                    <span className="fa fa-trash text-danger mr-2"></span>
+                </Button>
+                )}
+                
+            </div>
         </div>
     </div>
     )

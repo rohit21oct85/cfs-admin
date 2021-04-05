@@ -52,11 +52,11 @@ return (
                 {isLoading && (<LoadingComp />)}
                 {!isLoading && (
                 <div className="dash-cont-start">
-                    <div className="row">
-                        <div className="col-md-3">
+                    <div className="row col-md-12">
+                        <div className="col-md-3 card p-2" style={{ position: 'fixed', width: '320px'}}>
                             <CreatePermissionGroup />
                         </div>
-                        <div className="col-md-9">
+                        <div className="col-md-9" style={{ position: 'relative', left: '330px'}}>
                             <div className="subject-main-container">
                                 <AllPermissionGroup />
                             </div>

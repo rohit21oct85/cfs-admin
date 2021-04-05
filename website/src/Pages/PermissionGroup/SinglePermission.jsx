@@ -16,21 +16,7 @@ function SinglePermission({permission_group}) {
 
     return (
         <>
-            <div className="module-card" id={`card-${permission_group._id}`}>
-            <div className="subject-card-heading">
-                <div>
-                    <Link to={`sub-subject/${permission_group.module_name && permission_group.module_name.replace(' ','-').toLowerCase().trim()}/${permission_group._id}`}>
-                    #{permission_group._id}
-                    </Link></div>
-                <div>
-                    <Button className="delBtn" onClick={handleUpdate.bind(this,{id: permission_group._id, module_name: permission_group.module_name})}>
-                        <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                    </Button>
-                    <Button className="delBtn" onClick={handleDelete.bind(this,permission_group._id)}>
-                        <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                    </Button>
-                </div>
-            </div>
+            <div className="subject-card" id={`card-${permission_group._id}`}>
             <div className="subject-card-body mt-2">
                 <div className="admin-name"> 
                     <div className="name-label">
@@ -74,6 +60,19 @@ function SinglePermission({permission_group}) {
                     </div>
                 </div> 
                 
+            </div>
+            <hr className="mt-1 mb-1"/>
+            <div className="subject-card-heading">
+                <div>
+                </div>
+                <div>
+                    <Button className="delBtn" onClick={handleUpdate.bind(this,{id: permission_group._id, module_name: permission_group.module_name})}>
+                    <span className="fa fa-pencil-square-o text-success mr-2"></span>
+                    </Button>
+                    <Button className="delBtn" onClick={handleDelete.bind(this,permission_group._id)}>
+                        <span className="fa fa-trash text-danger"></span>
+                    </Button>
+                </div>
             </div>
         </div>
         </>

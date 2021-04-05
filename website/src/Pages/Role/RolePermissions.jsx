@@ -140,10 +140,14 @@ return (
         {isLoading && (<LoadingComp />)}
         {!isLoading && (
         <div className="dash-con-heading">
-            <div className="col-md-12 row">
-                <Link to={`/role-permission/update/${params.role_name}/${params.role_id}`}
-                className="btn btn-sm dark">Update Permission</Link>
-            </div>    
+            <Link to={`/master-role`}
+            className="btn btn-sm dark mr-2">
+                <span className="fa fa-arrow-left"></span>
+            </Link>
+        
+            <Link to={`/role-permission/update/${params.role_name}/${params.role_id}`}
+            className="btn btn-sm dark">Update Permission</Link>
+        
         </div>
         )}
         {!isLoading && (
@@ -151,7 +155,7 @@ return (
         <h4 className="mt-2">All Role Permissions</h4>    
         <div className="subject-main-container">
             {adminState.AllRolePermissions.map(permission => { return (
-                <div className="subject-card" key={permission._id}>
+                <div className="small-card" key={permission._id}>
                 <div className="subject-card-body mt-2">
                     
                     <div className="admin-name"> 

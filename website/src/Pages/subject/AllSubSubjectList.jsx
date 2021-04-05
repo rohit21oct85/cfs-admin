@@ -2,9 +2,6 @@ import React, {useContext, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link, useParams  } from "react-router-dom";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faPlus,faCloud } from '@fortawesome/free-solid-svg-icons'
-
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
@@ -36,10 +33,12 @@ return (
                 <div className="dash-con-heading">
                     <div className="col-md-12 row">
                         <Link to={`/sub-subject/create`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>  Add Sub Subject
+                            <span className="fa fa-plus-square text-success"></span>  
+                            &nbsp; Add Sub Subject
                         </Link>
                         <Link to={`/sub-subject/upload`} className="btn btn-sm dark ml-2">
-                            <FontAwesomeIcon icon={faCloud}></FontAwesomeIcon> Upload Sub Subject
+                        <span className="fa fa-cloud text-success"></span>  
+                        &nbsp;  Upload Sub Subject
                         </Link>
                     </div>    
                 </div>

@@ -1,8 +1,6 @@
 import React from 'react'
 import {useHistory, Link} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 import * as util from '../../utils/MakeSlug';
 
 function SingleSubSubject({sub}) {
@@ -11,21 +9,7 @@ function SingleSubSubject({sub}) {
         history.push(`delete-data/sub-subject/delete/${e}`);
     }
     return (
-        <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
-        <div className="subject-card-heading">
-            <div>
-                <Link to={`/books/${util.MakeSlug(sub.subject)}/${util.MakeSlug(sub.sub_subject)}/${sub._id}`}>
-                #{sub._id}
-                </Link></div>
-            <div>
-                <Link to={`/sub-subject/update/${sub._id}`}>
-                    <FontAwesomeIcon icon={faEdit} className="text-success mr-2"  varient="solid"/>
-                </Link>
-                <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
-                    <FontAwesomeIcon icon={faTrash} className="text-danger"  varient="solid"/>
-                </Button>
-            </div>
-        </div>
+        <div className="small-card" key={sub._id} id={`card-${sub._id}`}>
         <div className="subject-card-body">
             <div className="admin-name"> 
                 <div className="name-label">
@@ -43,6 +27,21 @@ function SingleSubSubject({sub}) {
                     {sub.sub_subject}
                 </div>
             </div> 
+        </div>
+        <hr className="mt-1 mb-1"/>
+        <div className="subject-card-heading">
+            <div></div>
+            <div>
+                <button className="delBtn" onClick={e => history.push(`/books/${util.MakeSlug(sub.subject)}/${util.MakeSlug(sub.sub_subject)}/${sub._id}`)}>
+                    <span className="fa fa-eye text-success mr-2"></span>
+                </button>
+                <button className="delBtn" onClick={e => history.push(`/sub-subject/update/${sub._id}`)}>
+                    <span className="fa fa-edit text-success mr-2"></span>
+                </button>
+                <Button className="delBtn" onClick={handleDelete.bind(this,sub._id)}>
+                    <span className="fa fa-trash text-danger mr-2"></span>
+                </Button>
+            </div>
         </div>
     </div>
     )

@@ -8,8 +8,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {SubjectContext} from '../../context/SubjectContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateSubSubject() {
     const history = useHistory();
@@ -28,7 +26,6 @@ export default function CreateSubSubject() {
         }else{
             formData['subject'] = params.subject_name;
             formData['subject_id'] = params.subject_id;
-            console.log(formData);
             if(params.id){
                 response = await api.patch(`subject/update/${params.id}`,formData);
             }else{
@@ -85,11 +82,11 @@ return (
                         <div className="col-md-3 pl-0">
                         {params.subject_name ? (
                             <Link to={`/sub-subject/${params.subject_name}/${params.subject_id}`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left text-success mr-2"></span>
                             </Link>
                         ):(
                             <Link to={`/sub-subject`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left text-success mr-2"></span>
                             </Link>
                         )}    
                         

@@ -8,8 +8,6 @@ import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {SubjectContext} from '../../context/SubjectContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function CreateSubSubject() {
     const history = useHistory();
@@ -92,11 +90,11 @@ return (
                     <div className="col-md-1 pl-3">
                         {params.subject_name ? (
                             <Link to={`/sub-subject/${params.subject_name}/${params.subject_id}`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left text-success mr-2"></span>
                             </Link>
                         ):(
                             <Link to={`/sub-subject`} className="btn btn-sm dark">
-                            <FontAwesomeIcon icon={faHandPointLeft} className="text-white mr-2"  varient="solid"/>
+                                <span className="fa fa-arrow-left text-success mr-2"></span>
                             </Link>
                         )}    
                     </div>
