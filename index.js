@@ -61,7 +61,9 @@ if (process.env.NODE_ENV === 'production') {
         .then(() => console.log('Mongo DB Connected Locally'))
         .catch(err => console.log(err));
 }
-
+app.listen(PORT, () => {
+    console.log(`App is running on PORT ${PORT}`);
+})
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
@@ -93,6 +95,3 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(index);
     });
 }
-app.listen(PORT, () => {
-    console.log(`App is running on PORT ${PORT}`);
-})

@@ -1,6 +1,6 @@
 const Admin = require('../../models/admin/Admin.js');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 let refreshTokens = [];
 

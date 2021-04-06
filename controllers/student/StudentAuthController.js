@@ -1,7 +1,7 @@
 const Student = require('../../models/student/Student.js');
 const Token = require('../../models/student/Token.js');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
 var randomBytes = require('randombytes');
 

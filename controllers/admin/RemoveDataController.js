@@ -1,5 +1,5 @@
 const RemoveData = require('../../models/admin/RemoveData.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const createRemoveData = async (req, res) => {
     const body = req.body;

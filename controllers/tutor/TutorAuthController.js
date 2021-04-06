@@ -1,6 +1,6 @@
 const Tutor = require('../../models/tutor/Tutor.js');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 let refreshTokens = [];
 
