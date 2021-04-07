@@ -94,4 +94,10 @@ if (process.env.NODE_ENV === 'production') {
         const index = path.join(__dirname, 'website', 'build', 'index.html');
         res.sendFile(index);
     });
+}else{
+    app.use(express.static('website/build'));
+    app.get('/*', (req, res) => {
+        const index = path.join(__dirname, 'website', 'build', 'index.html');
+        res.sendFile(index);
+    });
 }
