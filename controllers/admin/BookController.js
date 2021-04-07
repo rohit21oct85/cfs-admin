@@ -392,19 +392,7 @@ const UploadReviewCSV = async(req, res) => {
 
 const UpdateotherFunction = async(res,filterData, FinalData, callback) => {
     try{
-        // return res.json({data: FinalData, filter: filterData});
-        var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
-        await FinalData.map( data => {
-            Book.findOne(filterData,{$push: {reviews: {rating: data.rating,review: data.review, userName:data.userName}}}, options, async (err, result) => {
-                if(err){
-                    return res.status(409).json({
-                        message: "Error occured",
-                        error: err.message
-                    }); 
-                }
-            });
-        })
-
+        await Book.updateOne(filterData, {$addToSet: { reviews: {$each: FinalData}}});
         return res.status(201).json({
             error: false,
             message: "Review Uploaded successfully"

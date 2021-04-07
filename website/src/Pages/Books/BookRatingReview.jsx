@@ -67,8 +67,6 @@ const uploadMutation = useMutation(formData => {
     onSuccess: () => {
         queryClient.invalidateQueries('reviews')
         setLoading(false);
-        reviewRef.current.value = '';
-        userNameRef.current.value = '';
         history.push(`/book-rating-review/${params.isbn}/${params.book_id}`);
         var objDiv = document.getElementById("reviewDiv");
         objDiv.scrollTop = objDiv.scrollHeight;
