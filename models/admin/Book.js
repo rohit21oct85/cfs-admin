@@ -1,7 +1,15 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const ReviewSchema = new mongoose.Schema({ rating: 'Number', review: 'string', userName: 'string' });
+const ReviewSchema = new mongoose.Schema({ 
+    rating: 'Number', 
+    review: 'string', 
+    userName: 'string', 
+    created_at: {
+        type: Date,
+        default: Date.now
+    } 
+});
 
 const BookSchema = new mongoose.Schema({
     subject_id: {
