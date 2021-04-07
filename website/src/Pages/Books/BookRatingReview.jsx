@@ -98,6 +98,7 @@ async function handelChangeUpload(e){
     if(ext === "csv"){
         setFile(e.target.files[0]);
         formDataUpload.append('file', e.target.files[0]);
+        setUpload(false);
     }else{
         error({message: 'Only .csv files are allowed'});
     }
