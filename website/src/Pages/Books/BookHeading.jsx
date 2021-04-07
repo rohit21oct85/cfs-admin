@@ -21,10 +21,22 @@ function BookHeading({books}) {
         history.push(`/book-chapters/${isbn}/${book_name}/${id}`);
     }
 
+    
+    const handleRatingAndReview = async (isbn, id) => {
+        history.push(`/book-rating-review/${isbn}/${id}`);
+    }
+
+
+
     return (
         <div className="subject-card-heading">
             <div></div>
             <div>
+
+                <Button className="delBtn pl-1 pr-1" onClick={handleRatingAndReview.bind(this,books.ISBN13,books._id)}>
+                    <span className="fa fa-star text-danger mr-2"></span>
+                </Button>
+                
                 <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <span className="fa fa-eye text-secondary mr-2"></span>
                 </Button>

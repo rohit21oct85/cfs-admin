@@ -320,7 +320,105 @@ const searchBook = async(req, res) => {
 
 }
 
+const addReview = async (req, res) => {
+    try {
+        const content = {rating: req.body.rating,review: req.body.review, userName:req.body.userName};
+        const filter = {ISBN13: req.body.isbn,_id: req.body.book_id};
+        var Content = await Book.findOne(filter);
+        Content.reviews.push(content);
+        await Content.save();
+        return res.status(201).json({
+            error: false,
+            message: "Review Added"
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 
+
+
+const allReviews = async (req, res) => {
+    try {
+        const filter = {_id: req.params.book_id};
+        var Content = await Book.findOne(filter);
+        var reviewData = Content.reviews.reverse();
+        return res.status(201).json({
+            error: false,
+            data: reviewData
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+const UploadReviewCSV = async(req, res) => {
+    const data = req.body;
+    let FinalData = [];
+    try {
+        let results = [];
+        const filterData = {_id: data.book_id, ISBN13: data.isbn}
+        fs.createReadStream(req.file.path,{encoding: 'binary'})
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                results.forEach( (review, index) => {
+                    FinalData.push({ 
+                        userName: review.userName, 
+                        review: review.review, 
+                        rating: review.rating, 
+                        
+                    })
+                })
+
+                UpdateotherFunction(res,filterData, FinalData, function() {
+                    fs.unlinkSync(req.file.path)
+                })
+            });
+    } catch (error) {
+        return res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+const UpdateotherFunction = async(res,filterData, FinalData, callback) => {
+    try{
+        // return res.json({data: FinalData, filter: filterData});
+        var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
+        await FinalData.map( data => {
+            Book.findOne(filterData,{$push: {reviews: {rating: data.rating,review: data.review, userName:data.userName}}}, options, async (err, result) => {
+                if(err){
+                    return res.status(409).json({
+                        message: "Error occured",
+                        error: err.message
+                    }); 
+                }
+            });
+        })
+
+        return res.status(201).json({
+            error: false,
+            message: "Review Uploaded successfully"
+        })
+
+        callback();
+
+    }catch(err){
+        return res.status(409).json({
+            error: true,
+            message: err.message
+        })
+    }
+}
 module.exports = {
     BooksBySubSubjectId,
     getAllBook,
@@ -332,5 +430,8 @@ module.exports = {
     deleteBook,
     deleteBookAll,
     viewBook,
-    searchBook
+    searchBook,
+    addReview,
+    allReviews,
+    UploadReviewCSV
 }
