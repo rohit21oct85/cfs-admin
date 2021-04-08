@@ -24,13 +24,17 @@ router
     .get('/subject/:sub_subject_id', checkAuth, Book.BooksBySubSubjectId)
     .get('/search/:isbn', checkAuth, Book.searchBook)
     .get('/view-all/:sub_subject_id?/:pageno/:limit', checkAuth, Book.getAllBook)
+    .post('/add-review', checkAuth, Book.addReview)
+    .get('/all-reviews/:book_id', checkAuth, Book.allReviews)
     .post('/create', checkAuth, Book.createBook)
     .post('/upload', upload.single('file'), checkAuth, Book.uploadBook)
+    .post('/upload-review', upload.single('file'), checkAuth, Book.UploadReviewCSV)
     .post('/bulk-upload', upload.single('file'), checkAuth, Book.BulkUploadBook)
     .patch('/update/:book_id', Book.updateBook)
     .patch('/update-all/:sub_subject_id', Book.updateAllBook)
     .delete('/delete/:id', Book.deleteBook)
     .delete('/delete-all', Book.deleteBookAll)
-    .get('/view/:id', Book.viewBook);
+    .get('/view/:id', Book.viewBook)
+;
 
 module.exports = router;
