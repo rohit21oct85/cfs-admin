@@ -33,22 +33,22 @@ function BookHeading({books}) {
             <div></div>
             <div>
 
-                <Button className="delBtn pl-1 pr-1" onClick={handleRatingAndReview.bind(this,books.ISBN13,books._id)}>
+                <Button className="delBtn pl-1 pr-1" title="Review and Rating" onClick={handleRatingAndReview.bind(this,books.ISBN13,books._id)}>
                     <span className="fa fa-star text-danger mr-2"></span>
                 </Button>
                 
-                <Button className="delBtn pl-1 pr-1" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
+                <Button className="delBtn pl-1 pr-1" title="View chapters & Questions" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <span className="fa fa-eye text-secondary mr-2"></span>
                 </Button>
                 
-                <Button className="delBtn pl-1 pr-1" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
+                <Button className="delBtn pl-1 pr-1" title="Upload Chapters and Questions" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
                     <span className="fa fa-cloud text-success mr-2"></span>
                 </Button>
 
-                <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
+                <Button className="delBtn pl-1 pr-1" title="Update Books" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
                     <span className="fa fa-pencil-square-o text-secondary mr-2"></span>
                 </Button>
-                <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,books._id)}>
+                <Button className="delBtn pl-1 pr-1" title="Delete Books" onClick={handleDelete.bind(this,books._id)}>
                     <span className="fa fa-trash text-danger mr-2"></span>
                 </Button>
             </div>

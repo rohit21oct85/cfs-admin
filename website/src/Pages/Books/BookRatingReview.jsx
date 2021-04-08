@@ -98,7 +98,6 @@ async function handelChangeUpload(e){
     if(ext === "csv"){
         setFile(e.target.files[0]);
         formDataUpload.append('file', e.target.files[0]);
-        setUpload(false);
     }else{
         error({message: 'Only .csv files are allowed'});
     }
@@ -248,7 +247,7 @@ return (
                         </form>
                     </div>
                     <div className="col-md-8 offset-1">
-                        <h6> <span className="fa fa-star"></span> All Reviews for - {params.isbn}</h6>
+                        <h6> <span className="fa fa-star"></span> {data && data.data.length ? data && data.data.length : 'All ' } Reviews for - {params.isbn}</h6>
                         <hr />
                         <div style={{ height: '350px', overflowY: 'scroll', paddingRight: '15px'}} id="reviewDiv">
                             {data && data.data.map(review => {
