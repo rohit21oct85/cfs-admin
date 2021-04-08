@@ -20,13 +20,10 @@ function BookHeading({books}) {
         const book_name = MakeSlug(book);
         history.push(`/book-chapters/${isbn}/${book_name}/${id}`);
     }
-
     
     const handleRatingAndReview = async (isbn, id) => {
         history.push(`/book-rating-review/${isbn}/${id}`);
     }
-
-
 
     return (
         <div className="subject-card-heading">

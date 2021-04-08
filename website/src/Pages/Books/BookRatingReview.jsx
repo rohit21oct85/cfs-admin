@@ -247,12 +247,13 @@ return (
                         </form>
                     </div>
                     <div className="col-md-8 offset-1">
-                        <h6> <span className="fa fa-star"></span> {data && data.data.length ? data && data.data.length : 'All ' } Reviews for - {params.isbn}</h6>
+                        <h6> <span className="fa fa-star"></span> 
+                        {data && data.data.length ? data && data.data.length : 'All ' } Reviews for - ISBN <b>{params.isbn}</b></h6>
                         <hr />
                         <div style={{ height: '350px', overflowY: 'scroll', paddingRight: '15px'}} id="reviewDiv">
                             {data && data.data.map(review => {
                                 return (
-                                    <div className="module-card"
+                                    <div className="subject-card"
                                     style={{width: '100%'}}
                                     key={review._id}>
                                         
@@ -296,6 +297,8 @@ return (
                                             </div> 
 
                                         </div> 
+                                        <hr className="mt-1 mb-1"/>
+                                        
                                     </div>
                                 )
                             })}
