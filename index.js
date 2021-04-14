@@ -7,8 +7,23 @@ const path = require("path");
 const session = require('express-session')
 const Routes = require("./routes/index.js");
 const WebRoutes = require("./routes/web-routes.js");
-
+const TutorRoutes = require("./routes/tutor-routes.js");
+const cronJob = require('cron').CronJob;
+const {cfsCronTask} = require('./cfsCronTask.js');
 const app = express();
+
+/* Cron Task */
+var job = new cronJob({
+    cronTime: '10 * * * * *',
+    onTick: function() {
+        cfsCronTask()
+   },
+    start: false,
+    timeZone: 'Asia/Kolkata'
+  });
+job.start();
+
+
 app.use(cors());
 const PORT = process.env.PORT || 8080;
 
@@ -87,7 +102,9 @@ app.use("/web/v1/chapter", WebRoutes.WebChapterRoutes);
 app.use("/web/v1/faq", WebRoutes.WebFaqRoutes);
 app.use("/web/v1/category", WebRoutes.CategoryRoutes);
 app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
-app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
+
+app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
+app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('website/build'));

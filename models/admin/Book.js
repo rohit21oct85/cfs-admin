@@ -5,6 +5,10 @@ const ReviewSchema = new mongoose.Schema({
     rating: 'Number', 
     review: 'string', 
     userName: 'string', 
+    status: {
+        type: Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: Date.now
@@ -88,9 +92,12 @@ const BookSchema = new mongoose.Schema({
     },
     status: {
         type: Boolean,
-        required: true,
         default: true
     },
+    published: {
+        type: Boolean,
+    },
+
     created_at: {
         type: Date,
         default: Date.now

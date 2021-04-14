@@ -602,6 +602,85 @@ const RemoveBookChapters = async (req, res) => {
         });
     }
 }
+const getAnsweredTotalNo = async (book_isbn, chapter_no) => {
+    const count = await Chapter.count({
+        book_isbn: book_isbn,
+        chapter_no: chapter_no,
+        answered: true,
+        assigned: false
+    });
+    return count;
+}
+
+const getQCData = async (req, res) => {
+    try {
+
+        let details = await Chapter.aggregate([
+            {"$match": {
+                "book_isbn": req.params.isbn
+            }},
+            {"$group": {
+                "_id": {
+                    "chapter_no":"$chapter_no",
+                    "chapter_name":"$chapter_name"
+                },
+                "count":{
+                    "$sum": {
+                        $cond: [{
+                            $eq: ["$assigned", false]
+                        },1,0]
+                    }
+                },
+                "answered":{
+                    "$sum": {
+                        $cond: [{
+                            $eq: ["$answered", true]
+                        },1,0]
+                    }
+                }
+            }},
+            {$sort : { _id: 1}}
+        ]);
+        
+
+        const pending_qc = await Chapter.count({"book_isbn": req.params.isbn,assigned: true, answered: true});
+        const total_qc = await Chapter.count({"book_isbn": req.params.isbn, assigned: false, answered: false});
+        res.status(201).json({
+            error: false,
+            data: {
+                "total_question": total_qc,
+                "total_pending_qc": pending_qc,
+                "details": details
+            }
+        })
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+}
+
+const GetQCChapterQuestions = async (req, res) => {
+     
+    try {
+        const filter = {"book_isbn": req.params.isbn, "chapter_no": req.params.chapter_no};
+        await Chapter.find(filter,{problem_no: 1, question: 1, chapter_name: 1}).then(response => {
+            res.status(201).json({
+                error: false,
+                data: response
+            })
+        }).catch(err => {
+            res.status(201).json({
+                error: true,
+                message: err.message
+            })
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+}
 
 module.exports = {
     UploadChapters,
@@ -616,5 +695,7 @@ module.exports = {
     getBookOnlyProblems,
     searchQuestion,
     downloadBooks,
-    RemoveBookChapters
+    RemoveBookChapters,
+    getQCData,
+    GetQCChapterQuestions
 }

@@ -9,7 +9,7 @@
         "client": "cd website && npm run start",
         "backend": "nodemon index.js",
         "dev": "npm-run-all --parallel backend client",
-        "start:prod":"node index.js -p 80"
+        "start:prod": "node index.js -p 80"
     },
     "keywords": [
         "acadmic search engine, nodejs, mongodb, react js"
@@ -21,6 +21,7 @@
         "body-parser": "^1.19.0",
         "connect-flash": "^0.1.1",
         "cors": "^2.8.5",
+        "cron": "^1.8.2",
         "csv-parser": "^3.0.0",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",

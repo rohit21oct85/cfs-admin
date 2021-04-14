@@ -14,6 +14,7 @@ import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
+import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
@@ -142,7 +143,7 @@ export const privateRoutes = [
     },
 
     {
-        path: '/upload-chaptersc',
+        path: '/upload-chapters/:isbn/:book_name/:book_id',
         component: UploadChapters
     }
     ,
@@ -153,10 +154,14 @@ export const privateRoutes = [
     },
     
     {
-        path: '/book-rating-review/:isbn/:book_id',
+        path: '/book-rating-review/:isbn/:book_id/:review_id?',
         component: BookRatingReview
     },
-
+    
+    {
+        path: '/book-check-quality/:isbn/:book_id/:chapter?/:chapter_no?',
+        component: BookCheckQuality
+    },
 
     {
         path: '/all-students',

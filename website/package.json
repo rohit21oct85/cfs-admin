@@ -18,6 +18,8 @@
     "react-render-html": "^0.6.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "react-switch": "^6.0.0",
+    "react-toast-notifications": "^2.4.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

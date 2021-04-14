@@ -40,16 +40,35 @@ const ChapterSchema = new mongoose.Schema({
     image:{
         type: String,
     },
-
     answer:{
         type: String,
     },
-
     status: {
         type: Boolean,
-        required: true,
         default: true
     },
+    assigned:{
+        type: Boolean
+    },
+    assigned_to:{
+        type: String,
+    },
+    flag: {
+        type: String,
+    },
+    temp_answer: {
+        type: String,
+    },
+    assigned_at: {
+        type: Date
+    },
+    answered: {
+        type: Boolean
+    },
+    answered_at: {
+        type: Date
+    },
+
     created_at: {
         type: Date,
         default: Date.now

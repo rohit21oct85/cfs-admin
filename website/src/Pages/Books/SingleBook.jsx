@@ -3,10 +3,10 @@ import {GetName, GetString} from '../../utils/MakeSlug';
 import BookImage from './BookImage';
 import BookHeading from './BookHeading';
 
-export default function SingleBook({books}) {
+export default function SingleBook({books, width, heading}) {
     
     return (
-    <div className="subject-card" key={books._id} id={`card-${books._id}`}>
+    <div className="subject-card" style={{ width: width+'%'}} key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pr-0">
             <BookImage isbn={books.ISBN13}  width="100%"/>
@@ -60,8 +60,10 @@ export default function SingleBook({books}) {
         </div>
         </div>
         
-        <hr className="mt-1 mb-1"/>
-        <BookHeading books={books}/>
+        {heading && (<>
+            <hr className="mt-1 mb-1"/>
+            <BookHeading books={books}/>
+        </>)}
     </div>
     )
 }

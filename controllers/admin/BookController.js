@@ -322,15 +322,28 @@ const searchBook = async(req, res) => {
 
 const addReview = async (req, res) => {
     try {
-        const content = {rating: req.body.rating,review: req.body.review, userName:req.body.userName};
+        const content = {rating: req.body.rating,review: req.body.review, userName:req.body.userName, status: true};
         const filter = {ISBN13: req.body.isbn,_id: req.body.book_id};
-        var Content = await Book.findOne(filter);
-        Content.reviews.push(content);
-        await Content.save();
-        return res.status(201).json({
-            error: false,
-            message: "Review Added"
-        });
+        if(req.body.review_id){
+            let Review = await Book.findOne(filter);
+            let singleReview = await Review.reviews.id(req.body.review_id);
+            singleReview.set(content);
+            await Review.save();
+            return res.status(201).json({
+                error: false,
+                message: "Review updated"
+            });
+            
+        }else{
+            var Content = await Book.findOne(filter);
+            Content.reviews.push(content);
+            await Content.save();
+            return res.status(201).json({
+                error: false,
+                message: "Review Added"
+            });
+        }
+        
     } catch (error) {
         res.status(409).json({
             message: "Error occured",
@@ -373,6 +386,7 @@ const UploadReviewCSV = async(req, res) => {
                         userName: review.userName, 
                         review: review.review, 
                         rating: review.rating, 
+                        status: true, 
                         
                     })
                 })
@@ -407,6 +421,70 @@ const UpdateotherFunction = async(res,filterData, FinalData, callback) => {
         })
     }
 }
+
+const updateReviewStatus = async (req, res) => {
+    try {
+        const filter = {_id: req.body.book_id};
+        const content = {status: req.body.status};
+        
+        let Review = await Book.findOne(filter);
+        let singleReview = await Review.reviews.id(req.body.review_id);
+        singleReview.set(content);
+        await Review.save();
+        return res.status(201).json({
+            error: false,
+            message: "Review status updated"
+        });
+        
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+const updatePublishedStatus = async (req, res) => {
+    try {
+        const filter = {_id: req.body.book_id};
+        const content = {published: req.body.published};
+        await Book.findByIdAndUpdate(filter, content);
+        return res.status(201).json({
+            error: false,
+            message: "Freelancer Published status updated"
+        });
+        
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+const deleteReview = async(req, res) => {
+    try {
+        
+        let Review = await Book.findOne({_id: req.params.book_id});
+        await Review.reviews.id(req.params.review_id).remove();
+        await Review.save();
+        return res.status(201).json({
+            error: false,
+            message: "Review Deleted",
+        });
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+
 module.exports = {
     BooksBySubSubjectId,
     getAllBook,
@@ -421,5 +499,8 @@ module.exports = {
     searchBook,
     addReview,
     allReviews,
-    UploadReviewCSV
+    UploadReviewCSV,
+    updateReviewStatus,
+    deleteReview,
+    updatePublishedStatus
 }

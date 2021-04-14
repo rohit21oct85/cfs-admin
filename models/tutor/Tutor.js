@@ -1,8 +1,59 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const educationSchema = mongoose.Schema({
+    class: {
+        type: String
+    },
+    grade: {
+        type: String
+    },
+    subject: {
+        type: String
+    },
+    year: {
+        type: String
+    }
+});
+const masterSubjectSchema = mongoose.Schema({
+    subject_id: {
+        type: String
+    },
+    subject_name: {
+        type: String
+    }
+});
+
+const bankSchema = mongoose.Schema({
+    paypal: {
+        type: String
+    },
+    bank_name: {
+        type: String
+    },
+    account_type: {
+        type: String
+    },
+    account_holder: {
+        type: String
+    },
+    account_number: {
+        type: String
+    },
+    ifsc_code: {
+        type: String
+    },
+    bank_country: {
+        type: String
+    }
+});
+
 const TutorSchema = new mongoose.Schema({
-    fullname: {
+    first_name: {
+        type: String,
+        required: true,
+    },
+    last_name: {
         type: String,
         required: true,
     },
@@ -16,14 +67,42 @@ const TutorSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    role: {
+    house_name:{
         type: String,
         required: true,
-        default: "tutor"
+    },
+    street_name:{
+        type: String,
+        required: true,
+    },
+    city:{
+        type: String,
+        required: true,
+    },
+    zipcode:{
+        type: String,
+        required: true,
+    },
+    country:{
+        type: String
+    },
+    education: {
+        type:{educationSchema}
+    },
+    
+    master_subject: {
+        type: {masterSubjectSchema}
+    },
+    
+    bank_details: {
+        type:{bankSchema}
+    },
+    role: {
+        type: String,
+        default: 'tutor'
     },
     status: {
         type: Boolean,
-        required: true,
         default: true
     },
     created_at: {
