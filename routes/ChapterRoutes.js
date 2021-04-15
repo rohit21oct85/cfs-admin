@@ -22,8 +22,9 @@ const router = express.Router();
 
 router
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
-    .get('/qc-chapter-questions/:isbn/:chapter_no',  checkAuth, Chapter.GetQCChapterQuestions)
+    .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
     .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)
+    .post('/qc-answers',  checkAuth, Chapter.QCAnswer)
     .get('/single-question/:q_id',  checkAuth, Chapter.GetSingleQuestion)
     .patch('/add-question/:q_id',  checkAuth, Chapter.AddSingleQuestion)
     .post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)

@@ -713,8 +713,11 @@ span.chapter {
     background: #ededed;
     color: #000;
     border:0;
-    font-size: 0.80rem;
-    font-weight: bold;
-    border-radius: 6px;
-    padding:2px 5px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    border-radius: 50px !important;
+    padding:3px 10px;
 }  
+.ck.ck-editor{
+    height: 210px;
+}

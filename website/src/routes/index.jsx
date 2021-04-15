@@ -159,7 +159,7 @@ export const privateRoutes = [
     },
     
     {
-        path: '/book-check-quality/:isbn/:book_id/:chapter?/:chapter_no?',
+        path: '/book-check-quality/:isbn/:book_id/:chapter?/:chapter_no?/:status?/:remark?/:question_id?',
         component: BookCheckQuality
     },
 

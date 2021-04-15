@@ -637,19 +637,30 @@ const getQCData = async (req, res) => {
                             $eq: ["$answered", true]
                         },1,0]
                     }
-                }
+                },
+                
+                "approved":{
+                    "$sum": {
+                        $cond: [{
+                            $eq: ["$approved", true]
+                        },1,0]
+                    }
+                },
+
             }},
             {$sort : { _id: 1}}
         ]);
         
 
-        const pending_qc = await Chapter.count({"book_isbn": req.params.isbn,assigned: true, answered: true});
-        const total_qc = await Chapter.count({"book_isbn": req.params.isbn, assigned: false, answered: false});
+        const approved_qc = await Chapter.count({"book_isbn": req.params.isbn,approved: true});
+        const pending_qc = await Chapter.count({"book_isbn": req.params.isbn,answered: true});
+        const total_qc = await Chapter.count({"book_isbn": req.params.isbn, assigned: false});
         res.status(201).json({
             error: false,
             data: {
                 "total_question": total_qc,
                 "total_pending_qc": pending_qc,
+                "total_solved": approved_qc,
                 "details": details
             }
         })
@@ -663,8 +674,39 @@ const getQCData = async (req, res) => {
 const GetQCChapterQuestions = async (req, res) => {
      
     try {
-        const filter = {"book_isbn": req.params.isbn, "chapter_no": req.params.chapter_no};
-        await Chapter.find(filter,{problem_no: 1, question: 1, chapter_name: 1}).then(response => {
+        const filter = {
+            "book_isbn": req.params.isbn, 
+            "chapter_no": req.params.chapter_no
+        };
+        const status = req.params.status;
+        switch (status) {
+            case "answered":
+                filter.assigned = true;
+                filter.answered = true;
+                filter.approved = false;
+            break;
+            
+            case "assigned":
+                filter.assigned = false;
+                filter.answered = false;
+                filter.approved = false;
+            break;
+            case "approved":
+                filter.assigned = true;
+                filter.answered = false;
+                filter.approved = true;
+            break;
+            
+        }
+
+        await Chapter.find(filter,{
+            _id: 1,
+            problem_no: 1, 
+            question: 1, 
+            chapter_name: 1,
+            temp_answer: 1,
+            answered:1
+        }).then(response => {
             res.status(201).json({
                 error: false,
                 data: response
@@ -682,6 +724,39 @@ const GetQCChapterQuestions = async (req, res) => {
     }
 }
 
+const QCAnswer = async (req, res) => {
+    try {
+        const flag = req.body.flag
+        const data = {
+            flag: req.body.flag,
+        }
+        const filter = {_id: req.body.question_id}
+        switch (flag) {
+            case "approved":
+                data.approved = req.body.approved;
+                data.answered = req.body.asnwered;
+                data.approved_at = req.body.approved_at;
+                data.temp_answer = req.body.temp_answer;
+                data.answer = req.body.answer;
+                data.flag = req.body.flag;
+            break;
+        }
+        await Chapter.findOneAndUpdate(filter, data);
+        res.status(201).json({
+            error: false,
+            message: `answer ${req.body.flag} successfully`
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: error.message
+        })
+    }
+
+
+    
+}
+
 module.exports = {
     UploadChapters,
     UdateChaptersCSV,
@@ -697,5 +772,6 @@ module.exports = {
     downloadBooks,
     RemoveBookChapters,
     getQCData,
-    GetQCChapterQuestions
+    GetQCChapterQuestions,
+    QCAnswer
 }

@@ -9,13 +9,18 @@ import useBookQCData from '../../hooks/useBookQCData';
 import useChapterQuestions from '../../hooks/useChapterQuestions';
 
 
-import SingleBook from './SingleBook';
 import { useToasts } from 'react-toast-notifications';
 
 import {useMutation, useQueryClient} from 'react-query'
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
-import BookImage from './BookImage';
+
+import BookSummery from './BookSummery'
+import ChapterData from './ChapterData';
+
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from 'ckeditor5-classic-with-mathtype';
+
 
 export default function BookCheckQuality() {
 
@@ -28,8 +33,8 @@ const {state} = useContext(AuthContext);
 const {data, isLoading} = useSingleBook();
 const {data: qc_data, isLoading: qcd_loading} = useBookQCData();
 const {data: qc_questions, isLoading: qc_loading} = useChapterQuestions();
-console.log(qc_data?.details)
-// console.log([...qc_data?.details,...qc_data?.details_2])
+
+
 let API_URL = '';
 if(process.env.NODE_ENV === 'development'){
     API_URL = cons.LOCAL_API_URL;
@@ -44,9 +49,61 @@ const options = {
 };
 
 const [formData, setFormData] = useState({});
-const [rating, setRating] = useState('');
 const [error, setError] = useState();
-const [loading, setLoading] = useState(false);
+
+const [checkeAnswered, setCheckAnswered] = useState(false);
+const [answeredQuestion, setAnsweredQuestion] = useState({});
+
+const temp_answerRef = useRef();
+
+async function filteredAnswer(){
+    const answered = qc_questions?.data?.filter(d => d._id === params.question_id);
+    if(answered){
+        setAnsweredQuestion(answered[0]);
+        if(params.question_id){
+            setCheckAnswered(true);
+        }else{
+            setCheckAnswered(false);
+        }
+    }
+}
+const queryClient = useQueryClient()
+const [appApprovedLoading, setApprovedLoading] = useState(false);
+const approvedMutation = useMutation(formData => {
+    return axios.post(`${API_URL}chapter/qc-answers`, formData, options)
+},{
+onSuccess: () => {
+    queryClient.invalidateQueries(`chapters-${params.isbn}`)
+    setApprovedLoading(false);
+    setCheckAnswered(false);
+    history.push(`/book-check-quality/${params.isbn}/${params.book_id}`);
+    var objDiv = document.getElementById("reviewDiv");
+    objDiv.scrollTop = 0;
+    addToast('Review added successfully', { appearance: 'success',autoDismiss: true });
+}
+});
+const handleApproveAnswer = async (e) => {
+    const temp_answer = formData.temp_answer === undefined 
+                        ? temp_answerRef.current.props.data 
+                        : formData.temp_answer;
+    
+    formData.temp_answer = temp_answer;
+    formData.answer = temp_answer;
+    formData.question_id = params.question_id;
+    formData.flag = 'approved';
+    formData.approved = true;
+    formData.answered = false;
+    formData.approved_at = Date.now();
+    setApprovedLoading(true);
+    await approvedMutation.mutate(formData);
+}
+
+useEffect(() => {
+    filteredAnswer()
+    return () => {
+        filteredAnswer()
+    }
+}, [qc_questions,checkeAnswered, params.question_id])
 
 const backUrl = params && params.review_id 
         ? `/book-rating-review/${params.isbn}/${params.book_id}`
@@ -79,111 +136,13 @@ return (
 <div className="dash-cont-start" style={{ height: '100vh'}}>
     <div className="subject-main-container pl-0 pt-0 pr-0 pb-0">    
         <div className="row col-md-12 pl-0">
-           <div className="col-md-5 pr-0">
-               <div className="subject-card" style={{ width: '90%'}}>
-                    <div className="row col-md-12 pr-0">
-                        <div className="col-md-4 pl-0 pr-0">
-                            <BookImage isbn={data.ISBN13} width="76%" />
-                        </div>
-                        <div className="col-md-8 pr-0 pl-0">
-                            <div className="admin-name mt-0 mb-3"> 
-                                <div className="name-label">
-                                    Author: 
-                                </div>
-                                <div className="name-main">
-                                    {data.Author1}
-                                </div>
-                            </div>
-                            <div className="admin-name mt-3 mb-3"> 
-                                <div className="name-label">
-                                    ISBN-13: 
-                                </div>
-                                <div className="name-main">
-                                    {data.ISBN13}
-                                </div>
-                            </div>
-                            <div className="admin-name mt-3 mb-3"> 
-                                <div className="name-label">
-                                    Subject: 
-                                </div>
-                                <div className="name-main">
-                                    {data.subject_name}/{data.sub_subject_name}
-                                </div>
-                            </div>
-                            <div className="admin-name mt-1 mb-1"> 
-                                <div className="name-label">
-                                    Total Reviews: 
-                                </div>
-                                <div className="name-main">
-                                    {data.reviews.length}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <hr className="pt-2"/> 
-                    <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
-                        <div className="name-label pt-1">
-                            Total Question: 
-                        </div>
-                        <div className="name-main">
-                            <button className="counter">
-                                Total - {qc_data?.total_question}
-                            </button>
-                        </div>
-                    </div> 
-                    <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
-                        <div className="name-label pt-1">
-                            Pending For QC: 
-                        </div>
-                        <div className="name-main">
-                            <button className="counter">
-                                Total - {qc_data?.total_pending_qc ? qc_data?.total_pending_qc: '0'}
-                            </button>
-                            
-                        </div>
-                    </div> 
-                    <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
-                        <div className="name-label pt-1">
-                            Solved: 
-                        </div>
-                        <div className="name-main">
-                            <button className="counter">
-                                Total - {qc_data?.total_approved ? qc_data?.total_approved: '0'}
-                            </button>
-                        </div>
-                    </div> 
-                    
-                    
-                    <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
-                        <div className="name-label pt-1">
-                            Total Reworked: 
-                        </div>
-                        <div className="name-main">
-                            <button className="counter">
-                                Total -  {qc_data?.total_rework ? qc_data?.total_rework: '0'}
-                            </button>
-                           
-                        </div>
-                    </div> 
-                    <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
-                        <div className="name-label pt-1">
-                            Total Rejected: 
-                        </div>
-                        <div className="name-main">
-                            <button className="counter">
-                                Total -  {qc_data?.total_unsolved ? qc_data?.total_unsolved: '0'}
-                            </button>
-                        </div>
-                    </div> 
-                   
-                </div>
-           </div>     
+            <div className="col-md-5 pr-0">
+                <BookSummery data={data} qc_data={qc_data}/>
+            </div>     
             <div className="col-md-7 pl-0">
                 
                 {params?.chapter_no === undefined && (
-
-                    <div className="subject-card" style={{ height: '74vh', width: '100%', overflowY: 'hidden', paddingRight: '10px', paddingBottom: '0px' }}>
+                <div className="subject-card" style={{ height: '74vh', width: '100%', overflowY: 'hidden', paddingRight: '10px', paddingBottom: '0px' }}>
                     
                     <div style={{ display: 'flex', flexContent: 'space-between' }}>
                         <b>All Chapters:</b>
@@ -192,35 +151,14 @@ return (
                     
                     <div style={{height: '65vh', overflowY: 'scroll', paddingRight: '10px', paddingBottom: '0px'}}>
                     {qcd_loading && (<span className="fa fa-spinner"></span>)}
-                    {!qcd_loading && qc_data?.details.map( (data, index) => {
+                    {!qcd_loading && qc_data?.details.map( data => {
                         
-                        return (
-                        <div className="mt-2 p-2" style={{  border: '1px solid #ddd'}} key={data._id.chapter_no}> 
-                            <div className="name-label pt-1">
-                                <strong>{data._id.chapter_no}. &nbsp; </strong>
-                                {data._id.chapter_name} 
-                            </div>
-                            <hr />
-                            <div className="admin-name" style={{display: 'flex', justifyContent: 'start',}}>
-                                <button className="counter text-success mr-2"
-                                onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}`)}
-                                >
-                                Pending in QC -- {data.answered}
-                                </button>
-                                <button className="counter text-danger"
-                                onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}`)}
-                                >
-                                Total Question -- {data.count}
-                                </button>
-                                
-                            </div>
-                        </div>   
-                        )
+                        return (<ChapterData data={data} key={data._id.chapter_no}/>)
                     })}
                         </div>
                     </div>
                 )}
-                {params?.chapter_no && (
+                {params?.chapter_no && !checkeAnswered && (
                     <div className="subject-card" style={{ height: '74vh', overflow: 'hidden', width: '100%' }}>
                         
                         <div style={{ display: 'flex', flexContent: 'space-between' }}>
@@ -236,28 +174,142 @@ return (
                         {qc_loading && (<span className="fa fa-spinner"></span>)}
                         {!qc_loading && qc_questions?.data?.map( ques => {
                             return (
-                                <div className=" mt-2 p-2" style={{ border: '1px solid #ddd'}} key={ques._id}> 
+                                <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}} key={ques._id}> 
+                                
                                 <div className="name-label pt-1">
                                     <strong>Q.No: {ques.problem_no}. &nbsp; </strong>
                                     {ques?.question} 
                                 </div>
                                 <hr className="mt-1 mb-1" /> 
+                                
                                 <div className="name-main">
-                                    <button className="btn btn-sm dark" style={{ borderRadius: '50%'}}
-                                    onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}`)}
+                                    <button className="btn btn-sm text-success" style={{ borderRadius: '50%'}}
+                                    onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${params.chapter_no}`)}
                                     >
-                                       <span class="fa fa-question-circle-o"></span>
+                                       <span className="fa fa-question-circle-o"></span>
                                        &nbsp; 
-                                       Answer the Question
+                                       <b> Answer the Question</b>
                                     </button>
+                                    {ques.answered && (
+                                        <button className="btn btn-sm text-danger" style={{ borderRadius: '50%'}}
+                                        onClick={e => {
+                                            setCheckAnswered(true);
+                                            history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${params.chapter_no}/${params.status}/${params.status == 'answered'? 'check_answer': 'submit_answer'}/${ques._id}`)
+                                        }}
+                                        >
+                                           <span className="fa fa-question-circle-o"></span>
+                                           &nbsp; 
+                                           <b>
+                                            QC the Answer
+                                           </b>
+                                        </button>
+                                    )}
                                     
                                 </div>
+
                             </div> 
                             )
                         })}
                         </div>
                     </div>
                 )}
+
+                {checkeAnswered && (
+                    <div className="subject-card" style={{ height: '74vh', overflow: 'hidden', width: '100%' }}>
+                        <div style={{ display: 'flex', flexContent: 'space-between' }}>
+                        <button className="btn btn-sm text-success pt-0 pb-0 pl-0"
+                        onClick={e => {
+                            setCheckAnswered(false);
+                            history.push(`/book-check-quality/${params.isbn}/${params.book_id}/${params.chapter}/${params.chapter_no}/${params.status}`)
+                        }}    
+                        >
+                            <span className="fa fa-arrow-left"></span>
+                        </button>
+                        <b>Chapter No: {params?.chapter_no}.&nbsp; {qc_questions?.data[0]?.chapter_name } </b>
+                        </div>
+                        <hr className="mt-1 mb-1"/>
+                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
+                            <div className="name-label pt-1">
+                                <strong>Q.No: {answeredQuestion?.problem_no}. &nbsp; </strong>
+                                {answeredQuestion?.question} 
+                            </div>
+                        </div> 
+                        
+                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
+                            <div className="name-label pt-1">
+                                <strong>Answer: &nbsp; </strong>
+                                 
+                                <CKEditor
+                                editor={ ClassicEditor }
+                                config={{
+                                    toolbar: {
+                                        items: [
+                                            'MathType', 'ChemType','heading', 
+                                            '|',
+                                            'bold',
+                                            'italic',
+                                            'link',
+                                            'bulletedList',
+                                            'numberedList',
+                                            'imageUpload',
+                                            'mediaEmbed',
+                                            'insertTable',
+                                            'blockQuote',
+                                            'undo',
+                                            'redo'
+                                        ]
+                                    },
+                                }}
+                                ref={temp_answerRef}
+                                data={answeredQuestion?.temp_answer}
+                                defaultValue={answeredQuestion?.temp_answer}
+                                onChange={ ( event, editor ) => {
+                                    const data = editor.getData();
+                                    setFormData( { ...formData, temp_answer: data } );
+                                } }
+                            />
+                            </div>
+                        </div> 
+                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
+                            <div className="name-label pt-1">
+                                <button className="btn btn-sm counter btn-success"
+                                onClick={handleApproveAnswer}
+                                >
+                                  {appApprovedLoading ? (
+                                      <>
+                                      <span className="fa fa-spinner"></span> 
+                                      &nbsp; processing....</>
+                                  ) : (
+                                    <>
+                                    <span className="fa fa-check-circle-o"></span> 
+                                    &nbsp; Approve Answer</>
+                                  )}
+                                   
+                                </button>
+                                <button className="btn btn-sm counter btn-warning ml-2">
+                                    <span className="fa fa-check-circle-o"></span> 
+                                    &nbsp; Send Back To Tutor
+                                </button>
+                                <button className="btn btn-sm counter btn-primary ml-2">
+                                <span className="fa fa-backward"></span> 
+                                    &nbsp; Send Back To Pool
+                                </button>
+                                
+                                <button className="btn btn-sm btn-danger counter ml-2"
+                                onClick={e => {
+                                    setCheckAnswered(false);
+                                    history.push(`/book-check-quality/${params.isbn}/${params.book_id}/${params.chapter}/${params.chapter_no}/${params.status}`)
+                                }} >
+                                <span className="fa fa-times"></span> 
+                                    &nbsp; Cancel
+                                </button>
+
+                            </div>
+                        </div>            
+
+                    </div>
+                )}        
+
             </div>     
         </div>
     </div>

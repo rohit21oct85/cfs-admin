@@ -68,12 +68,16 @@ const chapterQuestion = async (req, res) => {
 }
 const updateDB = async () => {
     await Chapter.find({}).updateMany({
-        assigned: false, 
-        assigned_to: '',
         flag: '',
+        assigned_to: '',
+        assigned: false, 
         assigned_at: null,
         answered: false, 
-        answered_at: null
+        answered_at: null,
+        rejected: false,
+        rejected_at: null,
+        approved: false,
+        approved_at: null
     });
 }
 const startAnswering = async (req, res) => {
@@ -90,8 +94,6 @@ const startAnswering = async (req, res) => {
 }
 const finishAnswer = async (req, res) => {
     
-    // res.send(req.body);
-
     try {
         const filter = {_id: req.body.question_id};
         const type = req.body.answer_type;

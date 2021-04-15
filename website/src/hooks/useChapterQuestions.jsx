@@ -9,6 +9,7 @@ export default function useChapterQuestions() {
     const params = useParams();
     const isbn = params.isbn;
     const chapter_no = params.chapter_no;
+    const status = params.status;
 
     const {state } = useContext(AuthContext);
     let API_URL = '';
@@ -18,7 +19,7 @@ export default function useChapterQuestions() {
         API_URL = cons.LIVE_API_URL;
     }
     return useQuery([`question-${chapter_no}`,isbn], async () => {
-        const result = await axios.get(`${API_URL}chapter/qc-chapter-questions/${isbn}/${chapter_no}`,{
+        const result = await axios.get(`${API_URL}chapter/qc-chapter-questions/${isbn}/${chapter_no}/${status}`,{
             headers: {
                 'Content-Type': 'Application/json',
                 'Authorization':'Bearer '+state.access_token
