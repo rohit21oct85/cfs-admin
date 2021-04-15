@@ -65,17 +65,11 @@ const options = {
     useCreateIndex: true
 };
 
-if (process.env.NODE_ENV === 'production') {
-    const MONGO_URI = process.env.MONGO_URI
-    mongoose.connect(MONGO_URI, options)
-        .then(() => console.log('Mongo DB Connected on Server'))
-        .catch(err => console.log(err));
-} else {
-    const db = require('./config/keys').MongoURI
-    mongoose.connect(db, options)
-        .then(() => console.log('Mongo DB Connected Locally'))
-        .catch(err => console.log(err));
-}
+const MONGO_URI = process.env.MONGO_URI
+mongoose.connect(MONGO_URI, options)
+    .then(() => console.log('Mongo DB Connected on Server'))
+    .catch(err => console.log(err));
+
 app.listen(PORT, () => {
     console.log(`App is running on PORT ${PORT}`);
 })

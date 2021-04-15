@@ -8,7 +8,6 @@
         "client": "cd website && npm run start",
         "backend": "nodemon index.js",
         "dev": "npm-run-all --parallel backend client",
-        "build:clean":"cd public && rm -rf build",
         "prod:build":"cd public && rm -rf build && cd ../website && npm run build"
     },
     "keywords": [
