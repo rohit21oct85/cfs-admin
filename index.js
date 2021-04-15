@@ -107,9 +107,15 @@ app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
 app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('website/build'));
+    app.use(express.static('public/build'));
     app.get('/*', (req, res) => {
-        const index = path.join(__dirname, 'website', 'build', 'index.html');
+        const index = path.join(__dirname, 'public', 'build', 'index.html');
+        res.sendFile(index);
+    });
+}else{
+    app.use(express.static('public/build'));
+    app.get('/*', (req, res) => {
+        const index = path.join(__dirname, 'public', 'build', 'index.html');
         res.sendFile(index);
     });
 }

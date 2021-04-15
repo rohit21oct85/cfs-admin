@@ -239,7 +239,7 @@ return (
                             <div className="name-label pt-1">
                                 <strong>Answer: &nbsp; </strong>
                                  
-                                {/* <CKEditor
+                                <CKEditor
                                 editor={ ClassicEditor }
                                 config={{
                                     toolbar: {
@@ -267,7 +267,7 @@ return (
                                     const data = editor.getData();
                                     setFormData( { ...formData, temp_answer: data } );
                                 } }
-                            /> */}
+                            />
                             </div>
                         </div> 
                         <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     

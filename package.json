@@ -5,11 +5,11 @@
     "main": "index.js",
     "scripts": {
         "start": "NODE_ENV='production' && node index.js",
-        "heroku-postbuild": "cd website && npm install && npm run build",
         "client": "cd website && npm run start",
         "backend": "nodemon index.js",
         "dev": "npm-run-all --parallel backend client",
-        "start:prod": "node index.js -p 80"
+        "build:clean":"cd public && rm -rf build",
+        "prod:build":"cd public && rm -rf build && cd ../website && npm run build"
     },
     "keywords": [
         "acadmic search engine, nodejs, mongodb, react js"

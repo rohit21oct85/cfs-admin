@@ -125,7 +125,7 @@ return (
                                 Question
                             </Form.Label>
                             
-                            {/* <CKEditor
+                            <CKEditor
                                 editor={ ClassicEditor }
                                 config={{
                                     toolbar: {
@@ -151,7 +151,7 @@ return (
                                     const data = editor.getData();
                                     setFormData( { ...formData, question: data } );
                                 } }
-                            /> */}
+                            />
                             
                         </Form.Group>
                         <Form.Group className="col-md-12">
