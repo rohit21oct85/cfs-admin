@@ -84,7 +84,7 @@ export default function BookSummery({data, qc_data}) {
             </div>
             <div className="name-main">
                 <button className="counter btn-primary">
-                    Total -  {qc_data?.total_rework ? qc_data?.total_rework: '0'}
+                    Total -  {qc_data?.total_reworked ? qc_data?.total_reworked: '0'}
                 </button>
                
             </div>
@@ -95,7 +95,7 @@ export default function BookSummery({data, qc_data}) {
             </div>
             <div className="name-main">
                 <button className="counter btn-info">
-                    Total -  {qc_data?.total_unsolved ? qc_data?.total_unsolved: '0'}
+                    Total -  {qc_data?.total_rejected ? qc_data?.total_rejected: '0'}
                 </button>
             </div>
         </div> 

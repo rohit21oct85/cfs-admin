@@ -14,6 +14,7 @@ import { useToasts } from 'react-toast-notifications';
 import {useMutation, useQueryClient} from 'react-query'
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
+import * as utils from '../../utils/MakeSlug';
 
 import BookSummery from './BookSummery'
 import ChapterData from './ChapterData';
@@ -69,12 +70,14 @@ async function filteredAnswer(){
 }
 const queryClient = useQueryClient()
 const [appApprovedLoading, setApprovedLoading] = useState(false);
+const [UpdateLoading, setUpdateLoading] = useState(false);
 const approvedMutation = useMutation(formData => {
     return axios.post(`${API_URL}chapter/qc-answers`, formData, options)
 },{
 onSuccess: () => {
     queryClient.invalidateQueries(`chapters-${params.isbn}`)
     setApprovedLoading(false);
+    setUpdateLoading(false);
     setCheckAnswered(false);
     history.push(`/book-check-quality/${params.isbn}/${params.book_id}`);
     var objDiv = document.getElementById("reviewDiv");
@@ -93,7 +96,6 @@ const handleApproveAnswer = async (e) => {
     formData.flag = 'approved';
     formData.approved = true;
     formData.answered = false;
-    formData.approved_at = Date.now();
     setApprovedLoading(true);
     await approvedMutation.mutate(formData);
 }
@@ -105,9 +107,32 @@ useEffect(() => {
     }
 }, [qc_questions,checkeAnswered, params.question_id])
 
+const [sendBack, setSendBack] = useState(false);
+const [flag, setFlag] = useState('');
+const [option, setOption] = useState('');
+
+console.log(option, flag)
+
+
+const handleSubmit = async () => {
+    if(flag === 'reject'){
+        formData.rejected = true;
+        formData.flag = flag;
+        formData.option = option;
+    }else if(flag === 'rework'){
+        formData.flag = flag;
+        formData.option = option;
+        formData.reworked = true;
+    }
+    formData.question_id = params.question_id;
+    console.log(formData)
+    setUpdateLoading(true);
+    await approvedMutation.mutate(formData);
+}
+
 const backUrl = params && params.review_id 
         ? `/book-rating-review/${params.isbn}/${params.book_id}`
-        : `/books`;
+        : `/books/${data?.subject_name}/${data?.sub_subject_name}/${data?.sub_subject_id}`;
 return (
 <>
 {state.isLoggedIn && (
@@ -215,7 +240,7 @@ return (
                 )}
 
                 {checkeAnswered && (
-                    <div className="subject-card" style={{ height: '74vh', overflow: 'hidden', width: '100%' }}>
+                    <div className="subject-card" style={{ height: 'auto !important', overflowY: 'scroll',overflowX: 'hidden', width: '100%' }}>
                         <div style={{ display: 'flex', flexContent: 'space-between' }}>
                         <button className="btn btn-sm text-success pt-0 pb-0 pl-0"
                         onClick={e => {
@@ -286,26 +311,108 @@ return (
                                   )}
                                    
                                 </button>
-                                <button className="btn btn-sm counter btn-warning ml-2">
+                                <button className={`btn btn-sm counter btn-danger ml-2 ${(flag == 'rework') ? 'active' :''}`}
+                                    onClick={e => {
+                                        setOption('')
+                                        setFlag('rework')
+                                        setSendBack(true)}}
+                                >
                                     <span className="fa fa-check-circle-o"></span> 
                                     &nbsp; Send Back To Tutor
                                 </button>
-                                <button className="btn btn-sm counter btn-primary ml-2">
+                                <button className={`btn btn-sm counter btn-primary ml-2 ${(flag == 'reject') ? 'active' :''}`}
+                                    onClick={e => {
+                                        setOption('')
+                                        setFlag('reject')
+                                        setSendBack(true)
+                                    }}
+                                >
                                 <span className="fa fa-backward"></span> 
                                     &nbsp; Send Back To Pool
                                 </button>
                                 
                                 <button className="btn btn-sm btn-danger counter ml-2"
-                                onClick={e => {
-                                    setCheckAnswered(false);
-                                    history.push(`/book-check-quality/${params.isbn}/${params.book_id}/${params.chapter}/${params.chapter_no}/${params.status}`)
-                                }} >
+                                    onClick={e => {
+                                        setCheckAnswered(false);
+                                        history.push(`/book-check-quality/${params.isbn}/${params.book_id}/${params.chapter}/${params.chapter_no}/${params.status}`)
+                                    }} 
+                                >
                                 <span className="fa fa-times"></span> 
                                     &nbsp; Cancel
                                 </button>
 
                             </div>
-                        </div>            
+                        </div>
+                        {sendBack && (
+                            <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>  
+                                <h5>Options reason for: {flag} <span className="fa fa-enter"></span> </h5>   
+                                <hr className="mt-1 mb-3"/>
+                                <div className="name-label row col-md-12 pt-1" style={{ display: 'flex', justifyContent: 'start'}}>
+                                    <button 
+                                        className={`counter btn-success pl-3 pr-3 mr-2 ${(option == 'incomplete') ? 'active' :''}`}
+                                        onClick={e => {
+                                            setOption('incomplete')
+                                            setFormData({})
+                                        }}
+                                    >
+                                        &nbsp; Incomplete
+                                    </button>
+                                    <button 
+                                        className={`counter btn-success pl-3 pr-3 mr-2 ${(option == 'moredetails') ? 'active' :''}`}
+                                        onClick={e => {
+                                            setOption('moredetails')
+                                            setFormData({})
+                                        }}
+                                    >
+                                        &nbsp; Answer Required more details
+                                    </button>
+                                    <button 
+                                        className={`counter btn-success pl-3 pr-3 mr-2 ${(option == 'other') ? 'active' :''}`}
+                                        onClick={e => {
+                                            setOption('other')
+                                            setFormData({})
+                                        }}
+                                    >
+                                        &nbsp; Other Reason
+                                    </button>
+                                    {option == 'other' && (
+                                        <div>
+                                            <input type="text" name="other_data"
+                                            className="counter text-danger"
+                                            style={{ outline: 'none'}}
+                                            onChange={e => setFormData({...formData, other_data: e.target.value})}/>
+                                        </div>
+                                    )}
+                                </div>
+                                <hr className="mt-3 mb-3"/>
+                                <button 
+                                    className="btn-success counter pl-3 pr-3"
+                                    onClick={handleSubmit}
+                                >
+                                    {UpdateLoading ?(
+                                        <>
+                                        <span className="fa fa-spinner mr-2"></span> Processing...
+                                        </>
+                                    ):(
+                                        <>
+                                        <span className="fa fa-save mr-2"></span> Submit Answer
+                                        </>
+                                    )}
+
+                                </button>
+                                <button 
+                                    className="btn-danger counter pl-3 pr-3 ml-2"
+                                    onClick={e => {
+                                        setFlag('')
+                                        setSendBack(false)
+                                    }}
+                                >
+                                   <span className="fa fa-times"></span> Cancel
+                                </button>
+
+                            </div>
+                        )}        
+
 
                     </div>
                 )}        

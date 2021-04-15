@@ -56,31 +56,30 @@ const ChapterSchema = new mongoose.Schema({
     assigned:{
         type: Boolean
     },
-    assigned_to:{
-        type: String,
-    },
-    assigned_at: {
-        type: Date
-    },
     answered: {
         type: Boolean
     },
-    answered_at: {
-        type: Date
-    },
-    
     rejected: {
         type: Boolean
-    },
-    rejected_at: {
-        type: Date
     },
     approved: {
         type: Boolean
     },
-    approved_at: {
+    reworked: {
+        type: Boolean
+    },
+    option: {
+        type: String
+    },
+    
+    assigned_at: {
         type: Date
     },
+    
+    assigned_to: {
+        type: Object
+    },
+
     created_at: {
         type: Date,
         default: Date.now

@@ -10,8 +10,10 @@ const WebRoutes = require("./routes/web-routes.js");
 const TutorRoutes = require("./routes/tutor-routes.js");
 const cronJob = require('cron').CronJob;
 const {cfsCronTask} = require('./cfsCronTask.js');
-const app = express();
+const responseTime = require('response-time')
 
+const app = express();
+app.use(responseTime())
 /* Cron Task */
 var job = new cronJob({
     cronTime: '10 * * * * *',
@@ -101,12 +103,6 @@ app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
 app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('public/build'));
-    app.get('/*', (req, res) => {
-        const index = path.join(__dirname, 'public', 'build', 'index.html');
-        res.sendFile(index);
-    });
-}else{
     app.use(express.static('public/build'));
     app.get('/*', (req, res) => {
         const index = path.join(__dirname, 'public', 'build', 'index.html');
