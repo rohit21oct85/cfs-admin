@@ -10,22 +10,35 @@ export default function ChapterData({data}) {
             <strong>{data._id.chapter_no}. &nbsp; </strong>
             {data._id.chapter_name} 
         </div>
-        <hr className="mt-1 mb-1"/>
+        <hr className="mt-1 mb-2"/>
         <div className="admin-name" style={{display: 'flex', justifyContent: 'start',}}>
             <button className="counter btn-danger mr-2"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/answered`)}
             >
-            Pending For QC -- {data.answered}
+            Pending QC -- {data.answered}
             </button>
             <button className="counter btn-success mr-2"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/approved`)}
             >
-            Total Approved -- {data.approved}
+            Approved -- {data.approved}
             </button>
+            
+            <button className="counter btn-success mr-2"
+            onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/reworked`)}
+            >
+            Reworked -- {data.reworked}
+            </button>
+
+            <button className="counter btn-success mr-2"
+            onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/rejected`)}
+            >
+            Rejected -- {data.rejected}
+            </button>
+
             <button className="counter btn-primary"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/assigned`)}
             >
-            Total Question -- {data.count}
+            Total -- {data.count}
             </button>
             
         </div>

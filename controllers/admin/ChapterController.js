@@ -646,13 +646,29 @@ const getQCData = async (req, res) => {
                         },1,0]
                     }
                 },
+                "rejected":{
+                    "$sum": {
+                        $cond: [{
+                            $eq: ["$rejected", true]
+                        },1,0]
+                    }
+                },
+                "reworked":{
+                    "$sum": {
+                        $cond: [{
+                            $eq: ["$reworked", true]
+                        },1,0]
+                    }
+                },
 
             }},
-            {$sort : { _id: 1}}
+            {$sort : { _id: 1, answered: 1}}
         ]);
         
 
         const approved_qc = await Chapter.count({"book_isbn": req.params.isbn,approved: true});
+        const rejected_qc = await Chapter.count({"book_isbn": req.params.isbn,rejected: true});
+        const reworked_qc = await Chapter.count({"book_isbn": req.params.isbn,reworked: true});
         const pending_qc = await Chapter.count({"book_isbn": req.params.isbn,answered: true});
         const total_qc = await Chapter.count({"book_isbn": req.params.isbn, assigned: false});
         res.status(201).json({
@@ -661,6 +677,8 @@ const getQCData = async (req, res) => {
                 "total_question": total_qc,
                 "total_pending_qc": pending_qc,
                 "total_solved": approved_qc,
+                "total_rejected": rejected_qc,
+                "total_reworked": reworked_qc,
                 "details": details
             }
         })
@@ -681,20 +699,19 @@ const GetQCChapterQuestions = async (req, res) => {
         const status = req.params.status;
         switch (status) {
             case "answered":
-                filter.assigned = true;
                 filter.answered = true;
-                filter.approved = false;
             break;
-            
             case "assigned":
                 filter.assigned = false;
-                filter.answered = false;
-                filter.approved = false;
             break;
             case "approved":
-                filter.assigned = true;
-                filter.answered = false;
                 filter.approved = true;
+            break;
+            case "rejected":
+                filter.rejected = true;
+            break;
+            case "reworked":
+                filter.reworked = true;
             break;
             
         }
@@ -727,8 +744,12 @@ const GetQCChapterQuestions = async (req, res) => {
 const QCAnswer = async (req, res) => {
     try {
         const flag = req.body.flag
+        let option = '';
         const data = {
             flag: req.body.flag,
+        }
+        if(req.body.option === 'other'){
+            option = req.body.other_data;
         }
         const filter = {_id: req.body.question_id}
         switch (flag) {
@@ -739,6 +760,38 @@ const QCAnswer = async (req, res) => {
                 data.temp_answer = req.body.temp_answer;
                 data.answer = req.body.answer;
                 data.flag = req.body.flag;
+            break;
+            case "reject":
+                data.assigned = false;
+                data.rejected = req.body.rejected;
+                data.approved = false;
+                data.answered = false;
+                data.rejected_at = req.body.rejected_at;
+                data.assigned_at = req.body.rejected_at;
+                data.approved_at = null;
+                data.answered_at = null;
+                data.reworked = false;
+                data.reworked_at = null;
+                data.temp_answer = '';
+                data.answer = '';
+                data.flag = flag;
+                data.option = option;
+            break;
+            case "rework":
+                data.reworked = true;
+                data.rejected = false;
+                data.assigned = true;
+                data.approved = false;
+                data.answered = false;
+                data.reworked_at = new Date();
+                data.assigned_at = null;
+                data.rejected_at = null;
+                data.approved_at = null;
+                data.answered_at = null;
+                data.temp_answer = '';
+                data.answer = '';
+                data.flag = flag;
+                data.option = option;
             break;
         }
         await Chapter.findOneAndUpdate(filter, data);
@@ -755,6 +808,44 @@ const QCAnswer = async (req, res) => {
 
 
     
+}
+const clearFields = async (req, res) => {
+    await Chapter.updateMany({},
+        {$unset: {
+        "flag": "",
+        "option": "",
+        "assigned_to": "",
+        "assigned_at": "",
+        "assigned": "", 
+        "answered": "", 
+        "rejected": "",
+        "approved": "",
+        "reworked": ""
+    }});
+
+    res.status(201).json({
+        error: false,
+        message: "field cleared"
+    })
+}
+const addFields = async (req, res) => {
+    await Chapter.updateMany({},
+        {
+        "flag": "",
+        "option": "",
+        "assigned_to": "",
+        "assigned_at": new Date(),
+        "assigned": false, 
+        "answered": false, 
+        "rejected": false,
+        "approved": false,
+        "reworked": false
+    });
+
+    res.status(201).json({
+        error: false,
+        message: "field cleared"
+    })
 }
 
 module.exports = {
@@ -773,5 +864,7 @@ module.exports = {
     RemoveBookChapters,
     getQCData,
     GetQCChapterQuestions,
-    QCAnswer
+    QCAnswer,
+    clearFields,
+    addFields
 }

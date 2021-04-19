@@ -36,6 +36,8 @@ router
     .get('/exercise/:isbn/:chapter_no/:section_no', checkAuth, Chapter.getBookExercises)
     .get('/problem/:isbn/:chapter_no/:section_no/:excerise_no', checkAuth, Chapter.getBookProblems)
     .get('/only-problem/:isbn/:chapter_no', checkAuth,Chapter.getBookOnlyProblems)
+    .get('/clearfields',checkAuth, Chapter.clearFields)
+    .get('/addfields',checkAuth, Chapter.addFields)
     .get('/search-question/:isbn/:search', checkAuth,Chapter.searchQuestion)
 ;
 

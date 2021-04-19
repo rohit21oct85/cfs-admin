@@ -18,11 +18,12 @@ const openBook = async (req, res) => {
 }
 
 const getAnswered = async (req, res) => {
+    
     res.status(201).json(await Chapter.count({
         book_isbn: req.body.book_isbn,
         chapter_no: req.body.chapter_no,
         answered: true,
-        assigned: false
+        assigned: true
     }));
 }
 const chapterQuestion = async (req, res) => {
@@ -66,26 +67,12 @@ const chapterQuestion = async (req, res) => {
         });
     }
 }
-const updateDB = async () => {
-    await Chapter.find({}).updateMany({
-        flag: '',
-        assigned_to: '',
-        assigned: false, 
-        assigned_at: null,
-        answered: false, 
-        answered_at: null,
-        rejected: false,
-        rejected_at: null,
-        approved: false,
-        approved_at: null
-    });
-}
+
 const startAnswering = async (req, res) => {
     // res.send(req.body);
     try {
         const filter = {_id: req.body.question_id};
-        const data = {assigned: true, assigned_to: req.body.user_Id, flag: 'assigned', assigned_at: Date.now()}
-        // updateDB();
+        const data = {assigned: true,assigned_at: Date.now(), assigned_to: req.body.user_Id, flag: 'assigned'}
         await Chapter.findOneAndUpdate(filter, {$set: data});
         res.send({error: false, message: 'answring started'});
     } catch (error) {
@@ -97,17 +84,17 @@ const finishAnswer = async (req, res) => {
     try {
         const filter = {_id: req.body.question_id};
         const type = req.body.answer_type;
-        const data = {assigned_to: req.body.user_Id, flag: 'assigned'}
+        const data = {assigned_to:req.body.user_Id, flag:'assigned'}
         if(type == 'skip'){
             data.assigned = false;
             data.flag = req.body.reason;
         }else{
             data.flag = 'answered';
-            data.answered_at = Date.now()
             data.assigned = true
             data.answered = true
             data.temp_answer = req.body.temp_answer;
         }
+        // return res.send(data)
         await Chapter.findOneAndUpdate(filter, {$set: data});
         res.send({error: false, message: 'answring finished'});
 
