@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import '../mainDash.css';
 import {  useHistory , useParams , Link} from "react-router-dom";
 import { Button } from 'react-bootstrap'
@@ -20,6 +20,8 @@ const params = useParams();
 const {state} = useContext(AuthContext);
 
 const {data, isLoading, error} = useBooks();
+
+
 return (
 
 <>
@@ -47,8 +49,6 @@ return (
                 onClick={ e => history.push('/books-create')}
                 className="btn btn-sm dark">
                     <span className="fa fa-plus-circle text-success mr-2"></span> Add books</Button>
-                    
-                    
                 <Button 
                 onClick={ e => history.push('/books-upload')}
                 className="btn btn-sm dark ml-2">
@@ -57,6 +57,7 @@ return (
                 onClick={ e => history.push('/books-bulk-upload')}
                 className="btn btn-sm dark ml-2">
                     <span className="fa fa-cloud text-success mr-2"></span> Bulk Uploads books</Button>
+                
 
                 <SearchBook />
 
@@ -69,7 +70,9 @@ return (
         {!isLoading && (
         <div className="dash-cont-start">
         <div className="subject-main-container">    
-        {data.data.map(books => <SingleBook books={books} key={books._id}/> )}
+        
+        {data.data.map(books => <SingleBook heading={true} books={books} key={books._id}/> )}
+
         {data.pagination && data.pagination.itemCount === 0 && (
             <div className="col-md-6 offset-3 p-5">
                 <h2 style={{ fontSize: '1.2em' }}>No Books have been Uploaded in <br />

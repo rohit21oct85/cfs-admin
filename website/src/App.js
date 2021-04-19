@@ -15,6 +15,7 @@ import AuthProvider from './context/AuthContext.jsx';
 import AdminProvider from './context/AdminContext.jsx';
 import SubjectProvider from './context/SubjectContext.jsx';
 import ErrorProvider from './context/ErrorContext.jsx';
+import { ToastProvider } from 'react-toast-notifications';
 
 import {
   useQuery,
@@ -40,7 +41,9 @@ return (
     <AdminProvider>
     <SubjectProvider>
     <ErrorProvider>
+    <ToastProvider>
     <Navigation />
+    <React.StrictMode>
     <Switch>
     {guestRoutes && guestRoutes.map((route => (
     <Route exact={true} key={route.path} path={route.path} component={route.component} />
@@ -56,6 +59,8 @@ return (
 
 
     </Switch>
+    </React.StrictMode>
+    </ToastProvider>  
     </ErrorProvider> 
     </SubjectProvider> 
     </AdminProvider>  

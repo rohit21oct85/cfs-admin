@@ -411,8 +411,15 @@ label.form-lable.form-input{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 2px 0px
+    margin: 5px 0px
 }
+.displayRating{
+    font-size: 1.3rem;
+}
+.displayIcon{
+    font-size: 1.2rem;
+}
+
 .date{
     font-size: 0.8em;
 }
@@ -697,4 +704,20 @@ span.chapter {
 }
 .search{
     height: 29px;
+}
+.react-switch {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+.counter{
+    background: #ededed;
+    color: #000;
+    border:0;
+    font-size: 0.75rem;
+    font-weight: 400;
+    border-radius: 50px !important;
+    padding:3px 10px;
+}  
+.ck.ck-editor{
+    height: 210px;
 }

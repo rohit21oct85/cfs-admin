@@ -21,6 +21,14 @@ function SingleSubSubject({sub}) {
             </div> 
             <div className="admin-name"> 
                 <div className="name-label">
+                    Sub Subject Id: 
+                </div>
+                <div className="name-main date">
+                    {sub._id}
+                </div>
+            </div> 
+            <div className="admin-name"> 
+                <div className="name-label">
                     Sub Subject: 
                 </div>
                 <div className="name-main date">

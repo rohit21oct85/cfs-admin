@@ -13,8 +13,16 @@ function SingleSubject({sub}) {
     }
 
     return (
-        <div className="small-card" key={sub._id} id={`card-${sub._id}`}>
+        <div className="subject-card" key={sub._id} id={`card-${sub._id}`}>
         <div className="subject-card-body">
+            <div className="admin-name"> 
+                <div className="name-label">
+                    Subject Id: 
+                </div>
+                <div className="name-main">
+                    {sub._id}
+                </div>
+            </div> 
             <div className="admin-name"> 
                 <div className="name-label">
                     Subject Name: 

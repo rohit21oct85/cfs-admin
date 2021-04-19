@@ -7,8 +7,23 @@ const path = require("path");
 const session = require('express-session')
 const Routes = require("./routes/index.js");
 const WebRoutes = require("./routes/web-routes.js");
-
+const TutorRoutes = require("./routes/tutor-routes.js");
+const cronJob = require('cron').CronJob;
+const {cfsCronTask} = require('./cfsCronTask.js');
 const app = express();
+
+/* Cron Task */
+var job = new cronJob({
+    cronTime: '10 * * * * *',
+    onTick: function() {
+        cfsCronTask()
+   },
+    start: false,
+    timeZone: 'Asia/Kolkata'
+  });
+job.start();
+
+
 app.use(cors());
 const PORT = process.env.PORT || 8080;
 
@@ -50,17 +65,11 @@ const options = {
     useCreateIndex: true
 };
 
-if (process.env.NODE_ENV === 'production') {
-    const MONGO_URI = process.env.MONGO_URI
-    mongoose.connect(MONGO_URI, options)
-        .then(() => console.log('Mongo DB Connected on Server'))
-        .catch(err => console.log(err));
-} else {
-    const db = require('./config/keys').MongoURI
-    mongoose.connect(db, options)
-        .then(() => console.log('Mongo DB Connected Locally'))
-        .catch(err => console.log(err));
-}
+const MONGO_URI = process.env.MONGO_URI
+mongoose.connect(MONGO_URI, options)
+    .then(() => console.log('Mongo DB Connected on Server'))
+    .catch(err => console.log(err));
+
 app.listen(PORT, () => {
     console.log(`App is running on PORT ${PORT}`);
 })
@@ -87,13 +96,24 @@ app.use("/web/v1/chapter", WebRoutes.WebChapterRoutes);
 app.use("/web/v1/faq", WebRoutes.WebFaqRoutes);
 app.use("/web/v1/category", WebRoutes.CategoryRoutes);
 app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
-app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
+
+// app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
 app.use("/web/v1/subsubject", WebRoutes.WebSubjectRoutes);
 
+app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
+app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
+
+
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('website/build'));
+    app.use(express.static('public/build'));
     app.get('/*', (req, res) => {
-        const index = path.join(__dirname, 'website', 'build', 'index.html');
+        const index = path.join(__dirname, 'public', 'build', 'index.html');
+        res.sendFile(index);
+    });
+}else{
+    app.use(express.static('public/build'));
+    app.get('/*', (req, res) => {
+        const index = path.join(__dirname, 'public', 'build', 'index.html');
         res.sendFile(index);
     });
 }

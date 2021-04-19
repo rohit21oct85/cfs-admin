@@ -22,17 +22,21 @@ const router = express.Router();
 
 router
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
+    .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
+    .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)
+    .post('/qc-answers',  checkAuth, Chapter.QCAnswer)
     .get('/single-question/:q_id',  checkAuth, Chapter.GetSingleQuestion)
     .patch('/add-question/:q_id',  checkAuth, Chapter.AddSingleQuestion)
     .post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)
     .post('/update-chapter-csv', upload.single('file'), checkAuth, Chapter.UdateChaptersCSV)
-    .delete('/delete/:isbn', Chapter.RemoveBookChapters)
-    .get('/all/:isbn', Chapter.getBookChapters)
-    .get('/section/:isbn/:chapter_no', Chapter.getBookSections)
-    .get('/download/:isbn', Chapter.downloadBooks)
-    .get('/exercise/:isbn/:chapter_no/:section_no', Chapter.getBookExercises)
-    .get('/problem/:isbn/:chapter_no/:section_no/:excerise_no', Chapter.getBookProblems)
-    .get('/only-problem/:isbn/:chapter_no', Chapter.getBookOnlyProblems)
-    .get('/search-question/:isbn/:search', Chapter.searchQuestion);
+    .delete('/delete/:isbn', checkAuth, Chapter.RemoveBookChapters)
+    .get('/all/:isbn', checkAuth,Chapter.getBookChapters)
+    .get('/section/:isbn/:chapter_no',  checkAuth, Chapter.getBookSections)
+    .get('/download/:isbn', checkAuth,Chapter.downloadBooks)
+    .get('/exercise/:isbn/:chapter_no/:section_no', checkAuth, Chapter.getBookExercises)
+    .get('/problem/:isbn/:chapter_no/:section_no/:excerise_no', checkAuth, Chapter.getBookProblems)
+    .get('/only-problem/:isbn/:chapter_no', checkAuth,Chapter.getBookOnlyProblems)
+    .get('/search-question/:isbn/:search', checkAuth,Chapter.searchQuestion)
+;
 
 module.exports = router;
