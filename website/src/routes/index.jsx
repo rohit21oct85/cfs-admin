@@ -17,6 +17,7 @@ import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
+import AllTutors from '../Pages/Tutor/AllTutors.jsx';
 import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
 import CreateFaq from '../Pages/FAQ/CreateFaq.jsx';
 import CreateFaqQuestion from '../Pages/FAQ/CreateFaqQuestion.jsx';
@@ -123,12 +124,7 @@ export const privateRoutes = [
     },
     
     {
-        path: '/books-create',
-        component: CreateBooks
-    },
-
-    {
-        path: '/books-create/:subject_name/:subject_id/:book_id?',
+        path: '/books-create/:subject_name?/:subject_id?/:book_id?',
         component: CreateBooks
     },
     
@@ -182,7 +178,10 @@ export const privateRoutes = [
         path: '/add-faq-question/:faq_category?/:faq_id/:question_id?',
         component: CreateFaqQuestion
     },
-
+    {
+        path: '/all-tutors/:status?',
+        component: AllTutors
+    }
     
 ];
 

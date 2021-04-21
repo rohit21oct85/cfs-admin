@@ -2,6 +2,7 @@
 *{
     font-family: 'Open Sans', sans-serif;
 }
+
 .main_dash_area {
     height: 100vh;
     overflow: hidden;
@@ -411,7 +412,7 @@ label.form-lable.form-input{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 5px 0px
+    margin: 0px 0px
 }
 .displayRating{
     font-size: 1.3rem;
@@ -578,7 +579,6 @@ label.form-lable.form-input{
   50%  {width: 50%;}
   75%  {width: 75%;}
   100% {width: 100%;}
-
 }
 
 .checkall{

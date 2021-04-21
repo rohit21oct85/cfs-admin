@@ -10,37 +10,43 @@ export default function ChapterData({data}) {
             <strong>{data._id.chapter_no}. &nbsp; </strong>
             {data._id.chapter_name} 
         </div>
-        <hr className="mt-1 mb-2"/>
-        <div className="admin-name" style={{display: 'flex', justifyContent: 'start',}}>
-            <button className="counter btn-danger mr-2"
-            onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/answered`)}
-            >
-            Pending QC -- {data.answered}
-            </button>
+        <div className="clearfix"></div>
+        <div className="admin-name" style={{display: 'flex', justifyContent: 'start',marginTop: '15px'}}>
+            {data?.answered > 0 && (
+                <button className="counter btn-danger mr-2"
+                onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/answered`)}
+                >
+                Pending QC -- {data.answered}
+                </button>
+            )}
+            {data?.approved > 0 && (
             <button className="counter btn-success mr-2"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/approved`)}
             >
             Approved -- {data.approved}
             </button>
-            
+            )}
+            {data?.reworked > 0 && (
             <button className="counter btn-success mr-2"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/reworked`)}
             >
             Reworked -- {data.reworked}
             </button>
-
+            )}    
+            {data?.rejected > 0 && (
             <button className="counter btn-success mr-2"
             onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/rejected`)}
             >
             Rejected -- {data.rejected}
             </button>
-
+            )}
+            {data?.count > 0 && (
             <button className="counter btn-primary"
-            onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/assigned`)}
+            onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${data._id.chapter_no}/notassigned`)}
             >
-            Total -- {data.count}
+            Not Assigned -- {data.count}
             </button>
-            
+            )}
         </div>
     </div> 
     

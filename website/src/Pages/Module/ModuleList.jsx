@@ -84,8 +84,6 @@ return (
                 </div>
                 <div className="dash-cont-start">
                     <div className="org-main-area">
-                        
-                        
                         {!isLoading && (
                         <div className="subject-main-container">
                             

@@ -44,8 +44,8 @@ export default function BookSummery({data, qc_data}) {
             </div>
         </div>
         
-        <hr className="pt-2"/> 
-        <div className="admin-name mt-2 p-2" style={{ border: '1px solid #ddd'}}> 
+        <hr className="pt-1 pb-0"/> 
+        <div className="admin-name mt-1 p-2" style={{ border: '1px solid #ddd'}}> 
             <div className="name-label pt-1">
                 Total Question: 
             </div>

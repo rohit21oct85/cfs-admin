@@ -75,7 +75,7 @@ const approvedMutation = useMutation(formData => {
     return axios.post(`${API_URL}chapter/qc-answers`, formData, options)
 },{
 onSuccess: () => {
-    queryClient.invalidateQueries(`chapters-${params.isbn}`)
+    queryClient.invalidateQueries(['chapters',params.isbn])
     setApprovedLoading(false);
     setUpdateLoading(false);
     setCheckAnswered(false);
@@ -93,9 +93,15 @@ const handleApproveAnswer = async (e) => {
     formData.temp_answer = temp_answer;
     formData.answer = temp_answer;
     formData.question_id = params.question_id;
-    formData.flag = 'approved';
+    formData.remark = params.remark;
+    if(params?.remark === 'submit_answer'){
+        formData.flag = 'submitAnswer';
+    }else{
+        formData.flag = 'approved';
+    }
     formData.approved = true;
     formData.answered = false;
+    setSendBack(false)
     setApprovedLoading(true);
     await approvedMutation.mutate(formData);
 }
@@ -115,11 +121,10 @@ console.log(option, flag)
 
 
 const handleSubmit = async () => {
-    if(flag === 'reject'){
-        formData.rejected = true;
+    if(flag === 'rejected'){
         formData.flag = flag;
         formData.option = option;
-    }else if(flag === 'rework'){
+    }else if(flag === 'reworked'){
         formData.flag = flag;
         formData.option = option;
         formData.reworked = true;
@@ -202,21 +207,16 @@ return (
                                 <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}} key={ques._id}> 
                                 
                                 <div className="name-label pt-1">
-                                    <strong>Q.No: {ques.problem_no}. &nbsp; </strong>
-                                    {ques?.question} 
+                                    <strong>Q.No: {ques.problem_no}. &nbsp; 
+                                    <span className="badge badge-success pull-right" style={{ textTransform: 'capitalize'}}>{ques?.flag}</span>
+                                    </strong>
+                                    <hr className="mt-1 mb-2"/>
+                                    <p className="mb-1">{ques?.question}</p>
                                 </div>
-                                <hr className="mt-1 mb-1" /> 
-                                
+                                <hr className="mt-0 mb-2" /> 
                                 <div className="name-main">
-                                    <button className="btn btn-sm text-success" style={{ borderRadius: '50%'}}
-                                    onClick={e => history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${params.chapter_no}`)}
-                                    >
-                                       <span className="fa fa-question-circle-o"></span>
-                                       &nbsp; 
-                                       <b> Answer the Question</b>
-                                    </button>
-                                    {ques.answered && (
-                                        <button className="btn btn-sm text-danger" style={{ borderRadius: '50%'}}
+                                    {(ques.flag === 'answered' || ques.flag === 'approved') && (
+                                        <button className="btn btn-sm counter btn-danger" style={{ borderRadius: '50%'}}
                                         onClick={e => {
                                             setCheckAnswered(true);
                                             history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${params.chapter_no}/${params.status}/${params.status == 'answered'? 'check_answer': 'submit_answer'}/${ques._id}`)
@@ -226,6 +226,25 @@ return (
                                            &nbsp; 
                                            <b>
                                             QC the Answer
+                                           </b>
+                                        </button>
+                                    )}
+
+                                    {(
+                                        ques.flag === 'reworked' || 
+                                        ques.flag === 'rejected' ||
+                                        ques.flag === 'notassigned'
+                                        ) && (
+                                        <button className="btn btn-sm counter btn-success" style={{ borderRadius: '50%'}}
+                                        onClick={e => {
+                                            setCheckAnswered(true);
+                                            history.push(`/book-check-quality/${params.isbn}/${params.book_id}/chapter/${params.chapter_no}/${params.status}/${params.status == 'answered'? 'check_answer': 'submit_answer'}/${ques._id}`)
+                                        }}
+                                        >
+                                           <span className="fa fa-question-circle-o"></span>
+                                           &nbsp; 
+                                           <b>
+                                            Answer The Question
                                            </b>
                                         </button>
                                     )}
@@ -253,14 +272,18 @@ return (
                         <b>Chapter No: {params?.chapter_no}.&nbsp; {qc_questions?.data[0]?.chapter_name } </b>
                         </div>
                         <hr className="mt-1 mb-1"/>
-                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
+                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>
+                            
                             <div className="name-label pt-1">
-                                <strong>Q.No: {answeredQuestion?.problem_no}. &nbsp; </strong>
+                                <strong>Q.No: {answeredQuestion?.problem_no}. &nbsp; 
+                                <span className="badge badge-success pull-right" style={{ textTransform: 'capitalize'}}>{answeredQuestion?.flag}</span>  
+                                </strong>
+                                <hr className="mt-1 mb-2"/>
                                 {answeredQuestion?.question} 
                             </div>
                         </div> 
                         
-                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
+                        <div className="mt-1 p-2" style={{ border: '1px solid #ddd'}}>     
                             <div className="name-label pt-1">
                                 <strong>Answer: &nbsp; </strong>
                                  
@@ -295,6 +318,7 @@ return (
                             />
                             </div>
                         </div> 
+                        {params?.remark === 'check_answer' && (
                         <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>     
                             <div className="name-label pt-1">
                                 <button className="btn btn-sm counter btn-success"
@@ -311,19 +335,19 @@ return (
                                   )}
                                    
                                 </button>
-                                <button className={`btn btn-sm counter btn-danger ml-2 ${(flag == 'rework') ? 'active' :''}`}
+                                <button className={`btn btn-sm counter btn-danger ml-2 ${(flag == 'reworked') ? 'active' :''}`}
                                     onClick={e => {
                                         setOption('')
-                                        setFlag('rework')
+                                        setFlag('reworked')
                                         setSendBack(true)}}
                                 >
                                     <span className="fa fa-check-circle-o"></span> 
                                     &nbsp; Send Back To Tutor
                                 </button>
-                                <button className={`btn btn-sm counter btn-primary ml-2 ${(flag == 'reject') ? 'active' :''}`}
+                                <button className={`btn btn-sm counter btn-primary ml-2 ${(flag == 'rejected') ? 'active' :''}`}
                                     onClick={e => {
                                         setOption('')
-                                        setFlag('reject')
+                                        setFlag('rejected')
                                         setSendBack(true)
                                     }}
                                 >
@@ -343,11 +367,49 @@ return (
 
                             </div>
                         </div>
-                        {sendBack && (
+                        )}  
+                        {params?.remark === 'submit_answer' && (
+                        <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>
+                            <div className="name-label pt-1">
+                                {
+                                ((params.status === 'answered') ||  
+                                (params.status === 'notassigned') ||  
+                                (params.status === 'rejected') ||  
+                                (params.status === 'approved') ||  
+                                (params.status === 'reworked')) &&
+                                (
+                                <button className="btn btn-sm counter btn-success" 
+                                    onClick={handleApproveAnswer}>
+                                    {appApprovedLoading ? (
+                                        <>
+                                        <span className="fa fa-spinner"></span> 
+                                        &nbsp; processing....</>
+                                    ) : (
+                                        <>
+                                        <span className="fa fa-check-circle-o"></span> 
+                                        &nbsp; Submit Answer</>
+                                    )}
+                                    
+                                    </button>
+                                )}
+
+                                <button className="btn btn-sm btn-danger counter ml-2"
+                                    onClick={e => {
+                                        setCheckAnswered(false);
+                                        history.push(`/book-check-quality/${params.isbn}/${params.book_id}/${params.chapter}/${params.chapter_no}/${params.status}`)
+                                    }} 
+                                >
+                                <span className="fa fa-times"></span> 
+                                    &nbsp; Cancel
+                                </button>
+                            </div>
+                        </div>    
+                        )}          
+                        {sendBack && params?.remark === 'check_answer' && (
                             <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>  
-                                <h5>Options reason for: {flag} <span className="fa fa-enter"></span> </h5>   
+                                <h5>Options reason for: {params.status} <span className="fa fa-enter"></span> </h5>   
                                 <hr className="mt-1 mb-3"/>
-                                <div className="name-label row col-md-12 pt-1" style={{ display: 'flex', justifyContent: 'start'}}>
+                                <div className="name-label row pl-3">
                                     <button 
                                         className={`counter btn-success pl-3 pr-3 mr-2 ${(option == 'incomplete') ? 'active' :''}`}
                                         onClick={e => {

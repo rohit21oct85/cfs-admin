@@ -293,7 +293,6 @@ const searchBook = async(req, res) => {
             ,{
                 $limit: 5
             }
-            
             ,{
                 $project: {
                     sub_subject_name: 1,
@@ -304,6 +303,7 @@ const searchBook = async(req, res) => {
                     ISBN13: 1,
                     Edition: 1,
                     Author1: 1,
+                    published: 1,
                     score: { $meta: "searchScore" }
                 }
             }

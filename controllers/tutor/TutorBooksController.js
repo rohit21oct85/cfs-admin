@@ -3,6 +3,7 @@ const Chapter = require('../../models/admin/Chapter')
 
 const openBook = async (req, res) => {
     try {
+        
         const filter = {sub_subject_id:req.body.subject_id, published: true}
         const project = {_id:1, BookName:1,ISBN13: 1};
         const books = await Book.find(filter,project);
@@ -45,7 +46,7 @@ const chapterQuestion = async (req, res) => {
                 })
             }
         });
-        filter.assigned = false;
+        filter.flag = "notassigned";
         if(req.body.chapter_no === "0"){
             filter.chapter_no = results[0].chapter_no;
             const questions = await Chapter.find(filter, {problem_no:1,question:1,_id:1, chapter_no:1})
@@ -72,7 +73,11 @@ const startAnswering = async (req, res) => {
     // res.send(req.body);
     try {
         const filter = {_id: req.body.question_id};
-        const data = {assigned: true,assigned_at: Date.now(), assigned_to: req.body.user_Id, flag: 'assigned'}
+        const data = {
+            assigned_at: Date.now(), 
+            assigned_to: req.body.user_Id, 
+            flag: 'assigned'
+        }
         await Chapter.findOneAndUpdate(filter, {$set: data});
         res.send({error: false, message: 'answring started'});
     } catch (error) {
@@ -84,14 +89,15 @@ const finishAnswer = async (req, res) => {
     try {
         const filter = {_id: req.body.question_id};
         const type = req.body.answer_type;
-        const data = {assigned_to:req.body.user_Id, flag:'assigned'}
+        const data = {
+            assigned_to:req.body.user_Id, 
+            flag:'assigned'
+        }
         if(type == 'skip'){
             data.assigned = false;
             data.flag = req.body.reason;
         }else{
             data.flag = 'answered';
-            data.assigned = true
-            data.answered = true
             data.temp_answer = req.body.temp_answer;
         }
         // return res.send(data)

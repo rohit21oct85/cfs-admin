@@ -2,12 +2,12 @@ import React ,{useState, useContext} from 'react'
 import {MakeSlug, GetString} from '../../utils/MakeSlug';
 import {useHistory, useParams, useLocation} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
-import Switch from "react-switch";
 
 import {AuthContext} from '../../context/AuthContext';
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
 import {useMutation, useQueryClient} from 'react-query'
+import Switch from "react-switch";
 import { useToasts } from 'react-toast-notifications';
 
 function BookHeading({books}) {
@@ -70,6 +70,7 @@ function BookHeading({books}) {
             addToast('Freelancer Published status updated', { appearance: 'success',autoDismiss: true });
         }
     });
+
     const [checked, setChecked] = useState(false);
     const handleChange = async ({book_id,status}) => {
         setChecked(status);
@@ -92,13 +93,13 @@ function BookHeading({books}) {
                     activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
                     title="freelance tutoring"
                 />
-               {books.published} 
             </div>
             <div>
 
                 <Button className="delBtn pl-1 pr-1" title="QC Details" onClick={handleBookQulity.bind(this,books.ISBN13,books._id)}>
                     <span className="fa fa-thumbs-up displayIcon text-warning mr-2"></span>
                 </Button>
+                
                 <Button className="delBtn pl-1 pr-1" title="Review and Rating" onClick={handleRatingAndReview.bind(this,books.ISBN13,books._id)}>
                     <span className="fa fa-star displayIcon text-danger mr-2"></span>
                 </Button>

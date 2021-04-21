@@ -1,6 +1,7 @@
 const Tutor = require('../../models/tutor/Tutor.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const md5 = require('md5');
 
 let refreshTokens = [];
 
@@ -26,14 +27,24 @@ const Register = async(req, res) => {
     }
 }
 
+
+const comparePassword = async (password, dbpwd) => {
+    if(md5(password) === dbpwd){
+        return true
+    }else{
+        return false
+    }
+}
 const Login = async(req, res) => {
     try {
         // return res.send(req.body);
         let tutor = await Tutor.findOne({ email: req.body.email }, { __v: 0 });
         if (!tutor) return res.status(401).send({message: 'Invalid email or password'});
 
-        const validPassword = await bcrypt.compare(req.body.password, tutor.password);
+        const validPassword = await comparePassword(req.body.password, tutor.password);
+
         if (!validPassword) return res.status(401).send({message:"Invalid email or password"});
+
         const accessToken = generateAccessToken(tutor);
         const refreshToken = generateRefreshToken(tutor);
         refreshTokens.push(refreshToken);

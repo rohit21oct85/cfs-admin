@@ -10,7 +10,6 @@ const cfsCronTask = async () => {
                 flag: '', 
                 assigned_at: '' 
             }});
-            console.log(`Data Updated`);
         })
     }else{
         console.log(`No Task Available`);

@@ -14,6 +14,11 @@ const ModuleSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    
+    icon:{
+        type: String
+    },
+
     status:{
         type: Boolean,
         required: true,
