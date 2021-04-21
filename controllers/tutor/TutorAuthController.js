@@ -37,8 +37,7 @@ const comparePassword = async (password, dbpwd) => {
 }
 const Login = async(req, res) => {
     try {
-        // return res.send(req.body);
-        let tutor = await Tutor.findOne({ email: req.body.email }, { __v: 0 });
+        let tutor = await Tutor.findOne({ email: req.body.email });
         if (!tutor) return res.status(401).send({message: 'Invalid email or password'});
 
         const validPassword = await comparePassword(req.body.password, tutor.password);
@@ -55,7 +54,7 @@ const Login = async(req, res) => {
             tutor
         });
     } catch (error) {
-        return res.status(402).json({
+        return res.status(500).json({
             message: error.message
         });
     }
@@ -99,8 +98,8 @@ const Logout = async(req, res) => {
         const decode = await jwt.verify(accessToken, accessTokenSecret);
         const UserData = { id: decode.id, role: decode.role };
         let newAccessToken = await jwt.sign(UserData, 'sasdasd', { expiresIn: '0s' });
-        return res.status(402).json({
-            message: "successfully loggedout",
+        return res.status(200).json({
+            message: "successfully logged out",
             accessToken: newAccessToken
         });
     }
