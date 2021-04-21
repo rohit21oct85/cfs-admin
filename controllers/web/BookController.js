@@ -131,14 +131,46 @@ const searchChapterQuestion = async (req, res) => {
     });
 }
 
-const searchBookNameIsbn = async (req, res) => {
+const searchChapterQuestionIndividual = async (req, res) => {
     const search = req.params.search;
     const limit = parseInt(req.params.limit);
     // return res.send(req.params)
+
+    const total = await Chapter.countDocuments(Chapter.find({ 
+        $or:
+        // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]
+        [{question:{$regex:search}}]}));
+    const questions = await Chapter.find({ 
+        $or:
+        // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]
+        [{question:{$regex:search}}]
+    },{
+        _id:0,
+        book_id :1,
+        book_name:1,
+        chapter_no:1,
+        chapter_name:1,
+        section_no:1,
+        section_name:1,
+        excerise:1,
+        problem_no:1,
+        question:1,
+        book_isbn:1,
+    }).skip(req.params.pageno * req.params.limit).limit(parseInt(req.params.limit));
+
+    res.status(200).json({
+        questions:questions,
+        total:total
+    });
+}
+
+const searchBookNameIsbn = async (req, res) => {
+    const search = req.params.search;
+    const limit = parseInt(req.params.limit);
+
     const books = await Book.find({ 
         $or:
-        // [{ISBN13: { $regex: /^search$/i}},{BookName:{ $regex:/^search$/i }}]
-        [{ISBN13: { $regex: search}},{BookName:{ $regex:search }}]
+        [{ISBN13: { $regex: search }},{ BookName:{ $regex:search }}]
     },{
         _id:0,
         BookName:1,
@@ -146,10 +178,37 @@ const searchBookNameIsbn = async (req, res) => {
         Edition:1,
         Author1:1,
         ISBN10:1,
-    }).limit(limit);
+    }).limit(parseInt(limit));
 
     res.status(200).json({
         books
+    });
+}
+
+const searchBookNameIsbnIndividual = async (req, res) => {
+    const search = req.params.search;
+    const limit = parseInt(req.params.limit);
+    // return res.send(req.params)
+    const total =  await Book.countDocuments(Book.find({ 
+            $or:
+            [{ISBN13: { $regex: search }},{ BookName:{ $regex:search }}]
+        }))
+
+    const books = await Book.find({ 
+        $or:
+        [{ISBN13: { $regex: search }},{ BookName:{ $regex:search }}]
+    },{
+        _id:0,
+        BookName:1,
+        ISBN13:1,
+        Edition:1,
+        Author1:1,
+        ISBN10:1,
+    }).skip(req.params.pageno * req.params.limit).limit(parseInt(req.params.limit));
+
+    res.status(200).json({
+        books: books,
+        total: total,
     });
 }
 
@@ -366,4 +425,6 @@ module.exports = {
     getBookProblems,
     getBookOnlyProblems,
     searchQuestion,
+    searchBookNameIsbnIndividual,
+    searchChapterQuestionIndividual,
 }

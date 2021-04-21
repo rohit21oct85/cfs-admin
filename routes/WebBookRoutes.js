@@ -9,6 +9,8 @@ router
     .get('/popular-books', Book.popularBooks)
     .get('/search-chapter-question/:search/:limit', Book.searchChapterQuestion)
     .get('/search-book-name-isbn/:search/:limit', Book.searchBookNameIsbn)
+    .get('/search-book-name-isbn-individual/:search/:limit/:pageno', Book.searchBookNameIsbnIndividual)
+    .get('/search-chapter-question/:search/:limit/:pageno', Book.searchChapterQuestionIndividual)
 
     //used on book detail page
     .get('/related-books/:sub_subject', Book.relatedBooks)

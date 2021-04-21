@@ -99,8 +99,12 @@ app.use("/web/v1/faq", WebRoutes.WebFaqRoutes);
 app.use("/web/v1/category", WebRoutes.CategoryRoutes);
 app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
 
+// app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
+app.use("/web/v1/subsubject", WebRoutes.WebSubjectRoutes);
+
 app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
 app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
+
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('public/build'));
