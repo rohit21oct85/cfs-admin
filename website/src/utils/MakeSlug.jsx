@@ -1,8 +1,8 @@
 const MakeSlug = (str) => {
-    return str.trim().toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');   
+    return str?.trim()?.toLowerCase()?.replace(/[^\w ]+/g,'')?.replace(/ +/g,'-');   
 }
 const SameSlug = (str) => {
-    return str.trim().replace(/[^\w ]+/g,'').replace(/ +/g,'-');   
+    return str?.trim()?.replace(/[^\w ]+/g,'')?.replace(/ +/g,'-');   
 }
 
 const GetString = (str, length) => {

@@ -24,16 +24,20 @@ const getAllTutor = async (req, res) => {
             },
         };
         let query;
-        if(req.params.status){
-            if(req.params.status === 'all'){
-                query = {}
-            }else{
-                query = {status: `${req.params.status}`} 
-            }   
+        if(req.params.status === 'all' && req.params.master_subject === 'all'){
+            query = {} 
+        }else if(req.params.master_subject === 'all' && req.params.status !== 'all'){
+            query = {status: `${req.params.status}`} 
+        }else if(req.params.status === 'all' && req.params.master_subject !== 'all'){
+            query = {master_subject: req.params.master_subject} 
+        }
+        else if(req.params.status !== 'all' || req.params.master_subject !== 'all'){
+            query = {status: `${req.params.status}`, master_subject: req.params.master_subject} 
         }else{
             query = {}    
         }
         
+        // return res.send(query);
         await Tutor.paginate(query,options).then(result => {
             return res.status(200).json({
                 data: result.itemsList,
@@ -56,7 +60,29 @@ const getAllTutor = async (req, res) => {
         });
     }
 }
+const updateStatus = async (req, res) => {
+    try {
+        
+        const filter = {_id: req.body.tutor_id};
+        let status = '0';
+        if(req.body.status === true){
+            status = 1;
+        }
+        await Tutor.findOneAndUpdate(filter,{status: status});
+        res.status(201).json({
+            error: false,
+            message: "Tutor Activated successfully"
+        })
+        
 
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
+    }
+}
 module.exports = {
     getAllTutor,
+    updateStatus
 }
