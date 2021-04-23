@@ -2,6 +2,30 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const md5 = require('md5');
 
+const educationSchema = new mongoose.Schema({
+    class: {
+        type: String
+    },
+    grade: {
+        type: String
+    },
+    subject: {
+        type: String
+    },
+    year: {
+        type: String
+    },
+    docs: {
+        type: String
+    },
+    college: {
+        type: String
+    }
+});
+const DateSchema = {
+    type: Date,
+    format: 'YY-mm-dd'
+}
 const TutorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -40,17 +64,8 @@ const TutorSchema = new mongoose.Schema({
     country:{
         type: String
     },
-    class: {
-        type: String
-    },
-    grade: {
-        type: String
-    },
-    subject: {
-        type: String
-    },
-    year: {
-        type: String
+    education: {
+        type: [educationSchema]
     },
     master_subject_id: {
         type: String
@@ -73,7 +88,6 @@ const TutorSchema = new mongoose.Schema({
     referal_code:{
         type: String
     },
-    
     otp:{
         type: String
     },
@@ -96,9 +110,11 @@ const TutorSchema = new mongoose.Schema({
     status: {
         type: String
     },
+    type:{
+        type: String
+    },
     created_at: {
-        type: Date,
-        default: Date.now
+        type: DateSchema
     }
 });
 
@@ -108,7 +124,8 @@ TutorSchema.pre('save', function(next) {
         next();
     } else {
         const hash = md5(tutor.password)
-        tutor.password = hash;
+        // tutor.password = hash;
+        tutor.password = tutor.password;
         next();
     }
 });

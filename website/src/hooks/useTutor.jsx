@@ -24,13 +24,13 @@ export default function useTutor() {
     let pageno = (adminState.CurrentPage === null ) ? 1 : adminState.CurrentPage;
     let url = '';
     if(params.status && params.master_subject){
-        url = `${API_URL}tutor/all/${params?.status}/${params?.master_subject}/${pageno}/${limit}`;
+        url = `${API_URL}tutor/all/${params?.status}/${params?.master_subject}/${params?.type}/${pageno}/${limit}`;
     }
     else{
-        url = `${API_URL}tutor/all/all/all/${pageno}/${limit}`;
+        url = `${API_URL}tutor/all/all/all/all/${pageno}/${limit}`;
     }
 
-    return useQuery([`tutors/${params?.status}/${params?.master_subject}`,pageno], async () => {
+    return useQuery([`tutors/${params?.status}/${params?.master_subject}/${params?.type}`,pageno], async () => {
         const result = await axios.get(`${url}`,{
             headers: {
                 'Content-Type': 'Application/json',

@@ -718,6 +718,14 @@ span.chapter {
     border-radius: 50px !important;
     padding:3px 10px;
 }  
+.my-btn{
+    color: #fff;
+    border:0;
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 5px 10px;
+    outline: none;
+}
 .ck.ck-editor{
     height: 210px;
 }

@@ -181,7 +181,7 @@ export const privateRoutes = [
         component: CreateFaqQuestion
     },
     {
-        path: '/all-tutors/:status?/:master_subject?',
+        path: '/all-tutors/:status?/:master_subject?/:type?',
         component: AllTutors
     },
     {

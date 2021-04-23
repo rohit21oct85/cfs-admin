@@ -6,105 +6,168 @@ const checkValueIndex = (results, checkvalue) => {
     return results.findIndex( data => data.chapter_no === checkvalue);
 }
 const getChapters = async (isbn) => {
-    const chapters = [];
-    const map = new Map();
-    const results = await Chapter.find({
-        "book_isbn": `${isbn}`,
-    },{
-        _id: 0,
-        chapter_no: 1,
-        chapter_name: 1
-    });
-    if(results.length > 0)
-    {
-        results.forEach( item => {
-            if(!map.has(item.chapter_no)){
-                map.set(item.chapter_no, true);
-                chapters.push({
-                    chapter_no: item.chapter_no, 
-                    chapter_name: item.chapter_name, 
-                })
-            }
+    try {
+        const chapters = [];
+        const map = new Map();
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+        },{
+            _id: 0,
+            chapter_no: 1,
+            chapter_name: 1
         });
-        return chapters;
-    }else{
-        return results.length;
+        if(results.length > 0)
+        {
+            results.forEach( item => {
+                if(!map.has(item.chapter_no)){
+                    map.set(item.chapter_no, true);
+                    chapters.push({
+                        chapter_no: item.chapter_no, 
+                        chapter_name: item.chapter_name, 
+                    })
+                }
+            });
+            return chapters;
+        }else{
+            return results.length;
+        } 
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
     }
 }
 const getSections = async (isbn, chapter_no) => {
-    const results = await Chapter.find({
-        "book_isbn": `${isbn}`,
-        "chapter_no": `${chapter_no}`,
-    },{
-        _id: 0,
-        section_no: 1,
-        section_name: 1
-    });
-
-    const sections = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+            "chapter_no": `${chapter_no}`,
+        },{
+            _id: 0,
+            section_no: 1,
+            section_name: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.section_no)){
-            map.set(item.section_no, true);
-            if(item.section_no){
-                sections.push({
-                    section_no: item.section_no, 
-                    section_name: item.section_name, 
-                })
+        const sections = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.section_no)){
+                map.set(item.section_no, true);
+                if(item.section_no){
+                    sections.push({
+                        section_no: item.section_no, 
+                        section_name: item.section_name, 
+                    })
+                }
             }
-        }
-    });
-    return sections;
+        });
+        return sections;
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
     
 }
 const getExcerise = async (isbn, chapter_no, section_no) => {
-    const results = await Chapter.find({
-        "book_isbn": `${isbn}`,
-        "chapter_no": `${chapter_no}`,
-        "section_no": `${section_no}`,
-    },{
-        _id: 0,
-        excerise: 1
-    });
-
-    const excerise = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+            "chapter_no": `${chapter_no}`,
+            "section_no": `${section_no}`,
+        },{
+            _id: 0,
+            excerise: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.excerise)){
-            map.set(item.excerise, true);
-            if(item.excerise ){
-                excerise.push({
-                    excerise: item.excerise 
-                })
+        const excerise = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.excerise)){
+                map.set(item.excerise, true);
+                if(item.excerise ){
+                    excerise.push({
+                        excerise: item.excerise 
+                    })
+                }
             }
-        }
-    });
-    return excerise;
+        });
+        return excerise;
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        }) 
+    }
     
 }
 const getProblems = async (isbn, chapter_no, section_no, excerise) => {
-    const results = await Chapter.find({
-        "book_isbn": `${isbn}`,
-        "chapter_no": `${chapter_no}`,
-        "section_no": `${section_no}`,
-        "excerise": `${excerise}`,
-    },{
-        _id: 1,
-        problem_no: 1,
-        question: 1,
-        answer: 1,
-        image: 1
-    });
-
-    const problems = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+            "chapter_no": `${chapter_no}`,
+            "section_no": `${section_no}`,
+            "excerise": `${excerise}`,
+        },{
+            _id: 1,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            image: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.problem_no)){
-            map.set(item.problem_no, true);
-            if(item.problem_no){
+        const problems = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
+                if(item.problem_no){
+                    problems.push({
+                        q_id: item._id, 
+                        problem_no: item.problem_no, 
+                        question: item.question, 
+                        answer: item.answer, 
+                        image: item.image, 
+                    })
+                }
+            }
+        });
+        return problems; 
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        }) 
+    }
+}
+const getOnlyProblems = async (isbn, chapter_no) => {
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+            "chapter_no": `${chapter_no}`
+        },{
+            _id: 1,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            image: 1
+        });
+    
+        const problems = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
                 problems.push({
                     q_id: item._id, 
                     problem_no: item.problem_no, 
@@ -113,38 +176,15 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
                     image: item.image, 
                 })
             }
-        }
-    });
-    return problems;
-}
-const getOnlyProblems = async (isbn, chapter_no) => {
-    const results = await Chapter.find({
-        "book_isbn": `${isbn}`,
-        "chapter_no": `${chapter_no}`
-    },{
-        _id: 1,
-        problem_no: 1,
-        question: 1,
-        answer: 1,
-        image: 1
-    });
-
-    const problems = [];
-    
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.problem_no)){
-            map.set(item.problem_no, true);
-            problems.push({
-                q_id: item._id, 
-                problem_no: item.problem_no, 
-                question: item.question, 
-                answer: item.answer, 
-                image: item.image, 
-            })
-        }
-    });
-    return problems;
+        });
+        return problems;
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        }) 
+    }
 }
 const GetChapterQuestions = async (req, res) => {
     try{
@@ -369,198 +409,254 @@ const UpdateotherFunction = async(res,FinalData, callback) => {
 
 const getBookChapters = async (req, res) => {
 
-    const chapters = [];
-    const map = new Map();
-    const results = await Chapter.find({
-        "book_isbn": `${req.params.isbn}`,
-    },{
-        _id: 0,
-        chapter_no: 1,
-        chapter_name: 1
-    });
-    results.forEach( item => {
-        if(!map.has(item.chapter_no)){
-            map.set(item.chapter_no, true);
-            chapters.push({
-                chapter_no: item.chapter_no, 
-                chapter_name: item.chapter_name, 
-            })
-        }
-    });
-    res.status(200).json({
-        isbn: req.params.isbn,
-        chapters
-    });
+    try {
+        const chapters = [];
+        const map = new Map();
+        const results = await Chapter.find({
+            "book_isbn": `${req.params.isbn}`,
+        },{
+            _id: 0,
+            chapter_no: 1,
+            chapter_name: 1
+        });
+        results.forEach( item => {
+            if(!map.has(item.chapter_no)){
+                map.set(item.chapter_no, true);
+                chapters.push({
+                    chapter_no: item.chapter_no, 
+                    chapter_name: item.chapter_name, 
+                })
+            }
+        });
+        res.status(200).json({
+            isbn: req.params.isbn,
+            chapters
+        });
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
 }
 const getBookSections = async (req, res) => {
     
-    const results = await Chapter.find({
-        "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.params.chapter_no}`,
-    },{
-        _id: 0,
-        section_no: 1,
-        section_name: 1
-    });
-
-    const sections = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${req.params.isbn}`,
+            "chapter_no": `${req.params.chapter_no}`,
+        },{
+            _id: 0,
+            section_no: 1,
+            section_name: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.section_no)){
-            map.set(item.section_no, true);
-            sections.push({
-                section_no: item.section_no, 
-                section_name: item.section_name, 
-            })
-        }
-    });
-    res.status(200).json({
-        isbn: req.params.isbn, 
-        chapter_no: req.body.chapter_no, 
-        sections});
+        const sections = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.section_no)){
+                map.set(item.section_no, true);
+                sections.push({
+                    section_no: item.section_no, 
+                    section_name: item.section_name, 
+                })
+            }
+        });
+        res.status(200).json({
+            isbn: req.params.isbn, 
+            chapter_no: req.body.chapter_no, 
+            sections});
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
 }
 const getBookExercises = async (req, res) => {
-    const results = await Chapter.find({
-        "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.params.chapter_no}`,
-        "section_no": `${req.params.section_no}`,
-    },{
-        _id: 0,
-        excerise: 1
-    });
-
-    let excerise = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${req.params.isbn}`,
+            "chapter_no": `${req.params.chapter_no}`,
+            "section_no": `${req.params.section_no}`,
+        },{
+            _id: 0,
+            excerise: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.excerise)){
-            map.set(item.excerise, true);
-            excerise.push({
-                excerise: item.excerise 
-            })
-        }
-    });
-    res.status(200).json({
-        isbn: req.params.isbn,
-        chapter_no: req.body.chapter_no,
-        section_no: req.body.section_no, 
-        excerise
-    });
+        let excerise = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.excerise)){
+                map.set(item.excerise, true);
+                excerise.push({
+                    excerise: item.excerise 
+                })
+            }
+        });
+        res.status(200).json({
+            isbn: req.params.isbn,
+            chapter_no: req.body.chapter_no,
+            section_no: req.body.section_no, 
+            excerise
+        });
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
     
 }
 const getBookProblems = async (req, res) => {
-    const results = await Chapter.find({
-        "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.params.chapter_no}`,
-        "section_no": `${req.params.section_no}`,
-        "excerise": `${req.params.excerise_no}`,
-    },{
-        _id: 1,
-        problem_no: 1,
-        question: 1,
-        answer: 1,
-        image: 1
-    });
-
-    const problems = [];
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${req.params.isbn}`,
+            "chapter_no": `${req.params.chapter_no}`,
+            "section_no": `${req.params.section_no}`,
+            "excerise": `${req.params.excerise_no}`,
+        },{
+            _id: 1,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            image: 1
+        });
     
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.problem_no)){
-            map.set(item.problem_no, true);
-            problems.push({
-                q_id: item._id, 
-                problem_no: item.problem_no, 
-                question: item.question, 
-                answer: item.answer, 
-                image: item.image, 
-            })
-        }
-    });
-    res.status(200).json({
-        isbn: req.params.isbn,
-        chapter_no: req.body.chapter_no,
-        section_no: req.body.section_no, 
-        excerise: req.body.excerise,
-        problems
-    });
+        const problems = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
+                problems.push({
+                    q_id: item._id, 
+                    problem_no: item.problem_no, 
+                    question: item.question, 
+                    answer: item.answer, 
+                    image: item.image, 
+                })
+            }
+        });
+        res.status(200).json({
+            isbn: req.params.isbn,
+            chapter_no: req.body.chapter_no,
+            section_no: req.body.section_no, 
+            excerise: req.body.excerise,
+            problems
+        });
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
 }
 const getBookOnlyProblems = async (req, res) => {
-    const results = await Chapter.find({
-        "book_isbn": `${req.params.isbn}`,
-        "chapter_no": `${req.params.chapter_no}`
-    },{
-        _id: 1,
-        problem_no: 1,
-        question: 1,
-        answer: 1,
-        image: 1
-    });
+   try {
+        const results = await Chapter.find({
+            "book_isbn": `${req.params.isbn}`,
+            "chapter_no": `${req.params.chapter_no}`
+        },{
+            _id: 1,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            image: 1
+        });
 
-    const problems = [];
-    
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.problem_no)){
-            map.set(item.problem_no, true);
-            problems.push({
-                q_id: item._id, 
-                problem_no: item.problem_no, 
-                question: item.question, 
-                answer: item.answer, 
-                image: item.image, 
-            })
-        }
-    });
-    res.status(200).json({
-        isbn: req.params.isbn,
-        chapter_no: req.body.chapter_no,
-        problems
-    });
+        const problems = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
+                problems.push({
+                    q_id: item._id, 
+                    problem_no: item.problem_no, 
+                    question: item.question, 
+                    answer: item.answer, 
+                    image: item.image, 
+                })
+            }
+        });
+        res.status(200).json({
+            isbn: req.params.isbn,
+            chapter_no: req.body.chapter_no,
+            problems
+        });
+   } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+   }
 }
 const searchQuestion = async (req, res) => {
-    const s = req.params.search;
-    const isbn = req.params.isbn;
-    const results = await Chapter.find({
-        book_isbn: isbn, 
-        question: { $regex: s }
-    },{
-        _id: 0,
-        problem_no: 1,
-        question: 1,
-        chapter_no: 1,
-        chapter_name: 1,
-        answer: 1,
-        image: 1
-    }).limit( 10 );
-    const problems = [];
-    const map = new Map();
-    results.forEach( item => {
-        if(!map.has(item.problem_no)){
-            map.set(item.problem_no, true);
-            problems.push({
-                problem_no: item.problem_no, 
-                question: item.question, 
-                answer: item.answer, 
-                image: item.image, 
-                chapter_no: item.chapter_no, 
-                chapter_name: item.chapter_name, 
-                
-            })
-        }
-    });
-    res.status(200).json({
-        problems
-    });
+    try {
+        const s = req.params.search;
+        const isbn = req.params.isbn;
+        const results = await Chapter.find({
+            book_isbn: isbn, 
+            question: { $regex: s }
+        },{
+            _id: 0,
+            problem_no: 1,
+            question: 1,
+            chapter_no: 1,
+            chapter_name: 1,
+            answer: 1,
+            image: 1
+        }).limit( 10 );
+        const problems = [];
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
+                problems.push({
+                    problem_no: item.problem_no, 
+                    question: item.question, 
+                    answer: item.answer, 
+                    image: item.image, 
+                    chapter_no: item.chapter_no, 
+                    chapter_name: item.chapter_name, 
+                    
+                })
+            }
+        });
+        res.status(200).json({
+            problems
+        });
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        }) 
+    }
 }
 const GetSingleQuestion = async (req, res) => {
-    const results = await Chapter.findOne({
-        "_id": `${req.params.q_id}`
-    });
-    res.status(200).json({
-        results
-    });
+    try {
+        const results = await Chapter.findOne({
+            "_id": `${req.params.q_id}`
+        });
+        res.status(200).json({
+            results
+        });
+    } catch (error) {
+        res.send({
+            error: true,
+            code: 501,
+            message: error.message
+        })
+    }
 }
 const AddSingleQuestion = async (req, res) => {
     try {
@@ -578,9 +674,11 @@ const AddSingleQuestion = async (req, res) => {
                     });
 
     } catch (error) {
-        res.status(409).json({
+        res.send({
+            error: true,
+            code: 501,
             message: error.message
-        });
+        })
     }
 }
 const downloadBooks = async (req, res) => {
@@ -597,9 +695,11 @@ const RemoveBookChapters = async (req, res) => {
             })
         });
     } catch (error) {
-        res.status(409).json({
+        res.send({
+            error: true,
+            code: 501,
             message: error.message
-        });
+        })
     }
 }
 const getAnsweredTotalNo = async (book_isbn, chapter_no) => {
@@ -683,9 +783,11 @@ const getQCData = async (req, res) => {
             }
         })
     } catch (error) {
-        res.status(409).json({
+        res.send({
+            error: true,
+            code: 501,
             message: error.message
-        });
+        })
     }
 }
 
@@ -718,9 +820,11 @@ const GetQCChapterQuestions = async (req, res) => {
             })
         });
     } catch (error) {
-        res.status(409).json({
+        res.send({
+            error: true,
+            code: 501,
             message: error.message
-        });
+        })
     }
 }
 

@@ -121,16 +121,23 @@ const RefreshToken = async(req, res) => {
 
 const ChangePassword = async (req, res) => {
     // return res.send(req.body);
-    const old_password = req.body.old_password;
-    const new_password = req.body.new_password;
-    const filter = { _id: req.body.user_Id, role: req.body.user_role };
-    let tutor = await Tutor.findOne(filter, { __v: 0 });
-    if (!tutor) return res.status(401).send({message: 'Invalid email or password'});
-    const validPassword = await bcrypt.compare(req.body.old_password, tutor.password);
-    if (!validPassword) return res.status(401).send({message:"Invalid password"});
-    const update = await Tutor.findOneAndUpdate(filter, {password: new_password});
-    if(update){
-        res.send({error: false, message: "password changed"});
+    try {
+        const old_password = req.body.old_password;
+        const new_password = req.body.new_password;
+        const filter = { _id: req.body.user_Id, role: req.body.user_role };
+        let tutor = await Tutor.findOne(filter, { __v: 0 });
+        if (!tutor) return res.status(401).send({message: 'Invalid email or password'});
+        const validPassword = await bcrypt.compare(req.body.old_password, tutor.password);
+        if (!validPassword) return res.status(401).send({message:"Invalid password"});
+        const update = await Tutor.findOneAndUpdate(filter, {password: new_password});
+        if(update){
+            res.send({error: false, message: "password changed"});
+        }   
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
     }
 
 }

@@ -61,7 +61,7 @@ export default function TutorHeading({tutor}) {
             <div>
             <Switch
                     onChange={handleChange.bind(this,{tutor_id: tutor._id,status: !checked})}
-                    checked={tutor.status == "1" ? tutor.status : checked}
+                    checked={tutor.status == "1" ? true : false}
                     className="react-switch displayIcon mr-2"
                     height={20}
                     width={48}
