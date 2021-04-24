@@ -22,10 +22,7 @@ const EducationSchema = new mongoose.Schema({
         type: String
     }
 });
-const DateSchema = {
-    type: Date,
-    format: 'YY-mm-dd'
-}
+
 const TutorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -64,10 +61,7 @@ const TutorSchema = new mongoose.Schema({
     master_subject: {
         type: String
     },
-    master_sub_subject: {
-        type: String
-    },
-    master_sub_subject_id: {
+    master_subject_id: {
         type: Object
     },
     paypal: {
@@ -98,22 +92,22 @@ const TutorSchema = new mongoose.Schema({
         type: Boolean
     },
     approve:{
-        type: String
+        type: String,
+        default: '0'
     },
     role: {
         type: String,
         default: 'tutor'
     },
     status: {
-        type: String
+        type: String,
+        default: '0'
     },
     type:{
         type: String
-    },
-    created_at: {
-        type: DateSchema
     }
-});
+},
+{ timestamps: true });
 
 TutorSchema.pre('save', function(next) {
     const tutor = this;

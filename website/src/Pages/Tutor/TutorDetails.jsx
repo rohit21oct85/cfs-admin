@@ -30,7 +30,7 @@ export default function TutorDetails() {
                     <div className="dash-con-heading">
                         <div className="col-md-12 row">
                             <button className="btn btn-sm dark"
-                            onClick={e=> history.push(`/all-tutors/all/${data?.data?.master_subject}/all`)}
+                            onClick={e=> history.push(`/all-tutors/all/all/all`)}
                             >
                                 <span className="fa fa-arrow-left"></span>
                             </button>

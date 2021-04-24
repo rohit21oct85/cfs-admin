@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, {useContext, useRef, useState, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory , useParams , Link} from "react-router-dom";
 import { Button } from 'react-bootstrap'
@@ -64,17 +64,30 @@ export default function AllTutors() {
         setLoading(true);
         setBtnDisbaled(true);
         response = await axios.post(`${API_URL}tutor/upload`,formDataUpload, options);
-        if(response.status === 200){
-            setLoading(false)
-            setUploadForm(false)
-            history.push(`/all-tutors`);
-        }else{
-            setBtnDisbaled(false);
-            setLoading(false);
-            addToast(response.message, { appearance: 'success',autoDismiss: true });
-            history.push(`/all-tutors`);
-        }
+        setBtnDisbaled(false);
+        setLoading(false);
+        setUploadForm(false)
+        addToast(response.message, { appearance: 'success',autoDismiss: true });
+        history.push(`/all-tutors`);
     }
+    const [tutorData, setTutorData] = useState([]);
+    const [newTutor, setNewTutor] = useState(false);
+    const allData = data?.data;
+    const newTutorData = data?.newTutor?.tutor
+    useEffect(setQuestion,[data, newTutor]);
+
+    async function setQuestion(){
+        if(data?.newTutor?.count === 0){
+            setNewTutor(false)
+        }
+        if(newTutor === false){
+            setTutorData(allData);
+        }else{
+            setTutorData(newTutorData);
+        }
+
+    }
+
 return (
 <>
 {state.isLoggedIn && (
@@ -95,6 +108,19 @@ return (
                     <span className="fa fa-upload"></span>
                     &nbsp; Upload Tutor
                 </button>
+                {data?.newTutor?.count > 0 && (
+                    <button className="btn btn-sm dark mr-2"
+                        style={{ position: 'relative'}}
+                        onClick={e => setNewTutor(!newTutor)}
+                    >
+                        <span className="fa fa-user"></span>
+                        &nbsp; New Tutor 
+                        <span className="badge badge-danger ml-2 text-white"
+                        >{data?.newTutor?.count}</span>
+                    </button>
+
+                )}
+                
                 <select className="mr-2"
                 ref={typeRef}
                 onChange={e => {
@@ -178,7 +204,7 @@ return (
         </div>
         )}
         <div className={uploadForm ? 'row col-md-9':'row col-md-12'}>
-        {data?.data?.map(tutor => <SingleTutor tutor={tutor} key={tutor._id}/> )}
+        {tutorData?.map(tutor => <SingleTutor tutor={tutor} key={tutor._id}/> )}
         {data?.pagination?.itemCount === 0 && (
             <div className="col-md-6 text-center offset-3">
                 <h1 style={{ fontSize: '2.5em',color:'#000',marginTop:'30vh',padding:'25px',background: 'yellow' }}>No Tutor Registered <br /> 
