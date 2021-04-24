@@ -166,7 +166,7 @@ const saveEducation = async(req,res) => {
         let tutor = await Tutor.updateOne(filter,
             { $addToSet:
                 {   
-                    "education" : [{"class": req.body.degree,"grade":req.body.grade,"year":req.body.years,"subject":req.body.subject,"school":req.body.school,"document":req.file.filename,}]
+                    "education" : [{"class": req.body.degree,"grade":req.body.grade,"year":req.body.years,"subject":req.body.subject,"college":req.body.college,"docs":req.file.filename,}]
                 }
             });
         if (!tutor) return res.status(500).send({message: 'Something Went Wrong'});
