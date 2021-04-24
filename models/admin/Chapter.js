@@ -79,6 +79,10 @@ const ChapterSchema = new mongoose.Schema({
     assigned_to: {
         type: Object
     },
+    
+    tutor_name: {
+        type: String
+    },
 
     created_at: {
         type: Date,

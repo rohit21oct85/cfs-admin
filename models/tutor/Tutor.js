@@ -115,8 +115,8 @@ TutorSchema.pre('save', function(next) {
         next();
     } else {
         const hash = md5(tutor.password)
-        // tutor.password = hash;
-        tutor.password = tutor.password;
+        tutor.password = hash;
+        // tutor.password = tutor.password;
         next();
     }
 });

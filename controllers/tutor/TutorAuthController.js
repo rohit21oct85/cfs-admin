@@ -179,9 +179,9 @@ const masteredSubject = async(req,res) => {
     const filter = { email: req.body.email };
     let tutor = await Tutor.findOneAndUpdate(filter,  
         { $set:
-            {   master_subject: req.body.subject,
-                master_sub_subject:req.body.sub_subject,
-                master_sub_subject_id:req.body.sub_subject_id,
+            {   master_subject: req.body.sub_subject,
+                // master_sub_subject:req.body.sub_subject,
+                master_subject_id:req.body.sub_subject_id,
                 resume: filename,
             }
         });
@@ -224,7 +224,7 @@ const getTutorDetails = async(req,res) => {
     const filter = { email: req.body.email };
     try {
         const SingleTutor = await Tutor.findOne(filter, { __v: 0 });
-        const bank_details = JSON.parse(SingleTutor.bank_details);
+        const bank_details = SingleTutor.bank_details ? JSON.parse(SingleTutor.bank_details) : null;
         // console.log(bank_details)
         SingleTutor.bank_details = bank_details
         return res.status(200).json({

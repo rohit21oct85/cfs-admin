@@ -86,12 +86,12 @@ const startAnswering = async (req, res) => {
     }
 }
 const finishAnswer = async (req, res) => {
-    
     try {
         const filter = {_id: req.body.question_id};
         const type = req.body.answer_type;
         const data = {
             assigned_to:req.body.user_Id, 
+            tutor_name:req.body.tutor_name, 
             flag:'assigned'
         }
         if(type == 'skip'){
@@ -110,11 +110,23 @@ const finishAnswer = async (req, res) => {
     }
 }
 
+const getQuestion = async (req, res) => {
+    try {
+        const filter = { _id:req.body.questionId } //changed for time being since no published field in db
+        const project = {_id:1, question:1,problem_no: 1,section_no:1,excerise:1};
+        const question = await Chapter.findOne(filter,project);
+        return res.send(question);
+    } catch (error) {
+        res.send({error: true, message: error.message});
+    }
+}
+
 
 module.exports = {
     openBook,
     chapterQuestion,
     startAnswering,
     finishAnswer,
-    getAnswered
+    getAnswered,
+    getQuestion,
 }
