@@ -273,7 +273,6 @@ return (
                         </div>
                         <hr className="mt-1 mb-1"/>
                         <div className="mt-2 p-2" style={{ border: '1px solid #ddd'}}>
-                            
                             <div className="name-label pt-1">
                                 <strong>Q.No: {answeredQuestion?.problem_no}. &nbsp; 
                                 <span className="badge badge-success pull-right" style={{ textTransform: 'capitalize'}}>{answeredQuestion?.flag}</span>  
