@@ -5,7 +5,7 @@ import {AdminContext} from '../context/AdminContext';
 
 
 function Pagination({pagination}) {
-    const [pageno, setPageNo] = useState(window.localStorage.getItem('pageno'));
+    const [pageno, setPageNo] = useState(1);
     const {dispatch: adminDispatch} = useContext(AdminContext);
     const {isLoading} = useBooks();
     useEffect(() => {
@@ -18,7 +18,6 @@ function Pagination({pagination}) {
         }else{
             window.localStorage.setItem('pageno', pageno)
         }
-        console.log(" after load " , window.localStorage.getItem('pageno'))
     },[pageno])
     return (
         <div style={{ display: 'flex', flexContent: 'space-between'}}>

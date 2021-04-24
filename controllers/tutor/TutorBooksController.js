@@ -64,6 +64,7 @@ const chapterQuestion = async (req, res) => {
         
     } catch (error) {
         res.status(409).json({
+            error: true,
             message: error.message
         });
     }

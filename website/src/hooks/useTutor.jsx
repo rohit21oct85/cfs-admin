@@ -13,20 +13,24 @@ export default function useTutor() {
     const {state:adminState } = useContext(AdminContext);
 
     let API_URL = '';
+
     if(process.env.NODE_ENV === 'development'){
         API_URL = cons.LOCAL_API_URL;
     }else{
         API_URL = cons.LIVE_API_URL;
     }
+
     let limit = 12;
     let pageno = (adminState.CurrentPage === null ) ? 1 : adminState.CurrentPage;
     let url = '';
-    if(params.status){
-        url = `${API_URL}tutor/all/${params.status}/${pageno}/${limit}`;
-    }else{
-        url = `${API_URL}tutor/all/all/${pageno}/${limit}`;
+    if(params.status && params.master_subject){
+        url = `${API_URL}tutor/all/${params?.status}/${params?.master_subject}/${params?.type}/${pageno}/${limit}`;
     }
-    return useQuery([`tutors/${params?.status}`,pageno], async () => {
+    else{
+        url = `${API_URL}tutor/all/all/all/all/${pageno}/${limit}`;
+    }
+
+    return useQuery([`tutors/${params?.status}/${params?.master_subject}/${params?.type}`,pageno], async () => {
         const result = await axios.get(`${url}`,{
             headers: {
                 'Content-Type': 'Application/json',

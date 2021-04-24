@@ -2,6 +2,8 @@ import React from 'react'
 import TutorHeading from './TutorHeading';
 
 export default function SingleTutor({tutor}) {
+    const subData = tutor.education;
+    let subject = subData[0];
     return (
         <div className="subject-card" key={tutor._id} id={`card-${tutor._id}`}>
             <div className="subject-card-body">
@@ -32,23 +34,45 @@ export default function SingleTutor({tutor}) {
                     </div>
                 </div>
 
+        
+                <div className="admin-name mt-2 mb-2"> 
+                    <div className="name-label">
+                        College: 
+                    </div>
+                    <div className="name-main">
+                        {subject?.college}
+                    </div>
+                </div>
+                
+                
                 <div className="admin-name mt-2 mb-2"> 
                     <div className="name-label">
                         Class: 
                     </div>
                     <div className="name-main">
-                        {tutor.class}
+                        {subject?.class}
                     </div>
                 </div>
-                
                 <div className="admin-name mt-2 mb-2"> 
                     <div className="name-label">
                         Subject: 
                     </div>
                     <div className="name-main">
-                        {tutor.subject}
+                        {subject?.subject}
                     </div>
                 </div>
+                <div className="admin-name mt-2 mb-2"> 
+                    <div className="name-label">
+                        Year: 
+                    </div>
+                    <div className="name-main">
+                        {subject?.year}
+                    </div>
+                </div>
+                
+
+                
+                
 
                 <div className="admin-name mt-2 mb-2"> 
                     <div className="name-label">
@@ -73,7 +97,7 @@ export default function SingleTutor({tutor}) {
                         Country: 
                     </div>
                     <div className="name-main">
-                        {tutor.country}
+                        {tutor?.country},&nbsp; {tutor?.country_full}
                     </div>
                 </div>
                 <div className="admin-name mt-2 mb-2"> 

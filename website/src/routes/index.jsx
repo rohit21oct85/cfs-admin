@@ -18,6 +18,8 @@ import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import AllTutors from '../Pages/Tutor/AllTutors.jsx';
+import TutorDetails from '../Pages/Tutor/TutorDetails.jsx';
+
 import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
 import CreateFaq from '../Pages/FAQ/CreateFaq.jsx';
 import CreateFaqQuestion from '../Pages/FAQ/CreateFaqQuestion.jsx';
@@ -179,8 +181,12 @@ export const privateRoutes = [
         component: CreateFaqQuestion
     },
     {
-        path: '/all-tutors/:status?',
+        path: '/all-tutors/:status?/:master_subject?/:type?',
         component: AllTutors
+    },
+    {
+        path: '/tutor-details/:tutor_id?',
+        component: TutorDetails
     }
     
 ];

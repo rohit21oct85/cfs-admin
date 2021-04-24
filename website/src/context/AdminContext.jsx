@@ -121,7 +121,7 @@ function AdminProvider({children}){
         superAdminRoutes: [],
         adminRoutes: [],
         AllBooks: [],
-        CurrentPage: 1
+        CurrentPage: pageno === undefined ? 1 : pageno
     });
     return (
         <AdminContext.Provider value={{ state, dispatch}}>
