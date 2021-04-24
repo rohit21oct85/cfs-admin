@@ -105,9 +105,9 @@ const tutorDetails = async (req, res) => {
     try {
         // return res.send(req.body)
         const tutor = await Tutor.findOne({_id: req.params.tutor_id});
-        const approved_qc = await Chapter.count({"assigned_to": req.params.tutor_id,flag: "approved"});
-        const reworked_qc = await Chapter.count({"assigned_to": req.params.tutor_id,flag:"reworked"});
-        const pending_qc = await Chapter.count({"assigned_to": req.params.tutor_id,flag: "answered"});
+        const approved_qc = await Chapter.find({"assigned_to": req.params.tutor_id,flag: "approved"});
+        const reworked_qc = await Chapter.find({"assigned_to": req.params.tutor_id,flag:"reworked"});
+        const pending_qc = await Chapter.find({"assigned_to": req.params.tutor_id,flag: "answered"});
 
         res.status(201).json({
             error: false,
