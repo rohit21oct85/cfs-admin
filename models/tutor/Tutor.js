@@ -2,14 +2,33 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const md5 = require('md5');
 
+const EducationSchema = new mongoose.Schema({ 
+    class: {
+        type: String
+    },
+    grade: {
+        type: String
+    },
+    subject: {
+        type: String
+    },
+    year: {
+        type: String
+    },
+    school: {
+        type: String
+    },
+    document: {
+        type: String
+    },
+});
+
 const TutorSchema = new mongoose.Schema({
     fname: {
         type: String,
-        required: true,
     },
     lname: {
         type: String,
-        required: true,
     },
     email: {
         type: String,
@@ -23,40 +42,30 @@ const TutorSchema = new mongoose.Schema({
     },
     house_name:{
         type: String,
-        required: true,
     },
     street_name:{
         type: String,
-        required: true,
     },
     city:{
         type: String,
-        required: true,
     },
     zipcode:{
         type: String,
-        required: true,
     },
     country:{
         type: String
     },
-    class: {
-        type: String
-    },
-    grade: {
-        type: String
-    },
-    subject: {
-        type: String
-    },
-    year: {
-        type: String
-    },
-    master_subject_id: {
-        type: String
+    education: {
+        type: [EducationSchema]
     },
     master_subject: {
         type: String
+    },
+    master_sub_subject: {
+        type: String
+    },
+    master_sub_subject_id: {
+        type: Object
     },
     paypal: {
         type: String

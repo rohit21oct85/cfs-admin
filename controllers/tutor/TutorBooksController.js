@@ -3,8 +3,8 @@ const Chapter = require('../../models/admin/Chapter')
 
 const openBook = async (req, res) => {
     try {
-        
-        const filter = {sub_subject_id:req.body.subject_id, published: true}
+        // const filter = {sub_subject_id:req.body.subject_id, published: true} 
+        const filter = { sub_subject_id:req.body.subject_id } //changed for time being since no published field in db
         const project = {_id:1, BookName:1,ISBN13: 1};
         const books = await Book.find(filter,project);
         return res.send(books);
@@ -47,7 +47,7 @@ const chapterQuestion = async (req, res) => {
             }
         });
         filter.flag = "notassigned";
-        if(req.body.chapter_no === "0"){
+        if(req.body.chapter_no == "0"){
             filter.chapter_no = results[0].chapter_no;
             const questions = await Chapter.find(filter, {problem_no:1,question:1,_id:1, chapter_no:1})
             res.status(200).json({

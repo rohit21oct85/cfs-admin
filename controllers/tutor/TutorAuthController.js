@@ -1,4 +1,6 @@
 const Tutor = require('../../models/tutor/Tutor.js');
+const SubSubject = require('../../models/admin/SubSubject.js');
+const Subject = require('../../models/admin/Subject.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const md5 = require('md5');
@@ -132,8 +134,137 @@ const ChangePassword = async (req, res) => {
     if(update){
         res.send({error: false, message: "password changed"});
     }
+}
+
+const saveProfileInfo = async(req,res) => {
+        const filter = { email: req.body.email };
+        let tutor = await Tutor.findOneAndUpdate(filter,  
+            { $set: 
+                {   fname: req.body.fname,
+                    lname:req.body.lname,
+                    house_name:req.body.hno,
+                    street_name:req.body.street,
+                    city:req.body.city,
+                    zipcode:req.body.zip,
+                    country:req.body.country,
+                }
+            });
+        if (!tutor) return res.status(500).send({message: 'Something Went Wrong'});
+        else return res.status(200).send({message: 'Data updated Successfully'});
+}
+
+const saveEducation = async(req,res) => {
+    // return res.send(req.body)
+        const filter = { email: req.body.email };
+        let tutor = await Tutor.updateOne(filter,
+            { $addToSet:
+                {   
+                    "education" : [{"class": req.body.degree,"grade":req.body.grade,"year":req.body.years,"subject":req.body.subject,"school":req.body.school,"document":req.file.filename,}]
+                }
+            });
+        if (!tutor) return res.status(500).send({message: 'Something Went Wrong'});
+        else return res.status(200).send({message: 'Data updated Successfully'});
+}
+
+const masteredSubject = async(req,res) => {
+    const filename = req.file ? req.file.filename : '';
+    const filter = { email: req.body.email };
+    let tutor = await Tutor.findOneAndUpdate(filter,  
+        { $set:
+            {   master_subject: req.body.subject,
+                master_sub_subject:req.body.sub_subject,
+                master_sub_subject_id:req.body.sub_subject_id,
+                resume: filename,
+            }
+        });
+    if (!tutor) return res.status(500).send({message: 'Something Went Wrong'});
+    else return res.status(200).send({message: 'Data updated Successfully'})
+}
+
+const saveBankDetails = async(req,res) => {
+    try{
+        let OP={};
+        const data = req.body;
+        const filter = { email: req.body.email };
+        delete data['email'];
+        const d = JSON.stringify(data);
+        if(req.body.paypal){
+            OP = {
+                paypal: req.body.paypal
+            }
+        }else{
+            OP = {
+                bank_details: d
+            }
+        }
+        let tutor = await Tutor.findOneAndUpdate(filter,  
+            { $set:
+                OP
+            });
+        if (!tutor) return res.status(500).send({message: 'Something Went Wrong'});
+        else return res.status(200).send({message: 'Data updated Successfully'})
+    }catch(e){
+        return res.status(409).json({
+            error: true,
+            message: e.message
+        })
+    }
+}
+
+const getTutorDetails = async(req,res) => {
+    // return res.send(req.body.email);
+    const filter = { email: req.body.email };
+    try {
+        const SingleTutor = await Tutor.findOne(filter, { __v: 0 });
+        const bank_details = JSON.parse(SingleTutor.bank_details);
+        // console.log(bank_details)
+        SingleTutor.bank_details = bank_details
+        return res.status(200).json({
+            data: SingleTutor,
+            bank_details : bank_details
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
 
 }
+
+const getAllCategory = async(req, res) => {
+    try {
+        const SubSubjectResponse = await Subject.aggregate([
+            {
+                "$project": {
+                    "_id": {
+                        "$toString": "$_id"
+                    },
+                    "sub_subject" : 1,
+                    "subject" : 1,
+                }
+            },
+            {
+            $lookup: {
+                    from: "subsubjects",
+                    localField: "_id",
+                    foreignField: "subject_id",
+                    as: "sub_subject"
+                },
+            },
+        ])
+        return res.status(200).json({
+            data: SubSubjectResponse
+        });
+
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
 
 module.exports = {
     Register,
@@ -141,5 +272,11 @@ module.exports = {
     ForgotPassword,
     RefreshToken,
     Logout,
-    ChangePassword
+    ChangePassword,
+    saveProfileInfo,
+    saveEducation,
+    masteredSubject,
+    saveBankDetails,
+    getTutorDetails,
+    getAllCategory,
 }
