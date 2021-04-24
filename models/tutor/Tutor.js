@@ -22,10 +22,10 @@ const EducationSchema = new mongoose.Schema({
         type: String
     }
 });
-const DateSchema = {
-    type: Date,
-    format: 'YY-mm-dd'
-}
+// const DateSchema = {
+//     type: Date,
+//     format: 'YY-mm-dd'
+// }
 const TutorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -98,6 +98,7 @@ const TutorSchema = new mongoose.Schema({
         type: Boolean
     },
     approve:{
+        default: 0,
         type: String
     },
     role: {
@@ -105,13 +106,15 @@ const TutorSchema = new mongoose.Schema({
         default: 'tutor'
     },
     status: {
+        default: 0,
         type: String
     },
     type:{
         type: String
     },
     created_at: {
-        type: DateSchema
+        type: Date,
+        default: Date.now
     }
 });
 
@@ -121,8 +124,8 @@ TutorSchema.pre('save', function(next) {
         next();
     } else {
         const hash = md5(tutor.password)
-        // tutor.password = hash;
-        tutor.password = tutor.password;
+        tutor.password = hash;
+        // tutor.password = tutor.password;
         next();
     }
 });

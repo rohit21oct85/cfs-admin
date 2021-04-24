@@ -7,9 +7,10 @@ const router = express.Router();
 router
     .post('/open',tutorAuth, TutorBook.openBook)
     .post('/chapter-question',tutorAuth, TutorBook.chapterQuestion)
-    .get('/start-answering',tutorAuth, TutorBook.startAnswering)
+    .post('/start-answering',tutorAuth, TutorBook.startAnswering)
     .get('/answered',tutorAuth, TutorBook.getAnswered)
     .post('/finish-answer',tutorAuth, TutorBook.finishAnswer)
+    .post('/get-question-only',tutorAuth, TutorBook.getQuestion)
 ;
 
 module.exports = router;
