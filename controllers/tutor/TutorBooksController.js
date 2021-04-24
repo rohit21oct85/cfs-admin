@@ -91,6 +91,7 @@ const finishAnswer = async (req, res) => {
         const type = req.body.answer_type;
         const data = {
             assigned_to:req.body.user_Id, 
+            tutor_name:req.body.tutor_name, 
             flag:'assigned'
         }
         if(type == 'skip'){
