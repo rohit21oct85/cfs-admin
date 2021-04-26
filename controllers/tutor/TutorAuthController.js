@@ -224,7 +224,6 @@ const getTutorDetails = async(req,res) => {
     try {
         const SingleTutor = await Tutor.findOne(filter, { __v: 0 });
         const bank_details = SingleTutor.bank_details ? JSON.parse(SingleTutor.bank_details) : null;
-        // console.log(bank_details)
         SingleTutor.bank_details = bank_details
         return res.status(200).json({
             data: SingleTutor,

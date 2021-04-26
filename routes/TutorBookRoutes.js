@@ -11,6 +11,7 @@ router
     .get('/answered',tutorAuth, TutorBook.getAnswered)
     .post('/finish-answer',tutorAuth, TutorBook.finishAnswer)
     .post('/get-question-only',tutorAuth, TutorBook.getQuestion)
-;
+    .post('/get-dashboard-data',tutorAuth, TutorBook.getDashboardData)
+    .post('/delete-education',tutorAuth, TutorBook.deleteEducation);
 
 module.exports = router;

@@ -33,5 +33,6 @@ router
     .post('/save-bank-details', Auth.saveBankDetails)
     .get('/view-all', Auth.getAllCategory)
     .post('/get-tutor-details', Auth.getTutorDetails);
+    
 
 module.exports = router;
