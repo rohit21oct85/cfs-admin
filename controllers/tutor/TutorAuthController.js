@@ -4,6 +4,7 @@ const Subject = require('../../models/admin/Subject.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const md5 = require('md5');
+var mongoose = require("mongoose");
 
 let refreshTokens = [];
 
@@ -271,6 +272,16 @@ const getAllCategory = async(req, res) => {
     }
 }
 
+const deleteEducation = async (req, res) => {
+    try {
+        const filter = { email: req.body.email };
+        const data = await Tutor.findOneAndUpdate(filter, {$pull : { "education" : {"_id": req.body.id } } } );
+        return res.status(200).send({message: "education deleted successfully"});
+    } catch (error) {
+        res.send({error: true, message: error.message});
+        
+    }
+}
 
 module.exports = {
     Register,
@@ -285,4 +296,5 @@ module.exports = {
     saveBankDetails,
     getTutorDetails,
     getAllCategory,
+    deleteEducation
 }

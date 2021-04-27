@@ -1,6 +1,7 @@
 const Book = require('../../models/admin/Book')
 const Chapter = require('../../models/admin/Chapter')
 
+
 const openBook = async (req, res) => {
     try {
         // const filter = {sub_subject_id:req.body.subject_id, published: true} 
@@ -132,15 +133,7 @@ const getDashboardData = async (req, res) => {
         
     }
 }
-const deleteEducation = async (req, res) => {
-    try {
-        const filter = { email: req.body.email };
-        return res.status(200).send({data: data});
-    } catch (error) {
-        res.send({error: true, message: error.message});
-        
-    }
-}
+
 
 
 module.exports = {
@@ -151,5 +144,4 @@ module.exports = {
     getAnswered,
     getQuestion,
     getDashboardData,
-    deleteEducation,
 }
