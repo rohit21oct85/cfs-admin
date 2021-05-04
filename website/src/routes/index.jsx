@@ -14,6 +14,8 @@ import UploadBulkBooks from '../Pages/Books/UploadBulkBooks.jsx';
 import CreateBooks from '../Pages/Books/CreateBooks.jsx';
 import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
+import BookFaqQuestion from '../Pages/Books/BookFaqQuestion.jsx';
+import BookSEO from '../Pages/Books/BookSEO.jsx';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
@@ -134,28 +136,32 @@ export const privateRoutes = [
         path: '/books-upload/:subject_name?/:subject_id?',
         component: UploadBooks
     },
-    
     {
         path: '/book-chapters/:isbn/:book_name/:book_id',
         component: BooksChapters
     },
-
     {
         path: '/upload-chapters/:isbn/:book_name/:book_id',
         component: UploadChapters
-    }
-    ,
-
+    },
     {
         path: '/book-chapter-add-question/:q_id',
         component: ModifyChapters
     },
-    
     {
         path: '/book-rating-review/:isbn/:book_id/:review_id?',
         component: BookRatingReview
     },
     
+    {
+        path: '/book-faq/:isbn/:book_id/:faq_id?',
+        component: BookFaqQuestion
+    },
+    {
+        path: '/book-seo/:isbn/:book_id?/:seo_id?',
+        component: BookSEO
+    },
+
     {
         path: '/book-check-quality/:isbn/:book_id/:chapter?/:chapter_no?/:status?/:remark?/:question_id?',
         component: BookCheckQuality

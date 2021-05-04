@@ -40,6 +40,10 @@ export default function useTutor() {
         
         return {
             data: result.data.data, 
+            newTutor: {
+                count: result.data.newTutorCount,
+                tutor: result.data.newTutor,
+            },
             pagination: {
                 currentPage: result.data.currentPage,
                 hasNextPage: result.data.hasNextPage,

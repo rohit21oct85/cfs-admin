@@ -4,7 +4,6 @@ import BookImage from './BookImage';
 import BookHeading from './BookHeading';
 
 export default function SingleBook({books, width, heading}) {
-    
     return (
     <div className="subject-card" style={{ width: width+'%'}} key={books._id} id={`card-${books._id}`}>
         <div className="row">
@@ -55,6 +54,7 @@ export default function SingleBook({books, width, heading}) {
                         {books.Edition}
                     </div>
                 </div> 
+
         </div>
         
         </div>

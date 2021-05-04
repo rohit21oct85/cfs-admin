@@ -9,7 +9,8 @@ export default function TutorDetails() {
     const history = useHistory()
     const {state} = useContext(AuthContext);
     const {data, isLoading} = useSingleTutor();
-    const bank = JSON.stringify(data?.data?.bank_details)
+    const bank = data?.data?.bank_details
+    
     let eduData = data?.data?.education;
     let stats = data?.statics;
     let [QuestionAnswer, setQuestionAnswer] = useState([]);
@@ -30,7 +31,7 @@ export default function TutorDetails() {
                     <div className="dash-con-heading">
                         <div className="col-md-12 row">
                             <button className="btn btn-sm dark"
-                            onClick={e=> history.push(`/all-tutors/all/${data?.data?.master_subject}/all`)}
+                            onClick={e=> history.push(`/all-tutors/all/all/all`)}
                             >
                                 <span className="fa fa-arrow-left"></span>
                             </button>
@@ -164,7 +165,7 @@ export default function TutorDetails() {
                                     &nbsp; Bank Name: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Bank_Name}
+                                    {bank?.Bank_Name}
                                 </div>
                             </div> 
                             
@@ -174,7 +175,7 @@ export default function TutorDetails() {
                                     &nbsp; Account Name: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Account_Name}
+                                    {bank?.Account_Name}
                                 </div>
                             </div> 
                                 
@@ -184,7 +185,7 @@ export default function TutorDetails() {
                                     &nbsp; Bank Country: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Bank_Country}
+                                    {bank?.Bank_Country}
                                 </div>
                             </div> 
                                 
@@ -194,7 +195,7 @@ export default function TutorDetails() {
                                     &nbsp; Account Type: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Account_Type}
+                                    {bank?.Account_Type}
                                 </div>
                             </div> 
                             <div className="admin-name mb-1"> 
@@ -203,7 +204,7 @@ export default function TutorDetails() {
                                     &nbsp; Account_Number: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Account_Number}
+                                    {bank?.Account_Number}
                                 </div>
                             </div> 
                             <div className="admin-name mb-1"> 
@@ -212,7 +213,7 @@ export default function TutorDetails() {
                                     &nbsp; Bank Address: 
                                 </div>
                                 <div className="name-main">
-                                    {data?.data?.Bank_Address}
+                                    {bank?.Bank_Address}
                                 </div>
                             </div> 
 

@@ -12,14 +12,15 @@ const Register = async(req, res) => {
     const body = req.body;
     // return res.send(body);
     try {
-        let tutor = await Tutor.countDocuments(Tutor.findOne({ email: body.email }));
+        let tutor = await Tutor.count({ email: body.email });
         if (tutor) {
             return res.status(409).send({
                 message: 'User with the same email already registered'
             });
         }
-        const newTutor = new Tutor(body);
-        await newTutor.save();
+        
+        await Tutor.create(body);
+        
         return res.status(200).json({
             message: "Registered Sucessfully"
         });

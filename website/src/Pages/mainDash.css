@@ -434,8 +434,10 @@ label.form-lable.form-input{
 .name-main{
     font-weight: 600;
     font-size: 0.9em;
+    width: 60%;
     display: flex;
-    justify-content: space-between;
+    text-align: right;
+    justify-content: flex-end;
     text-transform: capitalize;
 }
 .name-main-method p {

@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, {useContext, useRef, useState, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory , useParams , Link} from "react-router-dom";
 import { Button } from 'react-bootstrap'
@@ -64,17 +64,30 @@ export default function AllTutors() {
         setLoading(true);
         setBtnDisbaled(true);
         response = await axios.post(`${API_URL}tutor/upload`,formDataUpload, options);
-        if(response.status === 200){
-            setLoading(false)
-            setUploadForm(false)
-            history.push(`/all-tutors`);
-        }else{
-            setBtnDisbaled(false);
-            setLoading(false);
-            addToast(response.message, { appearance: 'success',autoDismiss: true });
-            history.push(`/all-tutors`);
-        }
+        setBtnDisbaled(false);
+        setLoading(false);
+        setUploadForm(false)
+        addToast(response.message, { appearance: 'success',autoDismiss: true });
+        history.push(`/all-tutors`);
     }
+    const [tutorData, setTutorData] = useState([]);
+    const [newTutor, setNewTutor] = useState(false);
+    const allData = data?.data;
+    const newTutorData = data?.newTutor?.tutor
+    useEffect(setQuestion,[data, newTutor]);
+
+    async function setQuestion(){
+        if(data?.newTutor?.count === 0){
+            setNewTutor(false)
+        }
+        if(newTutor === false){
+            setTutorData(allData);
+        }else{
+            setTutorData(newTutorData);
+        }
+
+    }
+
 return (
 <>
 {state.isLoggedIn && (
@@ -95,12 +108,25 @@ return (
                     <span className="fa fa-upload"></span>
                     &nbsp; Upload Tutor
                 </button>
-                <select className="mr-2"
+                {data?.newTutor?.count > 0 && (
+                    <button className="btn btn-sm dark mr-2"
+                        style={{ position: 'relative'}}
+                        onClick={e => setNewTutor(!newTutor)}
+                    >
+                        <span className="fa fa-user"></span>
+                        &nbsp; New Tutor 
+                        <span className="badge badge-danger ml-2 text-white"
+                        >{data?.newTutor?.count}</span>
+                    </button>
+
+                )}
+                
+                <select className="col-md-2 mr-2"
                 ref={typeRef}
                 onChange={e => {
                     history.push(`/all-tutors/${statusRef.current.value}/${subRef.current.value}/${e.target.value}`)
                 }}>
-                    <option value="all" selected={(params?.type === 'all') ? 'selected':''}>All</option>
+                    <option value="all" selected={(params?.type === 'all') ? 'selected':''}>All - Portal</option>
                     <option value="freelance" selected={(params?.type === 'freelance') ? 'selected':''}>Freelance</option>
                     <option value="cfs" selected={(params?.type === 'cfs') ? 'selected':''}>CFS</option>
                 </select>
@@ -112,7 +138,7 @@ return (
                         history.push(`/all-tutors/${statusRef.current.value}/${e.target.value}/${typeRef.current.value}`)
                     }}
                 >
-                    <option value="all">All</option>
+                    <option value="all">All - Subject</option>
                     {allSubjects?.map(subcat => {
                     return (
                         <option
@@ -123,11 +149,11 @@ return (
                     )   
                     })}
                 </select>
-                <select className="col-md-1 mr-1"
+                <select className="col-md-2 mr-1"
                 ref={statusRef}
                 onChange={e => history.push(`/all-tutors/${e.target.value}/${subRef.current.value}/${typeRef.current.value}`)}
                 >
-                    <option value="all">All</option>
+                    <option value="all">All - Status</option>
                     <option value="1" selected={(params.status === "1") ? 'selected':''}>Active</option>
                     <option value="0" selected={(params.status === "0") ? 'selected':''}>Blocked</option>
                 </select>
@@ -178,7 +204,7 @@ return (
         </div>
         )}
         <div className={uploadForm ? 'row col-md-9':'row col-md-12'}>
-        {data?.data?.map(tutor => <SingleTutor tutor={tutor} key={tutor._id}/> )}
+        {tutorData?.map(tutor => <SingleTutor tutor={tutor} key={tutor._id}/> )}
         {data?.pagination?.itemCount === 0 && (
             <div className="col-md-6 text-center offset-3">
                 <h1 style={{ fontSize: '2.5em',color:'#000',marginTop:'30vh',padding:'25px',background: 'yellow' }}>No Tutor Registered <br /> 

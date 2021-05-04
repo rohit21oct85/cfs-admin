@@ -34,70 +34,21 @@ export default function SingleTutor({tutor}) {
                     </div>
                 </div>
 
-        
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        College: 
-                    </div>
-                    <div className="name-main">
-                        {subject?.college}
-                    </div>
-                </div>
-                
-                
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        Class: 
-                    </div>
-                    <div className="name-main">
-                        {subject?.class}
-                    </div>
-                </div>
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        Subject: 
-                    </div>
-                    <div className="name-main">
-                        {subject?.subject}
-                    </div>
-                </div>
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        Year: 
-                    </div>
-                    <div className="name-main">
-                        {subject?.year}
-                    </div>
-                </div>
-                
-
-                
-                
-
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        City: 
-                    </div>
-                    <div className="name-main">
-                        {tutor.city}
-                    </div>
-                </div>
-                
-                <div className="admin-name mt-2 mb-2"> 
-                    <div className="name-label">
-                        ZipCode: 
-                    </div>
-                    <div className="name-main">
-                        {tutor.zipcode}
-                    </div>
-                </div>
-
                 <div className="admin-name mt-2 mb-2"> 
                     <div className="name-label">
                         Country: 
                     </div>
                     <div className="name-main">
                         {tutor?.country},&nbsp; {tutor?.country_full}
+                    </div>
+                </div>
+                <div className="admin-name mt-2 mb-2"> 
+                    <div className="name-label">
+                        Registered At: 
+                    </div>
+                    <div className="name-main">
+                        <span className="fa fa-calendar mr-2 pt-1"></span>
+                        <span>{tutor?.createdAt}</span>
                     </div>
                 </div>
                 <div className="admin-name mt-2 mb-2"> 

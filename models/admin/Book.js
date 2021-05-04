@@ -15,6 +15,35 @@ const ReviewSchema = new mongoose.Schema({
     } 
 });
 
+const FAQSchema = new mongoose.Schema({ 
+    question: 'string', 
+    answer: 'string', 
+    status: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    } 
+});
+const similarBooksSchema = new mongoose.Schema({ 
+    book_isbn:{
+        type: String
+    },
+    book_id:{
+        type: Object
+    },
+    status: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    } 
+});
+
 const BookSchema = new mongoose.Schema({
     subject_id: {
         type: Object,
@@ -53,6 +82,9 @@ const BookSchema = new mongoose.Schema({
     reviews: {
         type: [ReviewSchema]
     },
+    faqs: {
+        type: [FAQSchema]
+    },
     image: {
         type: String,
     },
@@ -61,7 +93,6 @@ const BookSchema = new mongoose.Schema({
     },
     extra_search: {
         type: String,
-        
     },
     Author1: {
         type: String,
@@ -78,26 +109,38 @@ const BookSchema = new mongoose.Schema({
     MetaTitle: {
         type: String,
     },
-    
     MetaKeywords: {
         type: String,
     },
-    
     MetaDescription: {
         type: String,
     },
-    
     NoIndex: {
         type: String,
     },
+    urls: {
+        type: String,
+    }, 
+    DisplayTitle: {
+        type: String,
+    },
+    AltImage:{
+        type: String,
+    }, 
     status: {
         type: Boolean,
         default: true
     },
+    seo:{
+        type: Boolean,
+        default: false
+    },
+    similarBooks: {
+        type: [similarBooksSchema]
+    },
     published: {
         type: Boolean,
     },
-
     created_at: {
         type: Date,
         default: Date.now

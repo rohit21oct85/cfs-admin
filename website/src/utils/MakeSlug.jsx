@@ -6,7 +6,11 @@ const SameSlug = (str) => {
 }
 
 const GetString = (str, length) => {
-    return str.substr(0,length);
+    if(str){
+        return str.substr(0,length);
+    }else{
+        return '';
+    }
 }
 const GetName = (str) => {
     if(str){

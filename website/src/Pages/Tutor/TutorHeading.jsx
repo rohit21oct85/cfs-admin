@@ -43,7 +43,7 @@ export default function TutorHeading({tutor}) {
         return axios.post(`${API_URL}tutor/update-status`, formData, options)
     },{
         onSuccess: () => {
-            queryClient.invalidateQueries([`tutors/${params?.status}/${params.master_subject}`])
+            queryClient.invalidateQueries([`tutors/${params?.status}/${params?.master_subject}/${params?.type}`])
             history.push(`${path}`);
             addToast('Freelancer Published status updated', { appearance: 'success',autoDismiss: true });
         }
@@ -60,8 +60,8 @@ export default function TutorHeading({tutor}) {
         <div className="subject-card-heading">
             <div>
             <Switch
-                    onChange={handleChange.bind(this,{tutor_id: tutor._id,status: !checked})}
-                    checked={tutor.status == "1" ? true : false}
+                    onChange={handleChange.bind(this,{tutor_id: tutor._id,status: tutor?.status === "1" ? checked: !checked})}
+                    checked={tutor?.status === '1' ? !checked : checked}
                     className="react-switch displayIcon mr-2"
                     height={20}
                     width={48}

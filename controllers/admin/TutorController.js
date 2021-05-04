@@ -34,32 +34,36 @@ const getAllTutor = async (req, res) => {
             query = {} 
         }
         else if(status !== 'all' && master_subject !== 'all' && type !== 'all'){
-            query = {status: `${req.params.status}`, master_subject: req.params.master_subject,type: req.params.type} 
+            query = {status: `${status}`, master_subject: master_subject,type: type} 
         }
         else if(status === 'all' && master_subject === 'all' && type !== 'all'){
-            query = {type: req.params.type} 
+            query = {type: type} 
         }
         else if(status === 'all' && master_subject !== 'all' && type === 'all'){
-            query = {master_subject: req.params.master_subject} 
+            query = {master_subject: master_subject} 
         }
         else if(status === 'all' && master_subject !== 'all' && type !== 'all'){
-            query = {master_subject: req.params.master_subject,type: req.params.type} 
+            query = {master_subject: master_subject,type: type} 
         }
         
         else if(status !== 'all' && master_subject === 'all' && type === 'all'){
-            query = {status: `${req.params.status}`} 
+            query = {status: `${status}`} 
         }
 
         else if(status !== 'all' && master_subject === 'all' && type !== 'all'){
-            query = {status: `${req.params.status}`,type: req.params.type} 
+            query = {status: `${status}`,type: type} 
         }
 
 
         // return res.send(query);
-
+        const newTutor = await Tutor.find({status: 0, approve: 0});
+        const newTutorCount = await Tutor.count({status: 0, approve: 0});
         await Tutor.paginate(query,options).then(result => {
             return res.status(200).json({
+
                 data: result.itemsList,
+                newTutor: newTutor,
+                newTutorCount: newTutorCount,
                 itemCount: result.paginator.itemCount,
                 perPage: result.paginator.perPage,
                 currentPage: result.paginator.currentPage,
@@ -85,9 +89,10 @@ const updateStatus = async (req, res) => {
         const filter = {_id: req.body.tutor_id};
         let status = '0';
         if(req.body.status === true){
-            status = 1;
+            status  = 1;
+            approve = 1;
         }
-        await Tutor.findOneAndUpdate(filter,{status: status});
+        await Tutor.findOneAndUpdate(filter,{status: status, approve: approve});
         res.status(201).json({
             error: false,
             message: "Tutor Activated successfully"
@@ -131,7 +136,7 @@ const uploadTutorCSV = async(req, res) => {
     let FinalData = [];
     try {
         let results = [];
-        let education = []
+        
         fs.createReadStream(req.file.path,{encoding: 'binary'})
             .pipe(csv())
             .on('data', (data) => results.push(data))
@@ -148,6 +153,7 @@ const uploadTutorCSV = async(req, res) => {
                         city: data.city,
                         zipcode: data.zipcode,
                         country: data.country,
+                        country_full: data.country_full,
                         education: [{
                             class: results[index].class,
                             grade: results[index].grade,

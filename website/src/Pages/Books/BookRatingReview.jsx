@@ -134,8 +134,8 @@ const filterReview = async () => {
 }
 useEffect(filterReview,[data, params.review_id])
 
-const backUrl = params && params.review_id 
-        ? `/book-rating-review/${params.isbn}/${params.book_id}`
+const backUrl = params?.book_id 
+        ? `/book-seo/${params.isbn}/${params.book_id}`
         : `/books`;
 
 return (
@@ -152,11 +152,13 @@ return (
 
 <div className="dash-con-heading">
     <div className="col-md-12 row">
+
         <div className="p-0">
             <Link to={backUrl} className="btn btn-sm dark">
                 <span className="fa fa-arrow-left"></span>
             </Link>
         </div>
+
         <div className="row col-md-10">
         <div className="col-md-6 pr-0">
             {params && !params.review_id && (
