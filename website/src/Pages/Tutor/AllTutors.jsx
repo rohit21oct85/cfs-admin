@@ -121,12 +121,12 @@ return (
 
                 )}
                 
-                <select className="mr-2"
+                <select className="col-md-2 mr-2"
                 ref={typeRef}
                 onChange={e => {
                     history.push(`/all-tutors/${statusRef.current.value}/${subRef.current.value}/${e.target.value}`)
                 }}>
-                    <option value="all" selected={(params?.type === 'all') ? 'selected':''}>All</option>
+                    <option value="all" selected={(params?.type === 'all') ? 'selected':''}>All - Portal</option>
                     <option value="freelance" selected={(params?.type === 'freelance') ? 'selected':''}>Freelance</option>
                     <option value="cfs" selected={(params?.type === 'cfs') ? 'selected':''}>CFS</option>
                 </select>
@@ -138,7 +138,7 @@ return (
                         history.push(`/all-tutors/${statusRef.current.value}/${e.target.value}/${typeRef.current.value}`)
                     }}
                 >
-                    <option value="all">All</option>
+                    <option value="all">All - Subject</option>
                     {allSubjects?.map(subcat => {
                     return (
                         <option
@@ -149,11 +149,11 @@ return (
                     )   
                     })}
                 </select>
-                <select className="col-md-1 mr-1"
+                <select className="col-md-2 mr-1"
                 ref={statusRef}
                 onChange={e => history.push(`/all-tutors/${e.target.value}/${subRef.current.value}/${typeRef.current.value}`)}
                 >
-                    <option value="all">All</option>
+                    <option value="all">All - Status</option>
                     <option value="1" selected={(params.status === "1") ? 'selected':''}>Active</option>
                     <option value="0" selected={(params.status === "0") ? 'selected':''}>Blocked</option>
                 </select>

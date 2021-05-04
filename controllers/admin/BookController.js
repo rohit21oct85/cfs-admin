@@ -1,4 +1,5 @@
 const Book = require('../../models/admin/Book.js');
+const Chapter = require('../../models/admin/Chapter.js');
 const csv = require('csv-parser')
 const fs = require('fs')
 
@@ -352,6 +353,40 @@ const addReview = async (req, res) => {
     }
 }
 
+const addFaq = async (req, res) => {
+    try {
+        const content = {question:req.body.question,answer: req.body.answer, status: true};
+        const filter = {ISBN13: req.body.isbn,_id: req.body.book_id};
+        if(req.body.faq_id){
+            let FAQ = await Book.findOne(filter);
+            let singleFaq = await FAQ.faqs.id(req.body.faq_id);
+            singleFaq.set(content);
+            await FAQ.save();
+            return res.status(201).json({
+                error: false,
+                message: "FAQ updated"
+            });
+            
+        }else{
+            var Content = await Book.findOne(filter);
+            Content.faqs.push(content);
+            await Content.save();
+            return res.status(201).json({
+                error: false,
+                message: "Faq Added"
+            });
+        }
+        
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+
 
 
 const allReviews = async (req, res) => {
@@ -370,6 +405,23 @@ const allReviews = async (req, res) => {
         });
     }
 }
+const allFaqs = async (req, res) => {
+    try {
+        const filter = {_id: req.params.book_id};
+        var Content = await Book.findOne(filter);
+        var reviewData = Content.faqs.reverse();
+        return res.status(201).json({
+            error: false,
+            data: reviewData
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
 
 const UploadReviewCSV = async(req, res) => {
     const data = req.body;
@@ -444,6 +496,27 @@ const updateReviewStatus = async (req, res) => {
         });
     }
 }
+const updateFaqStatus = async (req, res) => {
+    try {
+        const filter = {_id: req.body.book_id};
+        const content = {status: req.body.status};
+        
+        let Faq = await Book.findOne(filter);
+        let singleFaq = await Faq.faqs.id(req.body.faq_id);
+        singleFaq.set(content);
+        await Faq.save();
+        return res.status(201).json({
+            error: false,
+            message: "Faq status updated"
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
 const updatePublishedStatus = async (req, res) => {
     try {
         const filter = {_id: req.body.book_id};
@@ -483,9 +556,109 @@ const deleteReview = async(req, res) => {
     }
 }
 
+const deleteFaq = async(req, res) => {
+    try {
+        
+        let Faq = await Book.findOne({_id: req.params.book_id});
+        await Faq.faqs.id(req.params.faq_id).remove();
+        await Faq.save();
+        return res.status(201).json({
+            error: false,
+            message: "Faq Deleted",
+        });
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+const totalQuestions = async(req, res) => {
+    try {
+        let BookCount = await Chapter.count({book_isbn: req.params.book_isbn});
+        res.status(201).json({
+            error: false,
+            count: BookCount
+        });
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+const BookSeo = async(req, res) => {
+    try {
+        let projection = {
+            MetaTitle: 1,
+            MetaKeywords: 1,
+            MetaDescription: 1,
+            NoIndex: 1,
+            DisplayTitle: 1,
+            Description: 1,
+            Author2: 1,
+            AltImage: 1,
+            urls: 1,
+            seo: 1,
+        }
+        let BookDetails = await Book.findOne({_id: req.params.book_id},projection);
+        res.status(201).json({
+            error: false,
+            details: BookDetails
+        });
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+const SaveBookSeo = async(req, res) => {
+    try {
+        let filter = {_id: req.body.book_id, ISBN13: req.body.isbn}
+        let updateData = {
+            MetaTitle: req.body.MetaTitle,
+            MetaKeywords: req.body.MetaKeywords,
+            MetaDescription: req.body.MetaDescription,
+            NoIndex: req.body.NoIndex,
+            DisplayTitle: req.body.DisplayTitle,
+            Description: req.body.Description,
+            Author2: req.body.Author2,
+            AltImage: req.body.AltImage,
+            urls: req.body.urls,
+            seo: true,
+        }
+        await Book.findOneAndUpdate(filter,updateData);
+        return res.status(201).json({
+            error: false,
+            message: "Book SEO Updated successfully"
+        });
+       
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+const addFields = async (req, res) => {
+    await Book.updateMany({},
+    {
+        "seo": false
+    });
+    res.status(201).json({
+        error: false,
+        message: "field cleared"
+    });
+}
 
 
 module.exports = {
+    addFields,
     BooksBySubSubjectId,
     getAllBook,
     createBook,
@@ -498,9 +671,16 @@ module.exports = {
     viewBook,
     searchBook,
     addReview,
+    addFaq,
     allReviews,
+    allFaqs,
     UploadReviewCSV,
     updateReviewStatus,
     deleteReview,
-    updatePublishedStatus
+    deleteFaq,
+    updatePublishedStatus,
+    updateFaqStatus,
+    totalQuestions,
+    BookSeo,
+    SaveBookSeo
 }

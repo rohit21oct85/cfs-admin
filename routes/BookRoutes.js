@@ -38,6 +38,14 @@ router
     .post('/update-published-status',checkAuth, Book.updatePublishedStatus)
     .post('/update-review-status',checkAuth, Book.updateReviewStatus)
     .delete('/delete-review/:book_id/:review_id',checkAuth, Book.deleteReview)
+    .post('/add-faq', checkAuth, Book.addFaq)
+    .get('/all-faqs/:book_id', checkAuth, Book.allFaqs)
+    .delete('/delete-faq/:book_id/:faq_id',checkAuth, Book.deleteFaq)
+    .post('/update-faq-status',checkAuth, Book.updateFaqStatus)
+    .get('/total-questions/:book_isbn', checkAuth, Book.totalQuestions)
+    .get('/seo/:book_id', checkAuth, Book.BookSeo)
+    .post('/add-seo', checkAuth, Book.SaveBookSeo)
+    .post('/addFields', checkAuth, Book.addFields)
 ;
 
 module.exports = router;
