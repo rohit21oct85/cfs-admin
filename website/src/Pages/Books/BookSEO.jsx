@@ -12,7 +12,9 @@ import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
 import * as utils from '../../utils/MakeSlug'
 
-import FAQHeading from './FAQHeading'
+
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from 'ckeditor5-classic-with-mathtype';
 
 import { useToasts } from 'react-toast-notifications';
 import Seobradcrumb from './Seobradcrumb';
@@ -56,6 +58,8 @@ const DisplayTitleRef = useRef('');
 const AuthorRef = useRef('');
 const DescriptionRef = useRef('');
 const AltImageRef = useRef('');
+const similarHeadingRef = useRef('');
+const faqHeadingRef = useRef('');
 
 const mutation = useMutation(formData => {
         return axios.post(`${API_URL}books/add-seo`, formData, options)
@@ -87,7 +91,8 @@ const handleSEO = async (e) => {
     formData['DisplayTitle'] = formData.DisplayTitle !== '' ? DisplayTitleRef.current.value : formData.DisplayTitle
     formData['Author2'] = formData.Author2 !== '' ? AuthorRef.current.value : formData.Author2
     formData['AltImage'] = formData.AltImage !== '' ? AltImageRef.current.value : formData.AltImage
-    formData['Description'] = formData.Description !== '' ? DescriptionRef.current.value : formData.Description
+    formData['similarHeading'] = similarHeadingRef.current.value
+    formData['faqHeading'] = faqHeadingRef.current.value
     formData['status'] = true
     setLoading(true);
     console.log(formData);
@@ -101,7 +106,9 @@ useEffect(() => {
     clearTimeout(timerError)
 }
 }, [error]);
-
+console.log(book)
+const Surls = seo?.urls === '' ? seo?.urls : utils.MakeSlug(book?.BookName)
+const urls = `isbn-${params.isbn}-${Surls}-${utils.MakeSlug(book?.Edition)}`;
 
 const backUrl = params?.faq_id 
         ? `/books/${book?.subject_name}/${book?.sub_subject_name}/${book?.sub_subject_id}`
@@ -114,7 +121,7 @@ return (
 <div className="main-area-all">
 <div className="dashboard_main-container">
 <div className="dash-main-head">
-    <h2>Book Landing Page SEO</h2>
+    <h2>Book Landing Page SEO - ISBN13: {params?.isbn}</h2>
 </div>
 {error && <Notification>{error.message}</Notification>}
 {isLoading && <LoadingComp />}
@@ -130,7 +137,7 @@ return (
         <form>
         <div className="row col-md-12">
             
-            <div className="col-md-4">
+            <div className="col-md-6">
                 
                     <div className="form-group">
                         <label>urls</label>
@@ -138,7 +145,7 @@ return (
                         <input 
                             ref={urlsRef}
                             readonly
-                            defaultValue={seo?.urls === '' ? seo?.urls : utils.MakeSlug(book?.BookName)}
+                            defaultValue={urls}
                             onChange={e => setFormData({...formData, urls: e.target.value})}
                             className="form-control" autoComplete="off" placeholder="Enter urls"/>
 
@@ -180,18 +187,7 @@ return (
                             <option value="index" selected={total?.count > 0 ? 'selected':''}>Index</option>
                         </select>
                     </div>
-                    
-            </div>
-            <div className="col-md-4">
-                <div className="form-group">
-                    <label>Display Title</label>
-                    <input 
-                        ref={DisplayTitleRef}
-                        defaultValue={seo?.DisplayTitle}
-                        onChange={e => setFormData({...formData, DisplayTitle: e.target.value})}
-                        className="form-control" autoComplete="off" placeholder="Enter DisplayTitle"/>
-                </div>
-                <div className="form-group">
+                    <div className="form-group">
                     <label>Author 2</label>
                     <input
                     type="text"
@@ -203,6 +199,34 @@ return (
                     onChange={e => setFormData({...formData, Author2: e.target.value})}
                     />
                 </div>
+                    
+            </div>
+            <div className="col-md-6">
+                <div className="form-group">
+                    <label>Similar Books Heading</label>
+                    <input 
+                        ref={similarHeadingRef}
+                        defaultValue={seo?.similarHeading}
+                        onChange={e => setFormData({...formData, similarHeading: e.target.value})}
+                        className="form-control" autoComplete="off" placeholder="Enter Similar Books Heading"/>
+                </div>
+                <div className="form-group">
+                    <label>FAQ Books Heading</label>
+                    <input 
+                        ref={faqHeadingRef}
+                        defaultValue={seo?.faqHeading}
+                        onChange={e => setFormData({...formData, faqHeading: e.target.value})}
+                        className="form-control" autoComplete="off" placeholder="Enter Similar Books Heading"/>
+                </div>
+                <div className="form-group">
+                    <label>Display Title</label>
+                    <input 
+                        ref={DisplayTitleRef}
+                        defaultValue={seo?.DisplayTitle}
+                        onChange={e => setFormData({...formData, DisplayTitle: e.target.value})}
+                        className="form-control" autoComplete="off" placeholder="Enter DisplayTitle"/>
+                </div>
+                
                 <div className="form-group">
                     <label>Alt Image</label>
                     <input
@@ -218,21 +242,37 @@ return (
 
                 <div className="form-group">
                     <label>Description</label>
-                    <textarea
-                        type="text"
-                        autoComplete="off"
-                        className="form-control"
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        config={{
+                            toolbar: {
+                                items: [
+                                    'heading', 
+                                    '|',
+                                    'bold',
+                                    'italic',
+                                    'link',
+                                    'bulletedList',
+                                    'numberedList',
+                                    'imageUpload',
+                                    'insertTable',
+                                    'blockQuote',
+                                    'undo',
+                                    'redo'
+                                ]
+                            },
+                        }}
                         ref={DescriptionRef}
-                        defaultValue={seo?.Description}
-                        style={{ height: '125px' }}
-                        onChange={e => setFormData({...formData, Description: e.target.value})}
-                    />
+                        data={seo?.Description ? seo?.Description : 'Enter Answer'}
+                        onChange={ ( event, editor ) => {
+                            const data = editor.getData();
+                            setFormData( { ...formData, Description: data } );
+                        } }
+                    />  
                 </div>
                 
             </div>
-            <div className="col-md-4">
-                <label htmlFor="">Similar Books</label>   
-            </div>
+            
             
         
         </div>

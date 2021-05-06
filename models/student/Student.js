@@ -4,32 +4,43 @@ const bcrypt = require('bcryptjs');
 
 const StudentSchema = new mongoose.Schema({
     fullname: {
-        type: String,
-        required: true,
+        type: String
     },
     email: {
         type: String,
-        required: true,
         unique: true,
     },
-    password: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    school: {
-        type: String,
-        required: true,
-        trim: true
-    },
+    dob:{type: String},
+    wallet: {type: String},
+    Subscribe: {type: String},
+    SubscribeDate: {type: String},
+    social_id: {type: String},
+    password: {type: String,trim: true},
+    dept: {type: String},
+    typ: {type: String},
+    college: {type: String},
+    years: {type: String},
+    img: {type: String},
+    country_code: {type: String},
+    Contact: {type: String},
+    otp: {type: String},
+    Address: {type: String},
+    State: {type: String},
+    Country: {type: String},
+    Zipcode: {type: String},
+    chkIsStudent: {type: String},
+    is_created: {type: String},
+    ip: {type: String},
+    loginwith: {type: String},
+    ios_token: {type: String},
+    subs_recurring: {type: String},
+    last_active_url: {type: String},
     role: {
         type: String,
-        required: true,
         default: "student"
     },
     status: {
         type: Boolean,
-        required: true,
         default: false
     },
     created_at: {

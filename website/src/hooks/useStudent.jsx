@@ -18,7 +18,7 @@ export default function useStudent() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    let limit = 10;
+    let limit = 30;
     let pageno = (adminState.CurrentPage === null ) ? 1 : adminState.CurrentPage;
     return useQuery(['students',pageno], async () => {
         const result = await axios.get(`${API_URL}student/all/${pageno}/${limit}`,{

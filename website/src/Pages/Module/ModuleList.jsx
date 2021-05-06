@@ -88,7 +88,7 @@ return (
                         <div className="subject-main-container">
                             
                         {adminState.ModLists.map( module => (
-                            <div className="small-card" key={module._id} id={`card-${module._id}`}>
+                            <div className="subject-card" key={module._id} id={`card-${module._id}`}>
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
                                         <div className="name-label">
@@ -105,16 +105,6 @@ return (
                                         </div>
                                         <div className="name-main">
                                             {(module.status == 1) ? 'Active':'Inactive'}
-                                        </div>
-                                    </div> 
-                                    
-                                    
-                                    <div className="admin-name"> 
-                                        <div className="name-label">
-                                            Created On: 
-                                        </div>
-                                        <div className="name-main">
-                                            {module.create_at.split('T')[0]}
                                         </div>
                                     </div> 
                                     <div className="admin-name"> 

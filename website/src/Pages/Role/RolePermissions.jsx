@@ -12,6 +12,8 @@ import {useFormData} from '../../hooks/useFormData';
 import * as api from '../../Helper/ApiHelper.jsx';
 import useAxios from '../../hooks/useAxios';
 
+
+
 export default function RolePermissions() {
 
     const history = useHistory();
@@ -152,7 +154,7 @@ return (
         <div className="dash-cont-start">
         <h4 className="mt-2">All Role Permissions</h4>    
         <div className="subject-main-container">
-            {adminState.AllRolePermissions.map(permission => { return (
+            {adminState?.AllRolePermissions.map(permission => { return (
                 <div className="small-card" key={permission._id}>
                 <div className="subject-card-body mt-2">
                     

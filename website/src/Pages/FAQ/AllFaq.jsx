@@ -36,7 +36,7 @@ return (
         <div className="subject-main-container">  
         {data && data.data.map(faq => <SingleFaqCategory faq={faq} key={faq._id}/> )}
 
-        {data.pagination && data.pagination.itemCount === 0 && (
+        {data?.pagination?.itemCount === 0 && (
             <div className="col-md-6 pt-1">
                 <h2 style={{ fontSize: '1.2em', color: '#f00' }}>No Faq Category Registered yet</h2>
             </div>

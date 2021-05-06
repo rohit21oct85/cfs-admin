@@ -17,6 +17,7 @@ import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
 import BookFaqQuestion from '../Pages/Books/BookFaqQuestion.jsx';
 import BookSEO from '../Pages/Books/BookSEO.jsx';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
+import SimilarBooks from '../Pages/Books/SimilarBooks.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import AllTutors from '../Pages/Tutor/AllTutors.jsx';
@@ -160,6 +161,10 @@ export const privateRoutes = [
     {
         path: '/book-seo/:isbn/:book_id?/:seo_id?',
         component: BookSEO
+    },
+    {
+        path: '/book-similar-books/:isbn/:book_id?',
+        component: SimilarBooks
     },
 
     {

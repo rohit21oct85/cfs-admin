@@ -18,7 +18,7 @@ function SinglePermission({permission_group}) {
             <div className="subject-card-body mt-2">
                 <div className="admin-name"> 
                     <div className="name-label">
-                        Module ID: 
+                        Group Name: 
                     </div>
                     <div className="name-main">
                         {permission_group.module_name}
@@ -35,20 +35,25 @@ function SinglePermission({permission_group}) {
                         {(permission_group.status == 1) ? 'Active':'Inactive'}
                     </div>
                 </div> 
-                
-                
+                <hr className="mt-1 mb-1"/>
+                <div className="subject-card-heading">
+                    
+                    <Button className="delBtn text-black" onClick={handleUpdate.bind(this,{id: permission_group._id, module_name: permission_group.module_name})}>
+                        <span className="fa fa-pencil-square-o text-success mr-2"></span>
+                        Edit
+                    </Button>
+                    <Button className="delBtn" onClick={handleDelete.bind(this,permission_group._id)}>
+                        <span className="fa fa-trash text-danger"></span>
+                    </Button>
+                    
+                </div>
+                <hr className="mt-1 mb-1"/>
                 <div className="admin-name"> 
                     <div className="name-label">
-                        Created On: 
+                        All Methods: 
                     </div>
-                    <div className="name-main">
-                        {permission_group.created_at.split('T')[0]}
-                    </div>
-                </div> 
-                <div className="admin-name"> 
-                    <div className="name-label">
-                        Methods: 
-                    </div>
+                    
+                    
                     <div className="name-main-method">
                         {permission_group.module_method.map( method => {
                             return (
@@ -59,19 +64,7 @@ function SinglePermission({permission_group}) {
                 </div> 
                 
             </div>
-            <hr className="mt-1 mb-1"/>
-            <div className="subject-card-heading">
-                <div>
-                </div>
-                <div>
-                    <Button className="delBtn" onClick={handleUpdate.bind(this,{id: permission_group._id, module_name: permission_group.module_name})}>
-                    <span className="fa fa-pencil-square-o text-success mr-2"></span>
-                    </Button>
-                    <Button className="delBtn" onClick={handleDelete.bind(this,permission_group._id)}>
-                        <span className="fa fa-trash text-danger"></span>
-                    </Button>
-                </div>
-            </div>
+            
         </div>
         </>
     )

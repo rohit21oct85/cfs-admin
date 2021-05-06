@@ -91,7 +91,7 @@ const handleProblems = async (e) => {
 const [search, setSearch] = useState('');
 
 const searchQuestion = async (search) => {
-    const result = await axios.get(`${API_URL}chapter/search-question/${params.isbn}/${search}`);
+    const result = await axios.get(`${API_URL}chapter/search-question/${params.isbn}/${search}`, options);
     setFproblems(result.data.problems);
 }
 useEffect(() => {

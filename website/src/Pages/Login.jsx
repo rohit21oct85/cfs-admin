@@ -86,12 +86,10 @@ export default function Login() {
             <NavLink to="/">
                 <img className="logo" src="/logo.png" />
             </NavLink>
-            <div className="row no-gutter mt-3">
-                <div className="col-md-6 offset-1">
-                    <img src="/bg_img.jpeg" style={{ width: '100%' }} />
-                </div>
-                <div className="col-md-3 card pl-3 pr-3 pt-3 pb-3">
-                <h4>Login </h4>    
+            <div className="row no-gutter">
+                <div className="col-md-3 loginDiv">
+                    
+                <h4>Administrator Login </h4>    
                 {error && (<p style={{ color: 'red', margin: '0px' }}>{error}</p>)} 
                 <hr />
                 <Form autoComplete="new-password" onSubmit={submitForm}>
@@ -110,17 +108,12 @@ export default function Login() {
                     <Button 
                         className="btn btn-md btn-block dark mt-3" 
                         type="submit"
+                        style={{ width: '100%'}}
                     >
-                        {loading ? 'Authenticating...':'Login'}
+                        <span className="fa fa-lock mr-2 p-2"></span>
+                        {loading ? 'Authenticating...':'Login Account'}
                     </Button>
                     </Form>
-                    <div className="col-md-12 text-center mt-3">
-                        Forgot Password ?
-                        <NavLink 
-                            className="ml-2"
-                            to='/forgot-password'
-                        >change password</NavLink>
-                    </div>
                 </div>
             </div>
             

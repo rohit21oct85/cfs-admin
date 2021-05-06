@@ -1,19 +1,42 @@
-import React, {useContext, useState, useEffect} from 'react'
+import React, {useContext, useState, useEffect, useRef} from 'react'
 import {Form, Button} from 'react-bootstrap';
 import {useHistory, useParams} from 'react-router-dom';
 import {AdminContext} from '../../context/AdminContext';
+import {AuthContext} from '../../context/AuthContext';
 import {useFormData} from '../../hooks/useFormData';
 import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
-import * as api from '../../Helper/ApiHelper.jsx';
+
+import axios from 'axios'
+import * as cons from '../../Helper/Cons.jsx'
+
+import * as utils from '../../utils/MakeSlug';
+
 import useAxios from '../../hooks/useAxios';
 
 const CreatePermissionGroup = () => {
     const history = useHistory();
     const params = useParams();
-    const {state, dispatch} = useContext(AdminContext);
+    const moduleRef = useRef("");
+    const {state} = useContext(AuthContext);
+
+    const {state: adminstate, dispatch} = useContext(AdminContext);
     const {state:errorState, dispatch:errorDispatch} = useContext(ErrorContext);
     const {formData, handleChange} = useFormData();
+    
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const options = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer '+state.access_token
+        }
+    };
+
     function clearFields(){
         document.getElementById("module").selectedIndex = '0';
         const cbs = document.querySelectorAll('input[name="module_method"]');
@@ -22,8 +45,18 @@ const CreatePermissionGroup = () => {
         });    
     }
     const handleSubmit = async () => {
-        if(formData.module_name !== undefined && formData.module_id !== undefined){
-            const response = await api.post(`/master-permission-group/create`, formData);
+
+        const moduleData = moduleRef.current.value
+        const sliceData = moduleData.split('_');
+        const module_name = sliceData[0]
+        const module_id = sliceData[1]
+        formData['module_name'] = module_name
+        formData['module_id'] = module_id
+        formData['id'] = params?.id
+        // console.log(formData); return; 
+
+        if(moduleRef.current.value !== "0"){
+            const response = await axios.post(`${API_URL}master-permission-group/create`, formData, options);
             if(response.data.status === 200){
                 dispatch({ type: 'GET_ALL_PERMISSION_GROUPS', payload: response.data.data})
                 errorDispatch({type: 'SET_SUCCESS', payload: response.data.message});
@@ -39,7 +72,7 @@ const CreatePermissionGroup = () => {
     }
 
     const {response} = useAxios({
-        method: 'get', url: `master-permission-group/view/${params.id}`
+        method: 'get', url: `master-permission-group/view/${params?.id}`
     });
     const [permissionGroup, setPermissionGroup] = useState({});
 
@@ -92,15 +125,16 @@ const CreatePermissionGroup = () => {
                     id="module" 
                     type="select"
                     onChange={handleChange}
+                    ref={moduleRef}
                     className="form-control">
-                    <option>Select Modules</option>    
-                    {state.ModLists.map( mod => {
-                            const module_name = mod.module_name.replaceAll(' ','-').toLowerCase().trim(); 
+                    <option value="0">Select Modules</option>    
+                    {adminstate?.ModLists.map( mod => {
+                            const module_name = utils.MakeSlug(mod.module_name); 
                             const module_id = mod._id;
                             return(
                             <option 
                                 value={`${module_name}_${module_id}`} 
-                                selected={(module_name === params.module_name)?'selected':''}
+                                selected={(module_name === params?.module_name)?'selected':''}
                                 key={mod._id}>{mod.module_name}</option>
                             )
                     })}
@@ -110,9 +144,9 @@ const CreatePermissionGroup = () => {
              <Form.Group>
                  <Form.Label>App Methods List</Form.Label>
                     
-                {state.methods.map( mod => {
+                {adminstate?.methods.map( mod => {
 
-                let checked = state.selected_methods && state.selected_methods.find( pgroup => pgroup.name === mod.name);
+                let checked = adminstate?.selected_methods?.find( pgroup => pgroup?.name === mod?.name);
 
                 return(
                         <div className="methods label"  key={mod.name}>

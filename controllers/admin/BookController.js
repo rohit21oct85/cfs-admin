@@ -439,7 +439,6 @@ const UploadReviewCSV = async(req, res) => {
                         review: review.review, 
                         rating: review.rating, 
                         status: true, 
-                        
                     })
                 })
 
@@ -597,6 +596,8 @@ const BookSeo = async(req, res) => {
             MetaDescription: 1,
             NoIndex: 1,
             DisplayTitle: 1,
+            similarHeading: 1,
+            faqHeading: 1,
             Description: 1,
             Author2: 1,
             AltImage: 1,
@@ -625,6 +626,7 @@ const SaveBookSeo = async(req, res) => {
             MetaDescription: req.body.MetaDescription,
             NoIndex: req.body.NoIndex,
             DisplayTitle: req.body.DisplayTitle,
+            similarHeading: req.body.similarHeading,
             Description: req.body.Description,
             Author2: req.body.Author2,
             AltImage: req.body.AltImage,
@@ -648,7 +650,7 @@ const SaveBookSeo = async(req, res) => {
 const addFields = async (req, res) => {
     await Book.updateMany({},
     {
-        "seo": false
+        "faqHeading": ""
     });
     res.status(201).json({
         error: false,
@@ -657,7 +659,77 @@ const addFields = async (req, res) => {
 }
 
 
+const relatedBooks = async(req, res) => {
+    try {
+        const Books = await Book.aggregate([
+            {$match: {sub_subject_name: `${req.params.sub_subject}`}},
+            { $sample: { size: 20 } }
+        ])
+        return res.status(200).json({
+            data: Books
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+const smimilarBooks = async(req, res) => {
+    try {
+        const SimilarBooks = await Book.findOne({_id: `${req.params.book_id}`},{similarBooks: 1,_id: 0})
+        return res.status(200).json({
+            data: SimilarBooks
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
+const addSimilarBooks = async(req, res) => {
+    try {
+        
+        const filter = {_id: req.body.book_id, ISBN13: req.body.book_isbn};
+        const sb = req.body.similarBooks;
+        const sbook_id = req.body.id;
+        if(req.body.id){
+            const updateData = {DisplayTitle: req.body.similarBooks.DisplayTitle, AltImage: req.body.similarBooks.AltImage}
+            // return res.send(updateData);
+            let SBook = await Book.findOne(filter);
+            let singleSBook = await SBook.similarBooks.id(sbook_id);
+            singleSBook.set(updateData);
+            await SBook.save();
+            return res.status(201).json({
+                error: false,
+                message: "Similar Books Updated successfully"
+            })
+        }else{
+            await Book.updateOne(filter, {$addToSet: { similarBooks: {$each: sb}}});
+            return res.status(201).json({
+                error: false,
+                message: "Similar Books Added successfully"
+            })
+        }
+
+        
+
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+
 module.exports = {
+    smimilarBooks,
+    addSimilarBooks,
+    relatedBooks,
     addFields,
     BooksBySubSubjectId,
     getAllBook,
