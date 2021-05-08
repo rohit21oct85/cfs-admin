@@ -24,7 +24,7 @@ function TopMenu({data}) {
                 </Button>
                 {!params.faq_id && (
                     <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
-                        <Pagination pagination={data && data.pagination}/>
+                        <Pagination pagination={data?.pagination}/>
                     </div>    
                 )}
             </div>

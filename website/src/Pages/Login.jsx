@@ -86,41 +86,39 @@ export default function Login() {
             <NavLink to="/">
                 <img className="logo" src="/logo.png" />
             </NavLink>
-            <div className="row no-gutter mt-3">
-                <div className="col-md-6 offset-1">
-                    <img src="/bg_img.jpeg" style={{ width: '100%' }} />
-                </div>
-                <div className="col-md-3 card pl-3 pr-3 pt-3 pb-3">
-                <h4>Login </h4>    
+            <div className="row no-gutter">
+                <div className="col-md-3 loginDiv">
+                    
+                <h4>Administrator Login </h4>    
                 {error && (<p style={{ color: 'red', margin: '0px' }}>{error}</p>)} 
                 <hr />
                 <Form autoComplete="new-password" onSubmit={submitForm}>
                     <Form.Group controlId="formBasicEmail" className="text-left">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" autoComplete="nope" ref={emailRef} placeholder="Enter email" />
+                        <Form.Label><span className="fa fa-envelope text-success"></span> Email address</Form.Label>
+                        <Form.Control type="email" autoComplete="Off" ref={emailRef} placeholder="Enter email" />
                         <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword"  className="text-left">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" autoComplete="nope" ref={passwordRef} placeholder="Password" />
+                        <Form.Label><span className="fa fa-key text-success"></span> Password</Form.Label>
+                        <div style={{ position: 'relative'}}>
+                            <Form.Control type="password" autoComplete="Off" id="pwd" ref={passwordRef} placeholder="Password" />
+                            <span className="fa fa-eye text-success"
+                            onClick={e=>{ e.preventDefault(); document.getElementById("pwd").style.type = 'text' }}
+                            style={{ position: 'absolute', right: '-10px', top: '12px', display: 'block', width: '40px', cursor: 'pointer'}}></span>
+                        </div>
                     </Form.Group>
                     <Button 
                         className="btn btn-md btn-block dark mt-3" 
                         type="submit"
+                        style={{ width: '100%'}}
                     >
-                        {loading ? 'Authenticating...':'Login'}
+                        <span className="fa fa-lock mr-2 p-2"></span>
+                        {loading ? 'Authenticating...':'Login Account'}
                     </Button>
                     </Form>
-                    <div className="col-md-12 text-center mt-3">
-                        Forgot Password ?
-                        <NavLink 
-                            className="ml-2"
-                            to='/forgot-password'
-                        >change password</NavLink>
-                    </div>
                 </div>
             </div>
             

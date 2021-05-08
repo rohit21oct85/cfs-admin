@@ -4,12 +4,10 @@ const bcrypt = require('bcryptjs');
 
 const StudentSchema = new mongoose.Schema({
     fullname: {
-        type: String,
-        required: true,
+        type: String
     },
     email: {
         type: String,
-        required: true,
         unique: true,
     },
     dob:{type: String},
@@ -17,7 +15,7 @@ const StudentSchema = new mongoose.Schema({
     Subscribe: {type: String},
     SubscribeDate: {type: String},
     social_id: {type: String},
-    password: {type: String,required: true,trim: true},
+    password: {type: String,trim: true},
     dept: {type: String},
     typ: {type: String},
     college: {type: String},
@@ -40,6 +38,10 @@ const StudentSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "student"
+    },
+    newStudent: {
+        type: Boolean,
+        default: true
     },
     status: {
         type: Boolean,
@@ -78,7 +80,6 @@ StudentSchema.pre('findOneAndUpdate', async function(next) {
     } catch (err) {
         return next(err);
     }
-
 });
 
 StudentSchema.plugin(mongoosePaginate);

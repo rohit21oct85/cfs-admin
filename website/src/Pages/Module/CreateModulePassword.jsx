@@ -26,21 +26,20 @@ export default function CreateModulePassword() {
         async  function handleSubmit(e){
             e.preventDefault();
             let response = null;
-            if(formData.module_method == ''){
-                errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Method Name'});
+            
+            formData['module_method'] = "delete";
+            formData['module_password'] = randomPassword;
+            formData['module_plain_password'] = randomPassword;
+            if(params.id){
+                response = await api.patch(`master-delete/update/${params.id}`,formData);
             }else{
-                formData['module_password'] = randomPassword;
-                formData['module_plain_password'] = randomPassword;
-                if(params.id){
-                    response = await api.patch(`master-delete/update/${params.id}`,formData);
-                }else{
-                    response = await api.post('master-delete/create',formData);
-                }
-                setFormSubmitted(true);
-                errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-                adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: response.data.data});
-                history.push(`/master-module/password/${params.module_name}/${params.module_id}`);
+                response = await api.post('master-delete/create',formData);
             }
+            setFormSubmitted(true);
+            errorDispatch({type: 'SET_SUCCESS', payload: response.message});
+            adminDispatch({type: 'GET_REMOVE_ALL_DATA', payload: response.data.data});
+            history.push(`/master-module/password/${params.module_name}/${params.module_id}`);
+        
         }
         async function handelChange(e){
             const data = e.target.value;
@@ -145,22 +144,7 @@ return (
                         } placeholder="Enter Module Name"/>
                     </Form.Group>
                         
-                    <Form.Group method="POST">
-                        <Form.Label>
-                            Module Methods Name
-                            <p style={{ marginBottom: '2px' }}><small>Enter: create, update, <b className="text-danger">delete</b>, view, view-all</small></p>
-                        </Form.Label>
-                        <Form.Control name="module_method" autoComplete="off"
-                            defaultValue={(params.module_method) ? params.module_method :module.module_method}
-                            onChange={handelChange}
-                            onKeyDown={ 
-                                event => {
-                                    if(event.key === 'Enter'){
-                                        event.preventDefault()
-                                    }
-                                }
-                            } placeholder="Enter Module Method Name"/>
-                    </Form.Group>
+                    
                     
                     <Form.Group method="POST">
                         <Form.Label>
@@ -169,7 +153,7 @@ return (
                             style={{ cursor: 'pointer', fontWeight: 'bold'}}
                             onClick={generateRandomPassword}
                             >
-                            <span className="fa fa-lock ml-2 text-success"></span>
+                            <span className="fa fa-lock mr-2 text-success"></span>
                              Generate Random password
                             </p>
                         </Form.Label>
@@ -206,25 +190,10 @@ return (
                     </Form.Group>
                 </Form>
                 </div>
-                <div className="col-md-8 pl-0 subject-main-container">
+                <div className="col-md-4 pl-0 subject-main-container">
                     {removeAllData && removeAllData.map(removeData => { return (
                         <div className="col-md-12 module-card" key={removeData._id} id={`card-${removeData._id}`}>
-                        <div className="subject-card-heading">
-                            <div>
-                                <Link to={`sub-subject/${removeData.module_name.replace(' ','-').toLowerCase().trim()}/${removeData._id}`}>
-                                #{removeData._id}
-                                </Link>
-                            </div>
-                            <div>
-                                <Button className="delBtn" onClick={handleUpdate.bind(this,{id: removeData._id, module_method: removeData.module_method})}>
-                                <span className="fa fa-edit text-muted mr-2"></span>
-                                </Button>
-                                
-                                <Button className="delBtn" onClick={handleDelete.bind(this,removeData._id)}>
-                                <span className="fa fa-trash text-danger mr-2"></span>
-                                </Button>
-                            </div>
-                        </div>
+                        
                         <div className="subject-card-body mt-2">
                             <div className="admin-name"> 
                                 <div className="name-label">
@@ -251,7 +220,7 @@ return (
                                  <div className="name-main">
                                      <span>*************</span>
                                      <span 
-                                         className="fa fa-eys ml-2"
+                                         className="fa fa-eye ml-2"
                                          style={{ cursor: 'pointer' }}
                                          onClick={ e => {
                                              setPasswordValidity(true);
@@ -315,16 +284,20 @@ return (
                                 </div>
                             </div> 
                             
-                            
-                            <div className="admin-name"> 
-                                <div className="name-label">
-                                    Created On: 
-                                </div>
-                                <div className="name-main">
-                                    {removeData.created_at.split('T')[0]}
-                                </div>
-                            </div> 
-                            
+                        </div>
+                        <hr className="mt-2 mb-2"/>
+                        <div className="subject-card-heading">
+                            <div>
+                            </div>
+                            <div>
+                                <Button className="delBtn" onClick={handleUpdate.bind(this,{id: removeData._id, module_method: removeData.module_method})}>
+                                <span className="fa fa-edit text-muted mr-2"></span>
+                                </Button>
+                                
+                                <Button className="delBtn" onClick={handleDelete.bind(this,removeData._id)}>
+                                <span className="fa fa-trash text-danger mr-2"></span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                     )})}

@@ -27,13 +27,12 @@ const FAQSchema = new mongoose.Schema({
         default: Date.now
     } 
 });
-const similarBooksSchema = new mongoose.Schema({ 
-    book_isbn:{
-        type: String
-    },
-    book_id:{
-        type: Object
-    },
+const SimilarBooksSchema = new mongoose.Schema({ 
+    ISBN13:'string',
+    BookId:'string',
+    Edition:'string',
+    DisplayTitle: 'string',
+    AltImage: 'string',
     status: {
         type: Boolean,
         default: false
@@ -62,8 +61,7 @@ const BookSchema = new mongoose.Schema({
         required: true,
     },
     BookName: {
-        type: String,
-        required: true
+        type: String
     },
     BookEdition: {
         type: String,
@@ -135,11 +133,25 @@ const BookSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    similarHeading: {
+        type: String
+    },
+    
+    faqHeading: {
+        type: String
+    },
+
     similarBooks: {
-        type: [similarBooksSchema]
+        type: [SimilarBooksSchema]
     },
     published: {
         type: Boolean,
+    },
+    question_uploaded: {
+        type: Boolean,
+    },
+    total_question: {
+        type: String
     },
     created_at: {
         type: Date,

@@ -1,4 +1,5 @@
 const Chapter = require('../../models/admin/Chapter.js');
+const Book = require('../../models/admin/Book.js');
 const csv = require('csv-parser')
 const fs = require('fs')
 
@@ -206,8 +207,12 @@ const GetChapterQuestions = async (req, res) => {
             if(sections.length > 0){
                 section_no = sections[0].section_no;
                 excerise = await getExcerise(req.params.isbn, chapter_no, section_no);
-                excerise_no = excerise[0].excerise;
-                problems = await getProblems(req.params.isbn, chapter_no, section_no, excerise_no);
+                if(excerise.length > 0){
+                    excerise_no = excerise[0].excerise;
+                    problems = await getProblems(req.params.isbn, chapter_no, section_no, excerise_no);
+                }else{
+                    problems = await getOnlyProblems(req.params.isbn, chapter_no);
+                }
             }else{
                 problems = await getOnlyProblems(req.params.isbn, chapter_no);
             }
@@ -245,7 +250,7 @@ const UploadChapters = async(req, res) => {
         fs.createReadStream(req.file.path,{encoding: 'utf8'})
             .pipe(csv())
             .on('data', (data) => results.push(data))
-            .on('end', () => {
+            .on('end', async () => {
                 results.forEach( (chapter, index) => {
                     // console.log(chapter); return;
                     if(chapter.chapter_no !== '' ){
@@ -273,9 +278,9 @@ const UploadChapters = async(req, res) => {
                         problem_no = results[index].problem_no
                     }
                     
-                    if(chapter.question !== ''){
-                        question = results[index].question
-                    }
+                    
+                    question = results[index].question
+                
                     FinalData.push({ 
                         book_id: data.book_id, 
                         book_name: data.book_name, 
@@ -289,7 +294,10 @@ const UploadChapters = async(req, res) => {
                         question: question, 
                     })
                 })
-                
+                await Book.findByIdAndUpdate({_id: data.book_id},{
+                    "question_uploaded": true,
+                    "total_question": FinalData.length
+                })  
                 otherFunction(res, FinalData, function() {
                     fs.unlinkSync(req.file.path)
                 })
@@ -304,7 +312,9 @@ const UploadChapters = async(req, res) => {
 
 const otherFunction = async(res, FinalData, callback) => {
     // return res.send(FinalData);
+    
     await Chapter.insertMany(FinalData).then(() => {
+              
         return res.status(200).json({
             success: true,
             message: "Chapters added successfully"
@@ -381,6 +391,7 @@ const UpdateotherFunction = async(res,FinalData, callback) => {
                 excerise: data.excerise,
                 problem_no: data.problem_no,
                 question: data.question,
+                flag: "notassigned"
             }}, options, async (err, result) => {
                 if(err){
                     return res.status(409).json({

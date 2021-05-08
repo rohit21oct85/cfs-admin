@@ -145,7 +145,7 @@ return (
 <div className="main-area-all">
 <div className="dashboard_main-container">
 <div className="dash-main-head">
-    <h2>Books Rating and Review</h2>
+    <h2>Books Rating and Review - ISBN13: {params?.isbn}</h2>
 </div>
 {error && <Notification>{error.message}</Notification>}
 {isLoading && <LoadingComp />}

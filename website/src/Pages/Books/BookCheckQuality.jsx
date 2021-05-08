@@ -158,7 +158,7 @@ return (
             </Link>
         </div>
         <div className="col-md-11 pl-0 ml-2">
-            <p style={{ fontSize: '1.2em', marginBottom: '0px' }}>{data && data.BookName}</p>
+            <p style={{ fontSize: '1.2em', marginBottom: '0px' }}>{data?.ISBN13} - {data?.BookName}</p>
         </div>
     </div>    
 </div>
@@ -181,7 +181,7 @@ return (
                     
                     <div style={{height: '65vh', overflowY: 'scroll', paddingRight: '10px', paddingBottom: '0px'}}>
                     {qcd_loading && (<span className="fa fa-spinner"></span>)}
-                    {!qcd_loading && qc_data?.details.map( data => {
+                    {!qcd_loading && qc_data?.details?.map( data => {
                         
                         return (<ChapterData data={data} key={data._id.chapter_no}/>)
                     })}

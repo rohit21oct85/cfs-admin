@@ -9,7 +9,8 @@ export default function BookSummery({data, qc_data}) {
                 <BookImage isbn={data.ISBN13} width="76%" />
             </div>
             <div className="col-md-8 pr-0 pl-0">
-                <div className="admin-name mt-0 mb-3"> 
+                
+                <div className="admin-name mt-0 mb-1"> 
                     <div className="name-label">
                         Author: 
                     </div>
@@ -17,7 +18,7 @@ export default function BookSummery({data, qc_data}) {
                         {data.Author1}
                     </div>
                 </div>
-                <div className="admin-name mt-3 mb-3"> 
+                <div className="admin-name mt-1 mb-1"> 
                     <div className="name-label">
                         ISBN-13: 
                     </div>
@@ -25,14 +26,24 @@ export default function BookSummery({data, qc_data}) {
                         {data.ISBN13}
                     </div>
                 </div>
-                <div className="admin-name mt-3 mb-3"> 
+                <div className="admin-name mt-1 mb-1"> 
                     <div className="name-label">
                         Subject: 
                     </div>
                     <div className="name-main">
-                        {data.subject_name}/{data.sub_subject_name}
+                        {data.subject_name}
                     </div>
                 </div>
+                
+                <div className="admin-name mt-1 mb-1"> 
+                    <div className="name-label">
+                        Sub Subject: 
+                    </div>
+                    <div className="name-main">
+                        {data.sub_subject_name}
+                    </div>
+                </div>
+
                 <div className="admin-name mt-1 mb-1"> 
                     <div className="name-label">
                         Total Reviews: 

@@ -32,12 +32,14 @@ const TutorSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
+        unique: true,
+    },
+    Contact: {
+        type: String,
         unique: true,
     },
     password: {
         type: String,
-        required: true,
         trim: true
     },
     house_name:{
@@ -131,7 +133,6 @@ TutorSchema.pre('findOneAndUpdate', async function(next) {
     } catch (err) {
         return next(err);
     }
-
 });
 
 TutorSchema.plugin(mongoosePaginate);

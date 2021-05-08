@@ -49,29 +49,14 @@ const ChapterSchema = new mongoose.Schema({
     },
     flag: {
         type: String,
+        Default: 'notassigned'
     },
     temp_answer: {
         type: String,
     },
-    assigned:{
-        type: Boolean
-    },
-    answered: {
-        type: Boolean
-    },
-    rejected: {
-        type: Boolean
-    },
-    approved: {
-        type: Boolean
-    },
-    reworked: {
-        type: Boolean
-    },
     option: {
         type: String
     },
-    
     assigned_at: {
         type: Date
     },

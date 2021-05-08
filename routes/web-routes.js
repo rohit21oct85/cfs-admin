@@ -6,6 +6,8 @@ const TutorAuthRoutes = require('./TutorAuthRoutes.js');
 const WebReviewRoutes = require('./WebReviewRoutes.js');
 const WebFaqRoutes = require('./WebFaqRoutes.js');
 const WebSubjectRoutes = require('./WebSubjectRoutes.js');
+const StudentRoutes = require('./StudentRoutes.js');
+
 
 module.exports = {
     WebBookRoutes,
@@ -15,5 +17,6 @@ module.exports = {
     TutorAuthRoutes,
     WebReviewRoutes,
     WebFaqRoutes,
-    WebSubjectRoutes
+    WebSubjectRoutes,
+    StudentRoutes
 }

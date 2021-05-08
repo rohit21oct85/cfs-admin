@@ -18,6 +18,8 @@ const {state} = useContext(AuthContext);
 
 const {data, isLoading, error} = useStudent();
 
+
+
 return (
 
 <>
@@ -34,7 +36,7 @@ return (
         <div className="dash-con-heading">
             <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
                
-                <Pagination pagination={data?.data?.pagination}/>
+                <Pagination pagination={data?.pagination}/>
             </div>    
         </div>
         {!isLoading && (

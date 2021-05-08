@@ -46,6 +46,9 @@ router
     .get('/seo/:book_id', checkAuth, Book.BookSeo)
     .post('/add-seo', checkAuth, Book.SaveBookSeo)
     .post('/addFields', checkAuth, Book.addFields)
+    .get('/all-books/:sub_subject', checkAuth, Book.relatedBooks)
+    .get('/similar-books/:book_id', checkAuth, Book.smimilarBooks)
+    .post('/add-similar-books', checkAuth, Book.addSimilarBooks)
 ;
 
 module.exports = router;
