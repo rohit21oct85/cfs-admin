@@ -168,7 +168,7 @@ return (
                             <option 
                             key={i}
                             value={section.section_no}
-                            >{section.section_no} - {section.section_name}</option>
+                            >{section.section_no === "NULL" ? '' : section.section_no} {section.section_name}</option>
                         );
                     })}
                   </select>  

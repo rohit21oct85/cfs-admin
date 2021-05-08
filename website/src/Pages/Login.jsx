@@ -94,16 +94,21 @@ export default function Login() {
                 <hr />
                 <Form autoComplete="new-password" onSubmit={submitForm}>
                     <Form.Group controlId="formBasicEmail" className="text-left">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" autoComplete="nope" ref={emailRef} placeholder="Enter email" />
+                        <Form.Label><span className="fa fa-envelope text-success"></span> Email address</Form.Label>
+                        <Form.Control type="email" autoComplete="Off" ref={emailRef} placeholder="Enter email" />
                         <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword"  className="text-left">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" autoComplete="nope" ref={passwordRef} placeholder="Password" />
+                        <Form.Label><span className="fa fa-key text-success"></span> Password</Form.Label>
+                        <div style={{ position: 'relative'}}>
+                            <Form.Control type="password" autoComplete="Off" id="pwd" ref={passwordRef} placeholder="Password" />
+                            <span className="fa fa-eye text-success"
+                            onClick={e=>{ e.preventDefault(); document.getElementById("pwd").style.type = 'text' }}
+                            style={{ position: 'absolute', right: '-10px', top: '12px', display: 'block', width: '40px', cursor: 'pointer'}}></span>
+                        </div>
                     </Form.Group>
                     <Button 
                         className="btn btn-md btn-block dark mt-3" 

@@ -12,8 +12,8 @@ function Question({problem, search}) {
     }
     const question_problem = renderHTML(problem.question);
     let problem_question = '';
-    if(question_problem.problem !== undefined){
-        problem_question = question_problem && question_problem.props.children[0];
+    if(question_problem?.problem !== undefined){
+        problem_question = question_problem?.props?.children[0];
     }else{
         problem_question = problem.question;
     }

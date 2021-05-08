@@ -39,6 +39,10 @@ const StudentSchema = new mongoose.Schema({
         type: String,
         default: "student"
     },
+    newStudent: {
+        type: Boolean,
+        default: true
+    },
     status: {
         type: Boolean,
         default: false
@@ -76,7 +80,6 @@ StudentSchema.pre('findOneAndUpdate', async function(next) {
     } catch (err) {
         return next(err);
     }
-
 });
 
 StudentSchema.plugin(mongoosePaginate);
