@@ -103,10 +103,17 @@ const popularBooks = async(req, res) => {
     }
 }
 
+// function regexEscape(string){
+//     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+// }
+
 const searchChapterQuestion = async (req, res) => {
-    const search = req.params.search;
-    const limit = parseInt(req.params.limit);
-    // return res.send(req.params)
+    // const search = req.params.search;
+    // const limit = parseInt(req.params.limit);
+    const search = req.body.search; // only recieve 100 chars in search
+    const limit = parseInt(req.body.limit);
+    // working with special charcters
+    // let searchString = regexEscape(search)
 
     const questions = await Chapter.find({ 
         $or:

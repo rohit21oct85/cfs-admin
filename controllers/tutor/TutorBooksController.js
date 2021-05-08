@@ -1,6 +1,7 @@
 const Book = require('../../models/admin/Book')
 const Chapter = require('../../models/admin/Chapter')
 
+
 const openBook = async (req, res) => {
     try {
         // const filter = {sub_subject_id:req.body.subject_id, published: true} 
@@ -112,7 +113,7 @@ const finishAnswer = async (req, res) => {
 
 const getQuestion = async (req, res) => {
     try {
-        const filter = { _id:req.body.questionId } //changed for time being since no published field in db
+        const filter = { _id:req.body.questionId } 
         const project = {_id:1, question:1,problem_no: 1,section_no:1,excerise:1};
         const question = await Chapter.findOne(filter,project);
         return res.send(question);
@@ -120,6 +121,19 @@ const getQuestion = async (req, res) => {
         res.send({error: true, message: error.message});
     }
 }
+
+const getDashboardData = async (req, res) => {
+    try {
+        const approvedQuestions = await Chapter.countDocuments({ assigned_to:req.body.userId, flag:'approved' });
+        const answeredQuestions = await Chapter.countDocuments({ assigned_to:req.body.userId, flag:'answered' });
+        const reworkedQuestions = await Chapter.countDocuments({ assigned_to:req.body.userId, flag:'reworked' });
+        return res.status(200).send({approvedQuestions:approvedQuestions,answeredQuestions:answeredQuestions,reworkedQuestions:reworkedQuestions});
+    } catch (error) {
+        res.send({error: true, message: error.message});
+        
+    }
+}
+
 
 
 module.exports = {
@@ -129,4 +143,5 @@ module.exports = {
     finishAnswer,
     getAnswered,
     getQuestion,
+    getDashboardData,
 }

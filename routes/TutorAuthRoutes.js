@@ -32,6 +32,8 @@ router
     .post('/save-mastered-subject', upload.single('file'), Auth.masteredSubject)
     .post('/save-bank-details', Auth.saveBankDetails)
     .get('/view-all', Auth.getAllCategory)
-    .post('/get-tutor-details', Auth.getTutorDetails);
+    .post('/get-tutor-details', Auth.getTutorDetails)
+    .post('/delete-education',tutorAuth, Auth.deleteEducation);
+    
 
 module.exports = router;
