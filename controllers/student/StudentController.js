@@ -21,12 +21,13 @@ const askQuestion = async (req, res) => {
             user_Id: req.body.user_Id
         }
         const noti = new Notify(notifyData);
-        await noti.save();
+        const dt = await noti.save();
         res.status(201).json({error: false, message: "Your question is submitted. you will get answer withing 2-4 Hrs."})
     } catch (error) {
         res.status(501).json({error: true, message: error})
     } 
 }
+
 const userQuestion = async (req, res) => {
     try {
         let flag = req.params.flag;
@@ -48,22 +49,20 @@ const userQuestion = async (req, res) => {
         })
     }
 }
+
 const userNotifications = async (req, res) => {
     try {
-        
         let cond = '';
         cond = {user_Id: req.body.user_Id, type: 'QA',isRead: false}
-        if(req?.params?.isRead === 'all'){
+        if(req.params.isRead === 'all'){
             cond = {user_Id: req.body.user_Id, type: 'QA'}
         }
-        if(req?.params?.isRead !== 'all'){
-            cond = {user_Id: req.body.user_Id, type: 'QA',isRead: req?.params?.isRead}
+        if(req.params.isRead !== 'all'){
+            cond = {user_Id: req.body.user_Id, type: 'QA',isRead: req.params.isRead}
         }
-        if(req?.params?.isRead === undefined){
+        if(req.params.isRead === undefined){
             cond = {user_Id: req.body.user_Id, type: 'QA',isRead:false}
         }
-        
-        
         
         const questions = await Notify.find(cond);
         res.status(201).json({
@@ -142,7 +141,7 @@ const myTextBook = async (req, res) => {
     try {    
         const filter = {user_Id: req.body.user_Id}
         const TextBooks = await TextBook.find(filter,{_id: 1, book_isbn: 1, book_name: 1, edition: 1, user_Id: 1});
-        res.status(501).json({
+        res.status(200).json({
             error: false,
             data: TextBooks
         })
