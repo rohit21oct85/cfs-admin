@@ -4,6 +4,7 @@ const Subject = require('../../models/admin/Subject.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const md5 = require('md5');
+var mongoose = require("mongoose");
 
 let refreshTokens = [];
 
@@ -225,7 +226,6 @@ const getTutorDetails = async(req,res) => {
     try {
         const SingleTutor = await Tutor.findOne(filter, { __v: 0 });
         const bank_details = SingleTutor.bank_details ? JSON.parse(SingleTutor.bank_details) : null;
-        // console.log(bank_details)
         SingleTutor.bank_details = bank_details
         return res.status(200).json({
             data: SingleTutor,
@@ -273,6 +273,16 @@ const getAllCategory = async(req, res) => {
     }
 }
 
+const deleteEducation = async (req, res) => {
+    try {
+        const filter = { email: req.body.email };
+        const data = await Tutor.findOneAndUpdate(filter, {$pull : { "education" : {"_id": req.body.id } } } );
+        return res.status(200).send({message: "education deleted successfully"});
+    } catch (error) {
+        res.send({error: true, message: error.message});
+        
+    }
+}
 
 module.exports = {
     Register,
@@ -287,4 +297,5 @@ module.exports = {
     saveBankDetails,
     getTutorDetails,
     getAllCategory,
+    deleteEducation
 }

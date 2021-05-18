@@ -60,7 +60,6 @@ AdminSchema.pre('findOneAndUpdate', async function(next) {
     } catch (err) {
         return next(err);
     }
-
 });
 
 
