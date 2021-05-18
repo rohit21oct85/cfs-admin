@@ -1,11 +1,9 @@
+const BartelbyChapter = require('../../models/admin/BartelbyChapter.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const Book = require('../../models/admin/Book.js');
 const csv = require('csv-parser')
 const fs = require('fs')
 
-const checkValueIndex = (results, checkvalue) => {
-    return results.findIndex( data => data.chapter_no === checkvalue);
-}
 const getChapters = async (isbn) => {
     try {
         const chapters = [];
@@ -33,7 +31,7 @@ const getChapters = async (isbn) => {
             return results.length;
         } 
     } catch (error) {
-        res.send({
+        return ({
             error: true,
             code: 501,
             message: error.message
@@ -51,7 +49,7 @@ const getSections = async (isbn, chapter_no) => {
             section_name: 1
         });
     
-        const sections = [];
+        let sections = [];
         
         const map = new Map();
         results.forEach( item => {
@@ -65,9 +63,12 @@ const getSections = async (isbn, chapter_no) => {
                 }
             }
         });
+        if(sections[0].section_no == "NULL"){
+            sections = [];
+        }
         return sections;
     } catch (error) {
-        res.send({
+        return ({
             error: true,
             code: 501,
             message: error.message
@@ -101,7 +102,7 @@ const getExcerise = async (isbn, chapter_no, section_no) => {
         });
         return excerise;
     } catch (error) {
-        res.send({
+        return ({
             error: true,
             code: 501,
             message: error.message
@@ -118,6 +119,7 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
             "excerise": `${excerise}`,
         },{
             _id: 1,
+            old_qid: 1,
             problem_no: 1,
             question: 1,
             answer: 1,
@@ -133,6 +135,7 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
                 if(item.problem_no){
                     problems.push({
                         q_id: item._id, 
+                        old_qid: item.old_qid, 
                         problem_no: item.problem_no, 
                         question: item.question, 
                         answer: item.answer, 
@@ -143,7 +146,7 @@ const getProblems = async (isbn, chapter_no, section_no, excerise) => {
         });
         return problems; 
     } catch (error) {
-        res.send({
+        return ({
             error: true,
             code: 501,
             message: error.message
@@ -157,6 +160,7 @@ const getOnlyProblems = async (isbn, chapter_no) => {
             "chapter_no": `${chapter_no}`
         },{
             _id: 1,
+            old_qid:1,
             problem_no: 1,
             question: 1,
             answer: 1,
@@ -171,6 +175,7 @@ const getOnlyProblems = async (isbn, chapter_no) => {
                 map.set(item.problem_no, true);
                 problems.push({
                     q_id: item._id, 
+                    old_qid: item.old_qid, 
                     problem_no: item.problem_no, 
                     question: item.question, 
                     answer: item.answer, 
@@ -180,13 +185,54 @@ const getOnlyProblems = async (isbn, chapter_no) => {
         });
         return problems;
     } catch (error) {
-        res.send({
+        return ({
             error: true,
             code: 501,
             message: error.message
         }) 
     }
 }
+const getBooksProblems = async (isbn, chapter_no,section_no) => {
+    try {
+        const results = await Chapter.find({
+            "book_isbn": `${isbn}`,
+            "chapter_no": `${chapter_no}`,
+            "section_no": `${section_no}`
+        },{
+            _id: 1,
+            old_qid:1,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            image: 1
+        });
+    
+        const problems = [];
+        
+        const map = new Map();
+        results.forEach( item => {
+            if(!map.has(item.problem_no)){
+                map.set(item.problem_no, true);
+                problems.push({
+                    q_id: item._id, 
+                    old_qid: item.old_qid, 
+                    problem_no: item.problem_no, 
+                    question: item.question, 
+                    answer: item.answer, 
+                    image: item.image, 
+                })
+            }
+        });
+        return problems;
+    } catch (error) {
+        return ({
+            error: true,
+            code: 501,
+            message: error.message
+        }) 
+    }
+}
+
 const GetChapterQuestions = async (req, res) => {
     try{
         let chapters = [];
@@ -202,12 +248,12 @@ const GetChapterQuestions = async (req, res) => {
                 book_isbn: req.params.isbn
             })
         }else{
-            chapter_no = chapters && chapters[0].chapter_no;
+            chapter_no = chapters[0]?.chapter_no;
             sections = await getSections(req.params.isbn, chapter_no);
             if(sections.length > 0){
                 section_no = sections[0].section_no;
                 excerise = await getExcerise(req.params.isbn, chapter_no, section_no);
-                if(excerise.length > 0){
+                if(excerise.length > 0 && section_no != NULL){
                     excerise_no = excerise[0].excerise;
                     problems = await getProblems(req.params.isbn, chapter_no, section_no, excerise_no);
                 }else{
@@ -225,7 +271,7 @@ const GetChapterQuestions = async (req, res) => {
             });
         }
         
-    }   catch(e) {
+    } catch(e) {
         return res.status(500).json({
             "errors": true,
             "message": "Error found while fatching data",
@@ -475,10 +521,16 @@ const getBookSections = async (req, res) => {
                 })
             }
         });
+        if(sections[0].section_no == "NULL"){
+            sections = [];
+        }
+        problems = await getOnlyProblems(req.params.isbn, req.params.chapter_no);
         res.status(200).json({
             isbn: req.params.isbn, 
             chapter_no: req.body.chapter_no, 
-            sections});
+            sections,
+            problems
+        });
     } catch (error) {
         res.send({
             error: true,
@@ -495,25 +547,31 @@ const getBookExercises = async (req, res) => {
             "section_no": `${req.params.section_no}`,
         },{
             _id: 0,
-            excerise: 1
+            excerise: 1,
+            problem_no:1,
+            question:1
         });
     
         let excerise = [];
+        let problems = [];
         
         const map = new Map();
+
         results.forEach( item => {
             if(!map.has(item.excerise)){
                 map.set(item.excerise, true);
-                excerise.push({
-                    excerise: item.excerise 
-                })
+                excerise.push({excerise: item.excerise })
             }
         });
+
+        
+        problems = await getBooksProblems(req.params.isbn, req.params.chapter_no, req?.params?.section_no);
         res.status(200).json({
             isbn: req.params.isbn,
             chapter_no: req.body.chapter_no,
             section_no: req.body.section_no, 
-            excerise
+            excerise,
+            problems
         });
     } catch (error) {
         res.send({
@@ -610,6 +668,9 @@ const getBookOnlyProblems = async (req, res) => {
         })
    }
 }
+
+
+
 const searchQuestion = async (req, res) => {
     try {
         const s = req.params.search;
@@ -892,9 +953,109 @@ const addFields = async (req, res) => {
         message: "field cleared"
     });
 }
+const importChapter = async (req, res) => {
+    // return res.send(req.body)
+    try {
+        const data = req.body;
+        await Chapter.insertMany(data);
+        await Book.findByIdAndUpdate({_id: data[0].book_id},{
+            "question_uploaded": true,
+            "total_question": data.length
+        }) ;
 
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "Chapter Added successfully"
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+
+const SaveBartlebyChapters = async (req, res) => {
+    try {
+        
+        let FinalData = req.body.bartley;
+        let filter = {book_isbn: req.body.book_isbn};
+        // return res.send(FinalData);
+        let count = await BartelbyChapter.count(filter) ;
+        
+        if(count === 0){
+            await BartelbyChapter.insertMany(FinalData);
+            await Book.findOneAndUpdate({ISBN13: req?.body?.book_isbn},{bartlyby_imported: 1})
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: 'chapter inserted'
+            })
+        }
+
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error
+        })
+    }
+}
+const BartelbyChapters = async (req, res) => {
+    try {
+        let data = await BartelbyChapter.find({book_isbn: req.params.isbn, uploaded: 0});
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const BartelbyUploadChapters = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const BartelbyUpdatesChapters = async (req, res) => {
+    try {
+        await BartelbyChapter.findOneAndUpdate({
+            book_isbn: req.body.book_isbn, 
+            section_id: req.body.section_id
+        },{uploaded: 1});
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "updated"
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
+    BartelbyUpdatesChapters,
+    SaveBartlebyChapters,
+    BartelbyChapters,
+    BartelbyUploadChapters,
+    importChapter,
     UploadChapters,
     UdateChaptersCSV,
     GetChapterQuestions,

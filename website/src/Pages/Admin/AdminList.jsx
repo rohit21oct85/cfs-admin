@@ -41,7 +41,9 @@ export default function AdminList() {
         clearTimeout(timerError)
         clearTimeout(timerSuccess)
         }
-    },[errorState])
+    },[errorState]);
+
+    
 return (
 
     <>
@@ -63,8 +65,27 @@ return (
                        
                         {!isLoading && (
                         <div className="subject-main-container">
-                        {adminState.Admins.map( admin => (
-                            <div className="small-card" key={admin._id} id={`card-${admin._id}`}>
+                        {adminState.Admins.map( admin => {
+                            const renderRoles = () => {
+                                if(admin.role == "1"){
+                                    return(
+                                        <b>Super Admin</b>
+                                    )
+                                }
+                                else if(admin.role == "2"){
+                                    return(
+                                        <b>Admin</b>
+                                    )
+                                }
+                                else if(admin.role == "3"){
+                                    return(
+                                        <b>Other Admin</b>
+                                    )
+                                }
+                            }
+                        
+                            return(
+                                <div className="small-card" key={admin._id} id={`card-${admin._id}`}>
                                 
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 
@@ -90,7 +111,19 @@ return (
                                             Role: 
                                         </div>
                                         <div className="name-main">
-                                            {(admin.role == 1) ? 'Super Admin':'Admin'}
+                                            {admin?.role == "1" ? (
+                                                <b>Super Admin</b>
+                                            ): (
+                                                <>
+                                                {
+                                                    admin?.role == "2" ? (
+                                                        <b>Admin</b>
+                                                    ) : (
+                                                        <b>Other Admin</b>
+                                                    )
+                                                }
+                                                </>
+                                            )}
                                         </div>
                                     </div> 
                                     
@@ -118,7 +151,8 @@ return (
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                            )
+                        })}
                         </div>
                         )}
                     </div>

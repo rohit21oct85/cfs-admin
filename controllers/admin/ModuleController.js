@@ -55,7 +55,6 @@ const ViewAllModule = async (req, res) => {
     try{
         const AllModules = await Module.find({},{__v: 0});
         return res.status(200).json({ 
-            total: AllModules.length,
             data: AllModules 
         });    
     } catch(error){

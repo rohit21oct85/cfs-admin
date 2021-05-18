@@ -4,7 +4,9 @@ const upload = multer({ dest: 'tmp/csv/' });
 
 const getAllSubject = async(req, res) => {
     try {
-        const Subjects = await subject.find({}, { __v: 0 });
+        const Subjects = await subject.find({}, { __v: 0 }).sort({
+            subject: 1
+        });
         return res.status(200).json({
             total: Subjects.length,
             data: Subjects

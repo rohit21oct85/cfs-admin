@@ -4,7 +4,10 @@ const fs = require('fs')
 
 const AllSubSubject = async(req, res) => {
     try {
-        const Subjects = await SubSubject.find({ subject_id: req.params.subject_id }, { __v: 0 });
+        const Subjects = await SubSubject.find({ subject_id: req.params.subject_id }, { __v: 0 })
+        .sort({
+            sub_subject: 1
+        });
         return res.status(200).json({
             total: Subjects.length,
             data: Subjects

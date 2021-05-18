@@ -29,8 +29,8 @@ job.start();
 app.use(cors());
 const PORT = process.env.PORT || 8080;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(bodyParser.json({limit: '500mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '500mb' }));
 const flash = require('connect-flash')
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -70,7 +70,7 @@ const options = {
 const MONGO_URI = process.env.MONGO_URI
 mongoose.connect(MONGO_URI, options)
     .then(() => console.log('Mongo DB Connected on Server'))
-    .catch(err => console.log(err));
+    .catch(err => console.log(err.message));
 
 app.listen(PORT, () => {
     console.log(`App is running on PORT ${PORT}`);
@@ -86,8 +86,10 @@ app.use("/api/v1/master-admin", Routes.adminRoutes);
 app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);
 app.use("/api/v1/sub-subject", Routes.SubSubjectRoutes);
+app.use("/api/v1/chield-subject", Routes.ChieldSubjectRoutes);
 app.use("/api/v1/books", Routes.BookRoutes);
 app.use("/api/v1/chapter", Routes.ChapterRoutes);
+app.use("/api/v1/question", Routes.QuestionRoutes);
 app.use("/api/v1/student", Routes.StudentRoutes);
 app.use("/api/v1/tutor", Routes.TutorRoutes);
 app.use("/api/v1/faq", Routes.FaqRoutes);

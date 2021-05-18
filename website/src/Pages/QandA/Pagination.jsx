@@ -1,19 +1,16 @@
-import React,{useState, useEffect, useContext} from 'react'
+import React,{useState, useEffect} from 'react'
+import {useHistory, useParams} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
-import useBooks from  '../hooks/useBooks';
-import {AdminContext} from '../context/AdminContext';
-
 
 function Pagination({pagination}) {
+    const history = useHistory()
+    const params = useParams()
     const [pageno, setPageNo] = useState(1);
-    const {dispatch: adminDispatch} = useContext(AdminContext);
-    const {isLoading} = useBooks();
-    
-    async function paginateFunction() {
-        adminDispatch({type: 'Book_CurrentPage',payload: pageno});
-        window.localStorage.setItem('pageno', pageno)
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect(paginateFunction,[params?.page])
+    function paginateFunction(){
+        setPageNo(params?.page)
     }
-    useEffect(paginateFunction,[pageno])
     return (
         <div style={{ display: 'flex', flexContent: 'space-between'}}>
             <Button className="dark" 
@@ -21,14 +18,18 @@ function Pagination({pagination}) {
             onClick={e => setPageNo(parseInt(pagination?.prev))}
             > <span className="fa fa-arrow-circle-o-left text-success"></span></Button>
             <select className="form-control" 
-            onChange={e => setPageNo(e.target.value)}
+            onChange={e => {
+                e.preventDefault();
+                history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${e.target.value}`)
+                
+            }}
             >
                 <option value="1">{isLoading ?'Pro...':'Page'}</option>
                 {[...Array(pagination?.pageCount).fill().map( (t,i) => {
                     return (
                         <option value={i+1}
                         key={i+1}
-                        selected={(pagination?.currentPage === +i+1)?'selected':''}
+                        selected={(+pagination?.currentPage === +i+1)?'selected':''}
                         >{i+1}</option>
                     )
                 })]}

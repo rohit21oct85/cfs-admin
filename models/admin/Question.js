@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const QuestionSchema = new mongoose.Schema({
+    old_qid:{type: String},
+    uuid:{type: String},
     subject:{type: String},
     subject_id:{type: String},
     sub_subject:{type: String},
     sub_subject_id:{type: String},
+    chield_subject_id:{type: String},
     book_isbn:{type: String},
     book_name:{type: String},
     book_edition:{type: String},
@@ -16,7 +19,10 @@ const QuestionSchema = new mongoose.Schema({
     image:{
         type: String,
     },
-    answer:{
+    shortanswer:{
+        type: String,
+    },
+    completeanswer:{
         type: String,
     },
     price: {

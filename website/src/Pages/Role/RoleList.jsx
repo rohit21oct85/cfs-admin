@@ -9,6 +9,8 @@ import {ErrorContext} from '../../context/ErrorContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
 
+import useRoles from '../../hooks/useRoles';
+
 import useAxios from '../../hooks/useAxios';
 
 export default function RoleList() {
@@ -16,27 +18,19 @@ export default function RoleList() {
     const {state} = useContext(AuthContext);
     const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    const {response, isLoading} = useAxios({
-        method: 'get', url: 'master-role/view-all'
-    });
-    
-    
+    // const {response, isLoading} = useAxios({
+    //     method: 'get', url: 'master-role/view-all'
+    // });
+    const {data:response, isLoading} = useRoles();
+    console.log("response " , response)
     const handleDelete = async (e) => {
-        history.push(`delete-data/master-role/delete/${e}`) 
-        // await api.del(``);
-        // document.getElementById('card-'+e).style.display = "none";
+        history.push(`delete-data/master-role/delete/${e}`); 
     }
     
     const handleUpdate = async (e) => {
         history.push(`/master-role/update/${e}`);
     }
 
-    useEffect(() => {
-        if(response !== null){
-            const Roles = response.data;
-            adminDispatch({type: 'GET_ALL_ROLE', payload: Roles});
-        }
-    }, [response]);
     useEffect( () => {
         let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
         let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
@@ -72,7 +66,7 @@ return (
                         
                         {!isLoading && (
                         <div className="subject-main-container">
-                        {adminState.Roles.map( role => (
+                        {response?.map( role => (
                             <div className="subject-card" key={role._id} id={`card-${role._id}`}>
                                 <div className="subject-card-body mt-2">
                                     <div className="admin-name"> 

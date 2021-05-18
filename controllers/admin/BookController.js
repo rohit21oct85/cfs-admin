@@ -305,7 +305,7 @@ const searchBook = async(req, res) => {
                     Edition: 1,
                     Author1: 1,
                     published: 1,
-                    score: { $meta: "searchScore" }
+                    bartlyby_imported: 1
                 }
             }
         ]);
@@ -650,7 +650,7 @@ const SaveBookSeo = async(req, res) => {
 const addFields = async (req, res) => {
     await Book.updateMany({},
     {
-        "faqHeading": ""
+        "bartlyby_imported": 0
     });
     res.status(201).json({
         error: false,
