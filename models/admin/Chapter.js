@@ -50,7 +50,7 @@ const ChapterSchema = new mongoose.Schema({
     },
     flag: {
         type: String,
-        Default: 'notassigned'
+        default: 'notassigned'
     },
     temp_answer: {
         type: String,

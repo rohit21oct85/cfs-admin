@@ -5,10 +5,10 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useBartelbyChapters() {
+export default function useQuestionAnswers() {
     const params = useParams();
     const isbn = params.isbn;
-    const status = params.status;
+    const section_id = params?.section_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -16,14 +16,16 @@ export default function useBartelbyChapters() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery([`chapters-bartelby-${isbn}-${status}`], async () => {
-        const result = await axios.get(`${API_URL}chapter/bartelby-chapters/${isbn}/${status}`,{
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization':'Bearer '+state.access_token
-            }
-        });
-        return result.data; 
+    return useQuery([`question-answeres-${section_id}`], async () => {
+        if(section_id){
+            const result = await axios.get(`${API_URL}chapter/bartelby-question-answers/${isbn}/${section_id}`,{
+                headers: {
+                    'Content-Type': 'Application/json',
+                    'Authorization':'Bearer '+state.access_token
+                }
+            });
+            return result.data; 
+        }
     });
     
 }

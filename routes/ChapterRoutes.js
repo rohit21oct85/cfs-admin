@@ -22,8 +22,9 @@ const router = express.Router();
 
 router
     .post('/bartley-chapters',  checkAuth, Chapter.SaveBartlebyChapters)
-    .get('/bartelby-chapters/:isbn',  checkAuth, Chapter.BartelbyChapters)
+    .get('/bartelby-chapters/:isbn/:status',  checkAuth, Chapter.BartelbyChapters)
     .post('/bartelby-update-chapters',  checkAuth, Chapter.BartelbyUpdatesChapters)
+    .get('/bartelby-question-answers/:book_isbn/:section_id',  checkAuth, Chapter.BartelbyQuestionAnswers)
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
     .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
     .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)
@@ -33,6 +34,7 @@ router
     .post('/upload', upload.single('file'), checkAuth, Chapter.UploadChapters)
     .post('/update-chapter-csv', upload.single('file'), checkAuth, Chapter.UdateChaptersCSV)
     .post('/import-data', checkAuth, Chapter.importChapter)
+    .post('/bartelby-upload-data', checkAuth, Chapter.BartelbyImportChapter)
     .delete('/delete/:isbn', checkAuth, Chapter.RemoveBookChapters)
     .get('/all/:isbn', checkAuth,Chapter.getBookChapters)
     .get('/section/:isbn/:chapter_no',  checkAuth, Chapter.getBookSections)

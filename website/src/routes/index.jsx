@@ -158,7 +158,7 @@ export const privateRoutes = [
         component: BookSEO
     },
     {
-        path: '/books-bartleby/:isbn?/:section_id?/:question_id?',
+        path: '/books-bartleby/:isbn?/:status?/:section_id?/:question_id?',
         component: BooksBartleby
     },
     {

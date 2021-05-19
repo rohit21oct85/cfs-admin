@@ -436,8 +436,7 @@ const UpdateotherFunction = async(res,FinalData, callback) => {
                 section_name: data.section_name,
                 excerise: data.excerise,
                 problem_no: data.problem_no,
-                question: data.question,
-                flag: "notassigned"
+                question: data.question
             }}, options, async (err, result) => {
                 if(err){
                     return res.status(409).json({
@@ -1005,7 +1004,13 @@ const SaveBartlebyChapters = async (req, res) => {
 }
 const BartelbyChapters = async (req, res) => {
     try {
-        let data = await BartelbyChapter.find({book_isbn: req.params.isbn, uploaded: 0});
+        let filter = {};
+        if(req?.params?.status === "import-chapter"){
+            filter = {book_isbn: req.params.isbn, uploaded: 0};
+        }else{
+            filter = {book_isbn: req.params.isbn, uploaded: 1};
+        }
+        let data = await BartelbyChapter.find(filter);
         res.status(201).json({
             error: false,
             status: 201,
@@ -1019,17 +1024,7 @@ const BartelbyChapters = async (req, res) => {
         })
     }
 }
-const BartelbyUploadChapters = async (req, res) => {
-    try {
-        
-    } catch (error) {
-        res.status(501).json({
-            error: true,
-            status: 501,
-            message: error.message
-        })
-    }
-}
+
 const BartelbyUpdatesChapters = async (req, res) => {
     try {
         await BartelbyChapter.findOneAndUpdate({
@@ -1050,11 +1045,87 @@ const BartelbyUpdatesChapters = async (req, res) => {
     }
 }
 
+const BartelbyImportChapter = async (req, res) => {
+    
+    try {
+        const FinalData = req?.body?.chapters;
+        const book_isbn = req?.body?.book_isbn;
+        const countChapter = await Chapter.countDocuments({book_isbn: book_isbn});
+        let message = '';
+        if(countChapter > 0){
+            var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
+            await FinalData.map( data => {
+                const book_isbn = data.book_isbn;
+                const problem_no = data.problem_no;
+                Chapter.findOneAndUpdate({
+                    book_isbn: book_isbn,
+                    problem_no: problem_no,
+                },{$set: {
+                    chapter_no: data.chapter_no,
+                    chapter_name: data.chapter_name,
+                    problem_no: data.problem_no,
+                    question: data.question,
+                    answer: data.answer,
+                }}, options, async (err, result) => {
+                    if(err){
+                        return res.status(409).json({
+                            message: "Error occured",
+                            error: err.message
+                        }); 
+                    }
+                });
+            })
+            message = "Chapter Updated successfully";
+        }else{
+            await Chapter.insertMany(FinalData);
+            message = "Chapter Added successfully";
+        }
+        await Book.findByIdAndUpdate({_id: FinalData[0].book_id},{
+            "question_uploaded": true,
+            "total_question": FinalData.length
+        }) ;
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: message
+        })
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const BartelbyQuestionAnswers = async (req, res) => {
+    try {
+        let section_id = req?.params?.section_id;
+        let chapter = await BartelbyChapter.findOne({section_id: section_id});
+        const data = await Chapter.find({
+            book_isbn: req?.params?.book_isbn,
+            chapter_no: chapter?.chapter_no
+        })
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 module.exports = {
+    BartelbyQuestionAnswers,
     BartelbyUpdatesChapters,
     SaveBartlebyChapters,
     BartelbyChapters,
-    BartelbyUploadChapters,
+    BartelbyImportChapter,
     importChapter,
     UploadChapters,
     UdateChaptersCSV,
