@@ -5,12 +5,10 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useChapterQuestions() {
-    const params = useParams();
-    const isbn = params.isbn;
-    const chapter_no = params.chapter_no;
-    const status = params.status;
+export default function useSingleAdmin() {
 
+    const params = useParams();
+    const admin_id = params.id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -18,15 +16,14 @@ export default function useChapterQuestions() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery([`question-${chapter_no}`,isbn], async () => {
-        const result = await axios.get(`${API_URL}chapter/qc-chapter-questions/${isbn}/${chapter_no}/${status}`,{
+    return useQuery([`admins-${admin_id}`], async () => {
+        const result = await axios.get(`${API_URL}master-admin/view/${admin_id}`,{
             headers: {
                 'Content-Type': 'Application/json',
                 'Authorization':'Bearer '+state.access_token
             }
         });
-        return result.data; 
-    
+        return result.data.data; 
     });
     
 }

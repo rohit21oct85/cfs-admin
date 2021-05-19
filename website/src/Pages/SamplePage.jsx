@@ -1,8 +1,13 @@
 import React from 'react'
+import {useHistory, useParams} from 'react-router-dom'
+import * as utils from '../../utils/MakeSlug';
+
 import useSingleTutor from '../../hooks/useSingleTutor';
 
 
 export default function TutorDetails() {
+    const params = useParams();
+    const history = useHistory();
     const {data} = useSingleTutor();
     return (
         <div className="col-lg-10 col-md-10 main_dash_area">

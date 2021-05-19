@@ -37,7 +37,8 @@
         "objects-to-csv": "^1.3.6",
         "randombytes": "^2.1.0",
         "razorpay": "^2.0.6",
+        "stripe": "^8.148.0",
         "response-time": "^2.3.2",
-        "stripe": "^8.148.0"
+        "uuid": "^8.3.2"
     }
 }

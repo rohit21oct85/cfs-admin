@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PrivateRoute from './Helper/PrivateRoute.jsx';
 import AdminRoute from './Helper/AdminRoute.jsx';
+import GuestRoute from './Helper/GuestRoute.jsx';
 
 import { guestRoutes, privateRoutes, adminRoutes } from './routes/index.jsx';
 
@@ -47,7 +48,7 @@ return (
     <React.StrictMode>
     <Switch>
     {guestRoutes && guestRoutes.map((route => (
-    <Route exact={true} key={route.path} path={route.path} component={route.component} />
+      <Route exact={true} key={route.path} path={route.path} component={route.component} />
     )))}
 
     {privateRoutes && privateRoutes.map((route => (

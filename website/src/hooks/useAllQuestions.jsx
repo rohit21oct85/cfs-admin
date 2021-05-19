@@ -6,9 +6,10 @@ import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
 
-export default function useGetSubSubjects() {
+export default function useAllQuestions() {
     const params = useParams();
-    const subject_id = params.subject_id;
+    const status = params?.status;
+    const chield_subject_id = params?.chield_subject_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -16,9 +17,9 @@ export default function useGetSubSubjects() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery(['SubSubjects', subject_id], async () => {
-        if(subject_id !== undefined){
-            const result = await axios.get(`${API_URL}sub-subject/subject/${subject_id}`,{
+    return useQuery([`all-questions-${status}-${chield_subject_id}`], async () => {
+        if(status == "TRUE" && chield_subject_id !== undefined){
+            const result = await axios.get(`${API_URL}question/chield-question/${status}/${chield_subject_id}`,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token

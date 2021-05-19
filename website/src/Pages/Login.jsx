@@ -6,10 +6,8 @@ import * as api from '../Helper/ApiHelper.jsx';
 import {AuthContext} from '../context/AuthContext.jsx';
 import {AdminContext} from '../context/AdminContext.jsx';
 import useAxios from '../hooks/useAxios';
-
 import axios from 'axios';
 import * as cons from '../Helper/Cons'
-
 import './login.css';
 
 export default function Login() {
@@ -66,8 +64,8 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
-                    
                     history.push('/dashboard');
+                    // window.location.href = '/dashboard'
                 }
             }
             
@@ -81,7 +79,15 @@ export default function Login() {
         }
     },[error]);
 
+    useEffect(checkLoggedUser, [state]);
+    async function checkLoggedUser(){
+        if(state?.isLoggedIn == "true"){
+            history.push(`/dashboard`);
+        }
+    }
+
     return (
+        <>
         <div className="container-fluid p-0 m-0 text-center LoginBg">
             <NavLink to="/">
                 <img className="logo" src="/logo.png" />
@@ -104,10 +110,7 @@ export default function Login() {
                     <Form.Group controlId="formBasicPassword"  className="text-left">
                         <Form.Label><span className="fa fa-key text-success"></span> Password</Form.Label>
                         <div style={{ position: 'relative'}}>
-                            <Form.Control type="password" autoComplete="Off" id="pwd" ref={passwordRef} placeholder="Password" />
-                            <span className="fa fa-eye text-success"
-                            onClick={e=>{ e.preventDefault(); document.getElementById("pwd").style.type = 'text' }}
-                            style={{ position: 'absolute', right: '-10px', top: '12px', display: 'block', width: '40px', cursor: 'pointer'}}></span>
+                            <Form.Control type="password" autoComplete="Off" ref={passwordRef} placeholder="Password" />
                         </div>
                     </Form.Group>
                     <Button 
@@ -123,6 +126,7 @@ export default function Login() {
             </div>
             
         </div>
+        </>
     )
 }
  

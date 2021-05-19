@@ -142,11 +142,7 @@ export default function CreateBooks() {
                                 const subject_name = MakeSlug(value.split("_")[0]);
                                 const subject_id = value.split("_")[1];
                                 let url = '';
-                                if(params.book_id === SingleBook._id){
-                                  url = `/books-create/${subject_name}/${subject_id}/${params.book_id}`
-                                }else{
-                                  url = `/books-create/${subject_name}/${subject_id}`
-                                }
+                                url = `/books-create/${subject_name}/${subject_id}`;
                                 history.push(
                                   `${url}`
                                 );

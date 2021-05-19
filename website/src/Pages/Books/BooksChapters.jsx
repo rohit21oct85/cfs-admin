@@ -72,6 +72,7 @@ const handleSection = async (e) => {
     const s_no = section_no.current.value
     const result = await axios.get(`${API_URL}chapter/exercise/${params.isbn}/${c_no}/${s_no}`,options);
     setExcerise(result.data.excerise);
+    setProblems(result.data.problems);
 }
 const handleExcerise = async (e) => {
     setSearch('');
@@ -174,7 +175,7 @@ return (
                   </select>  
                 </div>
                  )}
-                {excerise && excerise.length > 0 &&   ( 
+                {excerise && excerise.length > 0 && excerise[0].excerise && ( 
                 <div className="col-md-3 pr-0">
                   <select className="form-control" name="excerise"
                   ref={excerise_no}

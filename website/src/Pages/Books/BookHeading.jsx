@@ -65,6 +65,10 @@ function BookHeading({books}) {
     const handleBookSEO = async (isbn, id) => {
         history.push(`/book-seo/${isbn}/${id}`);
     }
+    
+    const handleBartlebyData = async (isbn) => {
+        history.push(`/books-bartleby/${isbn}`);
+    }
 
 
 
@@ -105,11 +109,15 @@ function BookHeading({books}) {
             </div>
             <div>
 
+
+
+                <Button className="delBtn pl-1 pr-1" title="Bartlyby" onClick={handleBartlebyData.bind(this,books.ISBN13)}>
+                    <span className={`fa fa-cog displayIcon text-warning mr-2`}></span>
+                </Button>
+
                 <Button className="delBtn pl-1 pr-1" title="SEO" onClick={handleBookSEO.bind(this,books.ISBN13,books._id)}>
                     <span className={`fa fa-globe displayIcon ${books.seo === true ? 'text-success': 'text-danger'} mr-2`}></span>
                 </Button>
-
-                
 
                 <Button className="delBtn pl-1 pr-1" title="QC Details" onClick={handleBookQulity.bind(this,books.ISBN13,books._id)}>
                     <span className="fa fa-thumbs-up displayIcon text-warning mr-2"></span>

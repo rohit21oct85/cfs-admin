@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const ChapterSchema = new mongoose.Schema({
+    old_qid:{type: String},
     book_id: {
         type: Object,
         required: true,

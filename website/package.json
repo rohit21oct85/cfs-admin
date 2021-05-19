@@ -29,6 +29,7 @@
     "eject": "react-scripts eject",
     "postbuild": "mv build ../public"
   },
+  "proxy": "https://www.crazyforstudy.com/api/",
   "eslintConfig": {
     "extends": [
       "react-app",

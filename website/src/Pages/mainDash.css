@@ -357,10 +357,21 @@ label.form-lable.form-input{
     color: #fff;
 }
 .dark:hover{
-    background: #495280;
+    background: #626eaa;
     border: 0px;
     color: #fff;
 }
+.red{
+    background: #f00;
+    border: 0px;
+    color: #fff;
+}
+.red:hover{
+    background: #f90;
+    border: 0px;
+    color: #fff;
+}
+
 .form-control{
     border-radius: 0px;
     padding: 0px 12px;
@@ -742,4 +753,25 @@ p.nameCard{
     line-height: 85px;
     text-align: center;
     text-transform: uppercase;
+}
+.br-5{
+    border-radius: 5px !important;
+}
+.br-10{
+    border-radius: 10px !important;
+}
+.br-15{
+    border-radius: 15px !important;
+}
+.bb-1{
+    border-bottom: 1px solid #ededed;
+}
+
+.dark-warning{
+    background: rgb(12, 112, 107) !important;
+    color: #fff;
+}
+.dark-warning:hover{
+    background: rgb(65, 216, 221) !important;
+    color: #fff;
 }

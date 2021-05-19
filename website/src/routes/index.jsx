@@ -16,8 +16,10 @@ import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
 import BookFaqQuestion from '../Pages/Books/BookFaqQuestion.jsx';
 import BookSEO from '../Pages/Books/BookSEO.jsx';
+import BooksBartleby from '../Pages/Books/BooksBartleby.jsx';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 import SimilarBooks from '../Pages/Books/SimilarBooks.jsx';
+import QAData from '../Pages/QandA/QAData.jsx';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import AllTutors from '../Pages/Tutor/AllTutors.jsx';
@@ -49,15 +51,6 @@ export const guestRoutes =  [
     { 
         path:'/',
         component: Login
-    },
-    {
-        path:'/login',
-        component: Login
-    },
-    
-    {
-        path:'/403',
-        component: NotAuthorized
     }
 
 ];
@@ -158,9 +151,15 @@ export const privateRoutes = [
         path: '/book-faq/:isbn/:book_id/:faq_id?',
         component: BookFaqQuestion
     },
+    
+    
     {
         path: '/book-seo/:isbn/:book_id?/:seo_id?',
         component: BookSEO
+    },
+    {
+        path: '/books-bartleby/:isbn?/:section_id?/:question_id?',
+        component: BooksBartleby
     },
     {
         path: '/book-similar-books/:isbn/:book_id?',
@@ -198,6 +197,10 @@ export const privateRoutes = [
     {
         path: '/tutor-details/:tutor_id?',
         component: TutorDetails
+    },
+    {
+        path: '/qa-data/:subject?/:subject_id?/:sub_subject?/:sub_subject_id?/:status?/:chield_subject_id?/:chield_subject?/:page?',
+        component: QAData
     }
     
 ];

@@ -153,6 +153,10 @@ const BookSchema = new mongoose.Schema({
     total_question: {
         type: String
     },
+    bartlyby_imported: {
+        type: Boolean,
+        default: 0
+    },
     created_at: {
         type: Date,
         default: Date.now

@@ -2,12 +2,15 @@ import React, {useContext,useState, useEffect} from 'react'
 import '../mainDash.css';
 import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
-import * as api from '../../Helper/ApiHelper.jsx';
 import useAxios from '../../hooks/useAxios'
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {ErrorContext} from '../../context/ErrorContext';
 import {AdminContext} from '../../context/AdminContext';
+
+import axios from 'axios'
+import * as cons from '../../Helper/Cons.jsx'
+
 
 export default function CreateRole() {
     const history = useHistory();
@@ -19,18 +22,31 @@ export default function CreateRole() {
 
     const [formData, setFormData] = useState("");
 
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const options = {
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization':'Bearer '+state.access_token
+        }
+    };
+    
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
-        console.log(formData); 
-        // return;
+        // console.log(formData); 
+        // // return;
         if(formData == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Subject Name'});
         }else{
             if(params.id){
-                response = await api.patch(`master-role/update/${params.id}`,formData);
+                response = await axios.patch(`${API_URL}master-role/update/${params.id}`,formData, options);
             }else{
-                response = await api.post('master-role/create',formData);
+                response = await axios.post(`${API_URL}master-role/create`,formData, options);
             }
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
             history.push('/master-role');
