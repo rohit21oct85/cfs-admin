@@ -14,6 +14,8 @@ router
     .patch('/update-notification/:id',checkAuth, Student.readNotifications)
     .post('/check-book-isbn/:isbn',checkAuth,Student.checkBookIsbn)
     .get('/my-textbook',checkAuth, Student.myTextBook)
+    .get('/my-subscription-details', checkAuth, Student.mySubscription)
+    .post('/my-textbook-del', checkAuth, Student.deleteTextBook)
 ;
 
 module.exports = router;

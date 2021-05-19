@@ -18,7 +18,7 @@ const askQuestion = async (req, res) => {
         const notifyData = {
             title: req.body.question,
             type: req.body.type,
-            user_Id: req.body.user_Id
+            user_Id: req.body.user_Id,
         }
         const noti = new Notify(notifyData);
         const dt = await noti.save();
@@ -154,6 +154,41 @@ const myTextBook = async (req, res) => {
     }
 }
 
+const mySubscription = async (req, res) => {
+    try {    
+        const filter = {_id: req.body.user_Id}
+        const Subscription = await Student.findOne(filter, { "transactions" : 1, "_id" : false, });
+        res.status(200).json({
+            error: false,
+            data: Subscription
+        })
+
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+const deleteTextBook = async (req, res) => {
+    try {    
+        const filter = {user_Id: req.body.user_Id, _id: req.body.id}
+        const textbook = await TextBook.deleteOne(filter);
+        if(textbook){
+            res.status(200).json({
+                error: false,
+                message: "textbook deleted successfully"
+            })
+        }
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     askQuestion,
     userQuestion,
@@ -161,5 +196,7 @@ module.exports = {
     modifyNotification,
     readNotifications,
     checkBookIsbn,
-    myTextBook
+    myTextBook,
+    mySubscription,
+    deleteTextBook,
 }

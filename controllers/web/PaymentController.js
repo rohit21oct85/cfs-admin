@@ -42,6 +42,7 @@ const saveTransaction = async(req, res) => {
         const data = {
             subscription_id: req.body.subscription_id, 
             payment_id: req.body.payment_id,
+            type: "subscription",
             SubscribeDate: Date.now(),
         }
         const transaction = await Student.findOneAndUpdate(filter,{$set: { transactions : data } });

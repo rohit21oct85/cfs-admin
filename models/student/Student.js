@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const TransactionSchema = new mongoose.Schema({ 
     subscription_id: 'string', 
     payment_id: 'string', 
+    type: 'string', 
     SubscribeDate: {
         type: Date,
         default: Date.now
