@@ -18,7 +18,7 @@ export default function Navigation() {
 
     const [AllRoutes, SetAllRoutes] = useState([]);
     let AllRoutesData = [];
-    useEffect(filterRoutes,[data]);
+    useEffect(filterRoutes,[state, data]);
     async function filterRoutes(){
         if(state?.role == "1"){
             AllRoutesData = data;

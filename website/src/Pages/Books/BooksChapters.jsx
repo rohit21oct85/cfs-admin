@@ -18,6 +18,7 @@ const history = useHistory();
 const params = useParams();
     
 const {state} = useContext(AuthContext);
+
 const {data, isLoading, error} = useChapters();
 
 const [chapters, setChapters] = useState([]);
@@ -225,9 +226,9 @@ return (
                 <>
                 <h3 className="mt-0">Question: </h3>  
                 <div className="clearfix"></div>      
-                {problems && problems.map(problem => {
+                {problems?.map(problem => {
                     return (
-                        <Question key={problem._id} problem={problem} search={search}/>
+                        <Question key={problem?._id} problem={problem} search={search}/>
                     )
                 } )}
                 </>
@@ -239,7 +240,6 @@ return (
                 {fproblems && fproblems.map(problem => {
                     return (
                         <Question key={problem._id} problem={problem} search={search}/>
-                        
                     )
                 } )}   
                 </>
@@ -247,8 +247,8 @@ return (
             
             {data.error && (
                 <div className="col-md-12 pl-0 text-danger">
-                    <strong style={{ fontSize: '1.2rem' }}>{data.message}</strong>
-                    <Link to={`/upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`}>Upload Books</Link>
+                    <strong style={{ fontSize: '1.2rem' }}>{data?.message}</strong>
+                    <Link to={`/upload-chapters/${params?.isbn}/${params?.book_name}/${params?.book_id}`}>Upload Books</Link>
                 </div>
             )}
         </div>

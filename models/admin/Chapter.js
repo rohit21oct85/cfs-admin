@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const ChapterSchema = new mongoose.Schema({
     old_qid:{type: String},
+    section_id:{type: String},
+    source:{type: String},
+    sequence:{type: Number},
     book_id: {
         type: Object,
         required: true,
@@ -44,6 +47,11 @@ const ChapterSchema = new mongoose.Schema({
     answer:{
         type: String,
     },
+    
+    expert_answer:{
+        type: String,
+    },
+
     status: {
         type: Boolean,
         default: true

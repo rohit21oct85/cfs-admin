@@ -63,7 +63,8 @@ export default function Login() {
                     refresh_token
                 }
                 if(isLoggedIn){
-                    dispatch({type: 'LOGIN', payload: payloadData});
+                    setLoading(false);
+                    await dispatch({type: 'LOGIN', payload: payloadData});
                     history.push('/dashboard');
                     // window.location.href = '/dashboard'
                 }
