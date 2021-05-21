@@ -66,7 +66,7 @@ export default function Login() {
                     setLoading(false);
                     await dispatch({type: 'LOGIN', payload: payloadData});
                     history.push('/dashboard');
-                    // window.location.href = '/dashboard'
+                    window.location.href = '/dashboard'
                 }
             }
             
