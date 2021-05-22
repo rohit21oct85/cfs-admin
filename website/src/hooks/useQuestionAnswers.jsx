@@ -1,11 +1,14 @@
-
-import {useContext, useState}  from 'react'
+import {useParams} from 'react-router-dom'
+import {useContext}  from 'react'
 import {useQuery} from 'react-query';
 import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useAppModules() {
+export default function useQuestionAnswers() {
+    const params = useParams();
+    const isbn = params.isbn;
+    const section_id = params?.section_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -13,15 +16,15 @@ export default function useAppModules() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery('app-modules', async () => {
-        if(state.access_token){
-            const result = await axios.get(`${API_URL}master-module/view-all`,{
+    return useQuery([`question-answeres-${section_id}`], async () => {
+        if(section_id){
+            const result = await axios.get(`${API_URL}chapter/bartelby-question-answers/${isbn}/${section_id}`,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token
                 }
             });
-            return result.data.data; 
+            return result.data; 
         }
     });
     

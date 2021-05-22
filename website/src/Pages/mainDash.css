@@ -12,7 +12,7 @@
     overflow-y: auto;
 }
 .dashboard_main-container {
-    padding: 0px 10px 20px 10px;
+    padding:0px 10px 10px;
     background-color: #f6f6f6;
 }
 .dash-main-head {
@@ -774,4 +774,7 @@ p.nameCard{
 .dark-warning:hover{
     background: rgb(65, 216, 221) !important;
     color: #fff;
+}
+.badge-success{
+    background: rgb(61, 190, 10) !important;
 }

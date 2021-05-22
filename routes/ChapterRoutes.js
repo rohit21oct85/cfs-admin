@@ -22,8 +22,14 @@ const router = express.Router();
 
 router
     .post('/bartley-chapters',  checkAuth, Chapter.SaveBartlebyChapters)
-    .get('/bartelby-chapters/:isbn',  checkAuth, Chapter.BartelbyChapters)
+    .get('/bartelby-chapters/:isbn/:status',  checkAuth, Chapter.BartelbyChapters)
     .post('/bartelby-update-chapters',  checkAuth, Chapter.BartelbyUpdatesChapters)
+    .post('/bartelby-clear-chapter',  checkAuth, Chapter.BartelbyClearChapters)
+    .post('/bartelby-upload-data', checkAuth, Chapter.BartelbyImportChapter)
+    .post('/bartelby-clear-all',  checkAuth, Chapter.BartelbyClearAllChapters)
+    .get('/bartelby-question-answers/:book_isbn/:section_id',  checkAuth, Chapter.BartelbyQuestionAnswers)
+    .post('/bartelby-chapter-change-status',  checkAuth, Chapter.BartelbyChaptersChangeStatus)
+    .post('/update-chapter-answer',  checkAuth, Chapter.BartelbyChaptersAnswer)
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
     .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
     .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)

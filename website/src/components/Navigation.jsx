@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Link, useHistory ,NavLink } from "react-router-dom";
+import { Link, useHistory ,NavLink, useParams } from "react-router-dom";
 import './loginNav.css';
 import { Navbar,Nav} from 'react-bootstrap'
 import {AuthContext} from '../context/AuthContext.jsx';
@@ -8,10 +8,8 @@ import useAppModules from '../hooks/useAppModules';
 
 export default function Navigation() {
     const history = useHistory();
+    const params  = useParams();
     const { state, dispatch } = useContext(AuthContext);
-    const HandleRoute = (e) => {
-        history.push('/my-profile');
-    }
     function logout(){
         dispatch({type: 'LOGOUT'})
         history.push('/')
@@ -19,9 +17,9 @@ export default function Navigation() {
     const {data} = useAppModules();
 
     const [AllRoutes, SetAllRoutes] = useState([]);
-    useEffect(filterRoutes,[state]);
+    let AllRoutesData = [];
+    useEffect(filterRoutes,[state, data]);
     async function filterRoutes(){
-        let AllRoutesData = [];
         if(state?.role == "1"){
             AllRoutesData = data;
         }else{
@@ -29,7 +27,6 @@ export default function Navigation() {
         }
         SetAllRoutes(AllRoutesData);
     }
-
 
 return (
 <>

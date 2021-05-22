@@ -16,6 +16,10 @@ const BartelbyChapterSchema = new mongoose.Schema({
     uploaded: {
         type: Number,
         default: 0
+    },
+    total_question: {
+        type: Number,
+        default: 0
     }
 });
 

@@ -151,7 +151,8 @@ const BookSchema = new mongoose.Schema({
         type: Boolean,
     },
     total_question: {
-        type: String
+        type: Number,
+        default: 0
     },
     bartlyby_imported: {
         type: Boolean,
