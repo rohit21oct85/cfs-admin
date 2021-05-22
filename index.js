@@ -103,6 +103,7 @@ app.use("/web/v1/category", WebRoutes.CategoryRoutes);
 app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
 app.use("/web/v1/student", WebRoutes.StudentRoutes);
 app.use("/web/v1/payment", WebRoutes.WebPaymentRoutes);
+app.use("/web/v1/assignment", WebRoutes.AssignmentRoutes);
 
 
 // app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);

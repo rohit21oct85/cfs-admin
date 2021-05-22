@@ -64,7 +64,7 @@ const userNotifications = async (req, res) => {
             cond = {user_Id: req.body.user_Id, type: 'QA',isRead:false}
         }
         
-        const questions = await Notify.find(cond);
+        const questions = await Notify.find(cond).sort({created_at:-1});;
         res.status(201).json({
             error: false,
             data: questions
