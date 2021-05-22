@@ -21,8 +21,8 @@ var upload = multer({ storage: storage })
 const router = express.Router();
 
 router
-    .get('/subject/:subject_id', checkAuth, SubSubject.AllSubSubject)
-    .get('/all', checkAuth, SubSubject.getAllSubSubject)
+    .get('/subject/:subject_id', SubSubject.AllSubSubject)
+    .get('/all', SubSubject.getAllSubSubject)
     .post('/create', checkAuth, SubSubject.createSubSubject)
     .post('/upload', upload.single('file'), checkAuth, SubSubject.uploadSubSubject)
     .patch('/update/:id', SubSubject.updateSubSubject)

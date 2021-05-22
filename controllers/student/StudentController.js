@@ -18,15 +18,16 @@ const askQuestion = async (req, res) => {
         const notifyData = {
             title: req.body.question,
             type: req.body.type,
-            user_Id: req.body.user_Id
+            user_Id: req.body.user_Id,
         }
         const noti = new Notify(notifyData);
-        await noti.save();
+        const dt = await noti.save();
         res.status(201).json({error: false, message: "Your question is submitted. you will get answer withing 2-4 Hrs."})
     } catch (error) {
         res.status(501).json({error: true, message: error})
     } 
 }
+
 const userQuestion = async (req, res) => {
     try {
         let flag = req.params.flag;
@@ -48,24 +49,22 @@ const userQuestion = async (req, res) => {
         })
     }
 }
+
 const userNotifications = async (req, res) => {
     try {
-        
         let cond = '';
         cond = {user_Id: req.body.user_Id, type: 'QA',isRead: false}
-        if(req?.params?.isRead === 'all'){
+        if(req.params.isRead === 'all'){
             cond = {user_Id: req.body.user_Id, type: 'QA'}
         }
-        if(req?.params?.isRead !== 'all'){
-            cond = {user_Id: req.body.user_Id, type: 'QA',isRead: req?.params?.isRead}
+        if(req.params.isRead !== 'all'){
+            cond = {user_Id: req.body.user_Id, type: 'QA',isRead: req.params.isRead}
         }
-        if(req?.params?.isRead === undefined){
+        if(req.params.isRead === undefined){
             cond = {user_Id: req.body.user_Id, type: 'QA',isRead:false}
         }
         
-        
-        
-        const questions = await Notify.find(cond);
+        const questions = await Notify.find(cond).sort({created_at:-1});;
         res.status(201).json({
             error: false,
             data: questions
@@ -142,11 +141,46 @@ const myTextBook = async (req, res) => {
     try {    
         const filter = {user_Id: req.body.user_Id}
         const TextBooks = await TextBook.find(filter,{_id: 1, book_isbn: 1, book_name: 1, edition: 1, user_Id: 1});
-        res.status(501).json({
+        res.status(200).json({
             error: false,
             data: TextBooks
         })
 
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+const mySubscription = async (req, res) => {
+    try {    
+        const filter = {_id: req.body.user_Id}
+        const Subscription = await Student.findOne(filter, { "transactions" : 1, "_id" : false, });
+        res.status(200).json({
+            error: false,
+            data: Subscription
+        })
+
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+const deleteTextBook = async (req, res) => {
+    try {    
+        const filter = {user_Id: req.body.user_Id, _id: req.body.id}
+        const textbook = await TextBook.deleteOne(filter);
+        if(textbook){
+            res.status(200).json({
+                error: false,
+                message: "textbook deleted successfully"
+            })
+        }
     } catch (error) {
         res.status(501).json({
             error: true,
@@ -162,5 +196,7 @@ module.exports = {
     modifyNotification,
     readNotifications,
     checkBookIsbn,
-    myTextBook
+    myTextBook,
+    mySubscription,
+    deleteTextBook,
 }

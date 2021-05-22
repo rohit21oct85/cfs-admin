@@ -2,6 +2,24 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcryptjs');
 
+const TransactionSchema = new mongoose.Schema({ 
+    subscription_id: 'string', 
+    payment_id: 'string', 
+    type: 'string', 
+    SubscribeDate: {
+        type: Date,
+        default: Date.now
+    }, 
+    status: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    } 
+});
+
 const StudentSchema = new mongoose.Schema({
     fullname: {
         type: String
@@ -12,7 +30,11 @@ const StudentSchema = new mongoose.Schema({
     },
     dob:{type: String},
     wallet: {type: String},
-    Subscribe: {type: String},
+    Subscribe: 
+        {
+            type: Boolean,
+            default: false 
+        },
     SubscribeDate: {type: String},
     social_id: {type: String},
     password: {type: String,trim: true},
@@ -35,6 +57,9 @@ const StudentSchema = new mongoose.Schema({
     ios_token: {type: String},
     subs_recurring: {type: String},
     last_active_url: {type: String},
+    transactions: {
+        type: [TransactionSchema]
+    },
     role: {
         type: String,
         default: "student"
