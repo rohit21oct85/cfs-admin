@@ -47,9 +47,12 @@ const ChapterSchema = new mongoose.Schema({
     answer:{
         type: String,
     },
-    
     expert_answer:{
         type: String,
+    },
+    answer_uploaded:{
+        type: Boolean,
+        default: false
     },
 
     status: {

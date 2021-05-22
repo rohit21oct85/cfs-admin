@@ -45,6 +45,8 @@ return (
 
         <div className="dash-con-heading">
             <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
+            {state.role == '1' && (
+                <>
                 <Button 
                 onClick={ e => history.push('/books-create')}
                 className="btn btn-sm dark">
@@ -57,8 +59,8 @@ return (
                 onClick={ e => history.push('/books-bulk-upload')}
                 className="btn btn-sm dark ml-2">
                     <span className="fa fa-cloud text-success mr-2"></span> Bulk Uploads books</Button>
-                
-
+              </>  
+            )}
                 <SearchBook />
 
                 <CategoryBook />    

@@ -94,27 +94,30 @@ function BookHeading({books}) {
     return (
         <div className="subject-card-heading mt-2">
             <div>
-            <Switch
-                    onChange={handleChange.bind(this,{book_id: books._id,status: !checked})}
-                    checked={books.published ? books.published : checked}
-                    className="react-switch displayIcon mr-2"
-                    height={20}
-                    width={48}
-                    handleDiameter={22}
-                    onHandleColor="#f00"
-                    boxShadow="0px 1px 2px rgba(0, 0, 0, 0.5)"
-                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                    title="freelance tutoring"
-                />
+            {state.role == '1' && (
+                <Switch
+                        onChange={handleChange.bind(this,{book_id: books._id,status: !checked})}
+                        checked={books.published ? books.published : checked}
+                        className="react-switch displayIcon mr-2"
+                        height={20}
+                        width={48}
+                        handleDiameter={22}
+                        onHandleColor="#f00"
+                        boxShadow="0px 1px 2px rgba(0, 0, 0, 0.5)"
+                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                        title="freelance tutoring"
+                    />
+            )}
+
             </div>
             <div>
 
-
-
-                <Button className="delBtn pl-1 pr-1" title="Bartlyby" onClick={handleBartlebyData.bind(this,books.ISBN13)}>
+                <Button className="delBtn pl-1 pr-1 text-warning" title="Bartlyby" onClick={handleBartlebyData.bind(this,books.ISBN13)}>
                     <span className={`fa fa-cog displayIcon text-warning mr-2`}></span>
+                    Bartel By
                 </Button>
-
+                {state.role == '1' && (
+                <>    
                 <Button className="delBtn pl-1 pr-1" title="SEO" onClick={handleBookSEO.bind(this,books.ISBN13,books._id)}>
                     <span className={`fa fa-globe displayIcon ${books.seo === true ? 'text-success': 'text-danger'} mr-2`}></span>
                 </Button>
@@ -137,6 +140,8 @@ function BookHeading({books}) {
                 <Button className="delBtn pl-1 pr-1" title="Delete Books" onClick={handleDelete.bind(this,books._id)}>
                     <span className="fa fa-trash displayIcon text-danger mr-2"></span>
                 </Button>
+                </>
+                )}
             </div>
         </div>
     )
