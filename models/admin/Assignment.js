@@ -11,6 +11,12 @@ const AssignmentSchema = new mongoose.Schema({
     subject_id: {
         type: String,
     },
+    tutor_id: {
+        type: String,
+    },
+    tutor_name: {
+        type: String,
+    },
     subject: {
         type: String,
     },
@@ -34,6 +40,18 @@ const AssignmentSchema = new mongoose.Schema({
     },
     reference:{
         type: String,
+    },
+    payment_status:{
+        type: String,
+        default: "Unpaid"
+    },
+    type:{
+        type: String,
+        default: "assignment"
+    },
+    assignment_status:{
+        type: String,
+        default: "Pending"
     },
     image:{
         type: String,

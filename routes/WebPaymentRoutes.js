@@ -8,6 +8,7 @@ router
     .post('/stripe-create-customer', studentAuth, Payment.createCustomer)
 
     .post('/save-transaction',studentAuth, Payment.saveTransaction)
+    .post('/razorpay-create-order',studentAuth, Payment.createOrder)
 ;
     
 module.exports = router;

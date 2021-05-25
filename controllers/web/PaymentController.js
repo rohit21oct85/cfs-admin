@@ -22,6 +22,25 @@ const createSubscription = async(req, res) => {
     }
 }
 
+const createOrder = async(req, res) => {
+    console.log(req.body.amt)
+    try {
+        const options = {
+            amount: req.body.amt,  // amount in the smallest currency unit
+            currency: "USD",
+        };
+        const data = await instance.orders.create(options)
+        return res.status(200).json({
+            data: data
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error
+        });
+    }
+}
+
 const createCustomer = async(req, res) => {
     try {
         
@@ -64,4 +83,5 @@ module.exports = {
     createSubscription,
     saveTransaction,
     createCustomer,
+    createOrder,
 }

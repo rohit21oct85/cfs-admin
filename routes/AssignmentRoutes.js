@@ -24,6 +24,10 @@ router
     // .get('/all/:pageno/:limit',checkAuth, AdminStudent.getAllStudents)
     .post('/save-assignment', upload.single('file'), studentAuth, Assignment.saveAssignmentOne)
     .put('/save-assignment2', studentAuth, Assignment.saveAssignmentTwo)
+    .post('/save-local-assignment',upload.single('file'), studentAuth, Assignment.saveAssignmentLocal)
+    .post('/get-assignment-info', studentAuth, Assignment.getAssignmentInfo)
+    .post('/get-assignment-all', studentAuth, Assignment.getAssignmentAll)
+    
 ;
 
 module.exports = router;
