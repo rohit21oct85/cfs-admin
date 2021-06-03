@@ -118,7 +118,7 @@ return (
                                 <div className="subject-card-heading">
                                     <div></div>
                                     <div>
-                                        <Link to={`view-permission/${role.name.replace(' ','-').toLowerCase().trim()}/${role._id}`}>
+                                        <Link to={`role-modules/view/${role.name.replaceAll(' ','-').toLowerCase().trim()}/${role._id}`}>
                                             <span className="fa fa-lock text-warning mr-2"></span>
                                         </Link>
                                         <Button className="delBtn" onClick={handleUpdate.bind(this,role._id)}>

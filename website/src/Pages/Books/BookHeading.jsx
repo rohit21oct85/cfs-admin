@@ -25,7 +25,7 @@ function BookHeading({books}) {
     }
     const handleUpload = async (isbn, book, id) => {
         const book_name = MakeSlug(book);
-        history.push(`/upload-chapters/${isbn}/${book_name}/${id}`);
+        history.push(`/books-upload-chapters/${isbn}/${book_name}/${id}`);
     }
 
     const {state} = useContext(AuthContext);
@@ -45,32 +45,23 @@ function BookHeading({books}) {
     
     const handleViewChapters = async (isbn, book, id) => {
         const book_name = MakeSlug(book);
-        history.push(`/book-chapters/${isbn}/${book_name}/${id}`);
-    }
-    
-    const handleRatingAndReview = async (isbn, id) => {
-        history.push(`/book-rating-review/${isbn}/${id}`);
+        history.push(`/books-chapters/${isbn}/${book_name}/${id}`);
     }
 
     
     const handleBookQulity = async (isbn, id) => {
-        history.push(`/book-check-quality/${isbn}/${id}`);
+        history.push(`/books-check-quality/${isbn}/${id}`);
     }
 
     
-    const handleBookFaq = async (isbn, id) => {
-        history.push(`/book-faq/${isbn}/${id}`);
-    }
-    
+
     const handleBookSEO = async (isbn, id) => {
-        history.push(`/book-seo/${isbn}/${id}`);
+        history.push(`/books-seo/${isbn}/${id}`);
     }
     
-    const handleBartlebyData = async (isbn) => {
-        history.push(`/books-bartleby/${isbn}`);
+    const handleBookData = async (isbn) => {
+        history.push(`/books-freelance/${isbn}`);
     }
-
-
 
     const queryClient = useQueryClient();
 
@@ -93,56 +84,81 @@ function BookHeading({books}) {
 
     return (
         <div className="subject-card-heading mt-2">
-            <div>
-            {state.role == '1' && (
-                <Switch
-                        onChange={handleChange.bind(this,{book_id: books._id,status: !checked})}
-                        checked={books.published ? books.published : checked}
-                        className="react-switch displayIcon mr-2"
-                        height={20}
-                        width={48}
-                        handleDiameter={22}
-                        onHandleColor="#f00"
-                        boxShadow="0px 1px 2px rgba(0, 0, 0, 0.5)"
-                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                        title="freelance tutoring"
-                    />
-            )}
-
-            </div>
-            <div>
-
-                <Button className="delBtn pl-1 pr-1 text-warning" title="Bartlyby" onClick={handleBartlebyData.bind(this,books.ISBN13)}>
-                    <span className={`fa fa-cog displayIcon text-warning mr-2`}></span>
-                    Bartel By
-                </Button>
-                {state.role == '1' && (
-                <>    
-                <Button className="delBtn pl-1 pr-1" title="SEO" onClick={handleBookSEO.bind(this,books.ISBN13,books._id)}>
-                    <span className={`fa fa-globe displayIcon ${books.seo === true ? 'text-success': 'text-danger'} mr-2`}></span>
-                </Button>
-
-                <Button className="delBtn pl-1 pr-1" title="QC Details" onClick={handleBookQulity.bind(this,books.ISBN13,books._id)}>
-                    <span className="fa fa-thumbs-up displayIcon text-warning mr-2"></span>
-                </Button>
-                
-                <Button className="delBtn pl-1 pr-1" title="View chapters & Questions" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
-                    <span className="fa fa-eye displayIcon text-secondary mr-2"></span>
-                </Button>
-                
-                <Button className="delBtn pl-1 pr-1" title="Upload Chapters and Questions" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
-                    <span className="fa fa-cloud displayIcon text-success mr-2"></span>
-                </Button>
-
-                <Button className="delBtn pl-1 pr-1" title="Update Books" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
-                    <span className="fa fa-pencil-square-o displayIcon text-secondary mr-2"></span>
-                </Button>
-                <Button className="delBtn pl-1 pr-1" title="Delete Books" onClick={handleDelete.bind(this,books._id)}>
-                    <span className="fa fa-trash displayIcon text-danger mr-2"></span>
-                </Button>
-                </>
+                {location?.pathname == '/books' && state.role == '1' && (
+                <> 
+                    <Button className="dark text-warning br-10" title="Update Books" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
+                        <span className="fa fa-pencil-square-o displayIcon mr-2"></span>
+                        Edit Books
+                    </Button>
+                    <Button className="btn-danger text-white br-10" title="Delete Books" onClick={handleDelete.bind(this,books._id)}>
+                        <span className="fa fa-trash displayIcon text-white mr-2"></span>
+                        Delete Books
+                    </Button>
+                </>     
                 )}
-            </div>
+                {location?.pathname == '/books/freelance' && (
+                    <Button className="dark text-warning br-10" onClick={handleBookData.bind(this,books.ISBN13)}>
+                        <span className={`fa fa-cog displayIcon mr-2`}></span>
+                        Manage Books
+                    </Button>
+                )}
+                
+                {location?.pathname == '/books/seo' && (
+                    <Button className="dark text-warning pl-2 pr-2 br-10" onClick={handleBookSEO.bind(this,books.ISBN13,books._id)}>
+                        <span className={`fa fa-globe displayIcon ${books.seo === true ? 'text-success': 'text-danger'} mr-2`}></span>
+                        Manage Text Book Seo
+                    </Button>
+                )}
+                {location?.pathname == '/books/check-quality' && (
+                    <Button className="dark text-warning pl-2 pr-2 br-10" onClick={handleBookQulity.bind(this,books.ISBN13,books._id)}>
+                    <span className="fa fa-thumbs-up displayIcon text-warning mr-2"></span>
+                    Manage Books Answers Quality
+                    </Button>
+                )}
+                
+                {location?.pathname == '/books/chapters' && (
+                    <>
+                    <Button className="dark text-warning pl-2 pr-2 br-10" title="View chapters & Questions" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
+                        <span className="fa fa-eye displayIcon text-white mr-2"></span>
+                        View Chapters and Questions
+                    </Button>
+                    </>
+                )}
+                {location?.pathname == '/books/upload-chapters' && (
+                    <>
+                    <Button className="dark text-warning pl-2 pr-2 br-10" title="Upload Chapters and Questions" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
+                        <span className="fa fa-cloud displayIcon text-success mr-2"></span>
+                        Upload Books Chapters Questions
+                    </Button>
+                    </>
+                )}
+                {location?.pathname == '/books/authoring' && (
+                    <div>
+                    {state.role == '1' && (
+                        <>
+                        Authoring Tutor
+
+                        <Switch
+                            onChange={handleChange.bind(this,{book_id: books._id,status: !checked})}
+                            checked={books.published ? books.published : checked}
+                            className="react-switch displayIcon ml-2"
+                            height={20}
+                            width={48}
+                            handleDiameter={22}
+                            onHandleColor="#f00"
+                            boxShadow="0px 1px 2px rgba(0, 0, 0, 0.5)"
+                            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                            title="freelance tutoring"
+                        />
+                        
+                            
+                        </>
+                    )}
+                    </div>
+                )}
+                
+
+
         </div>
     )
 }

@@ -5,12 +5,13 @@ import BookHeading from './BookHeading';
 
 export default function SingleBook({books, width, heading}) {
     return (
-    <div className="lg-card pt-2" style={{ width: width+'%'}} key={books._id} id={`card-${books._id}`}>
+    <div className="subject-card pt-2" style={{ width: width+'%'}} key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pl-2 pr-3">
             <BookImage isbn={books.ISBN13}  width="115%"/>
         </div>
-        <div className="col-md-9 pr-3 pl-3">    
+        <div className="col-md-9 pr-3 pl-3">   
+             
            <div className="subject-card-body pl-2">
                 <div className="admin-name"> 
                     <div className="name-label">

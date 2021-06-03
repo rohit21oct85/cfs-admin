@@ -8,6 +8,7 @@ const session = require('express-session')
 const Routes = require("./routes/index.js");
 const WebRoutes = require("./routes/web-routes.js");
 const TutorRoutes = require("./routes/tutor-routes.js");
+
 const cronJob = require('cron').CronJob;
 const {cfsCronTask} = require('./cfsCronTask.js');
 const responseTime = require('response-time')
@@ -79,9 +80,7 @@ app.listen(PORT, () => {
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
 app.use("/api/v1/master-module", Routes.moduleRoutes);
-app.use("/api/v1/master-role-permission", Routes.rolePermissionRoutes);
-app.use("/api/v1/master-user-permission", Routes.userPermissionRoutes);
-app.use("/api/v1/master-permission-group", Routes.permissionGroupRoutes);
+app.use("/api/v1/master-role-module", Routes.roleModuleRoutes);
 app.use("/api/v1/master-admin", Routes.adminRoutes);
 app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);
@@ -93,6 +92,7 @@ app.use("/api/v1/question", Routes.QuestionRoutes);
 app.use("/api/v1/student", Routes.StudentRoutes);
 app.use("/api/v1/tutor", Routes.TutorRoutes);
 app.use("/api/v1/faq", Routes.FaqRoutes);
+app.use("/api/v1/vendor", Routes.VendorRoutes);
 
 
 app.use("/web/v1/books", WebRoutes.WebBookRoutes);

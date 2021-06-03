@@ -17,9 +17,9 @@ export default function Navigation() {
     const {data} = useAppModules();
 
     const [AllRoutes, SetAllRoutes] = useState([]);
-    let AllRoutesData = [];
     useEffect(filterRoutes,[state, data]);
     async function filterRoutes(){
+        let AllRoutesData = [];
         if(state?.role == "1"){
             AllRoutesData = data;
         }else{
@@ -33,8 +33,8 @@ return (
 
 {state.isLoggedIn && (
 <div className="login_menu col-lg-2 col-md-2 col-12" bg="dark" variant="dark" expand="lg">
-    <div className="webLogo">
-        <img src="/logo.png" alt="User"/>
+    <div className="webLogo col-md-2 pt-2 pb-2">
+        <img src="/logo_2.png" className="img-responsive" style={{ width:'180px'}}  alt="User"/>
     </div>
     <div className="user_area">
         <div className="user_icon">
@@ -44,28 +44,27 @@ return (
             <span className="user_name">{state.fullname}</span>
             <span className="user_name"></span>
         </div>
-        <div className="user_options">
-            <ul>
-                <li className="btn btn-sm dark-warning p-2 br-5" as={Link} alt="Logout">
-                    {(state.role == "1") ? (
-                            <>
-                            <span className="fa fa-lock"></span> Master Admin
-                            </>
-                        ):(
-                            <>
-                            {(state.role == "2") ? (
-                                <><span className="fa fa-lock"></span> Admin</>
-                            ): (
-                                <><span className="fa fa-lock"></span> Other Admin</>
-                            )}
-                            </>
+        <div className="user_options flex pl-2 pr-2 pb-3">
+            <button className="btn btn-sm pt-0 pb-0 dark bg-success br-15" as={Link} alt="Logout">
+                {(state.role == "1") ? (
+                        <>
+                        <span className="fa fa-lock"></span> Master Admin
+                        </>
+                    ):(
+                        <>
+                        {(state.role == "2") ? (
+                            <><span className="fa fa-lock"></span> Admin</>
+                        ): (
+                            <><span className="fa fa-lock"></span> Other Admin</>
                         )}
-                </li>
-                <li className="btn btn-sm red p-2 br-5" as={Link} onClick={logout} alt="Logout">
-                    <span className="fa fa-power-off mr-2"></span>
-                    Logout
-                </li>
-            </ul>
+                        </>
+                    )}
+            </button>
+            <button className="btn btn-sm pt-0 pb-0 bg-danger br-15" as={Link} onClick={logout} alt="Logout">
+                <span className="fa fa-power-off mr-2"></span>
+                Logout
+            </button>
+            
         </div>
     </div>
     <div className="navbar_menus">
@@ -76,11 +75,19 @@ return (
                 </Nav>
             </li>
             
+            <li>
+                <Nav className="ml-auto">
+                    <NavLink to="/app-modules" > <span className="fa fa-gears"></span> App Modules</NavLink>
+                </Nav>
+            </li>
+            
             {AllRoutes?.map(routes => { 
                 return (
                 <li key={routes?._id}>
                 <Nav className="ml-auto">
-                    <NavLink to={`/${utils.MakeSlug(routes?.module_name)}`} >{routes?.module_name}</NavLink>
+                    <NavLink to={`/${utils.MakeSlug(routes?.module_name)}`} >
+                    <span className={`fa ${routes?.icon} mr-2 mt-1`}></span>
+                        {routes?.module_name}</NavLink>
                 </Nav>
                 </li>
                 )

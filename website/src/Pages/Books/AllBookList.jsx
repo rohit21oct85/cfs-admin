@@ -1,6 +1,6 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect} from 'react'
 import '../mainDash.css';
-import {  useHistory , useParams , Link} from "react-router-dom";
+import {  useHistory , useParams , Link, useLocation} from "react-router-dom";
 import { Button } from 'react-bootstrap'
 
 import {AuthContext} from '../../context/AuthContext';
@@ -17,10 +17,16 @@ import * as util from '../../utils/MakeSlug';
 export default function AllBookList() {
 const history = useHistory();
 const params = useParams();
+const location = useLocation();
 const {state} = useContext(AuthContext);
 
 const {data, isLoading, error} = useBooks();
 
+useEffect(()=> {
+    if(location.pathname === '/books-authoring'){
+        history.push(`/books/authoring`)
+    }
+},[state, params?.isbn]);
 
 return (
 
@@ -45,28 +51,11 @@ return (
 
         <div className="dash-con-heading">
             <div className="row pl-3" style={{ display: 'flex', flexContent: 'space-between' }}>
-            {state.role == '1' && (
-                <>
-                <Button 
-                onClick={ e => history.push('/books-create')}
-                className="btn btn-sm dark">
-                    <span className="fa fa-plus-circle text-success mr-2"></span> Add books</Button>
-                <Button 
-                onClick={ e => history.push('/books-upload')}
-                className="btn btn-sm dark ml-2">
-                    <span className="fa fa-cloud text-success mr-2"></span> Upload books</Button>
-                <Button 
-                onClick={ e => history.push('/books-bulk-upload')}
-                className="btn btn-sm dark ml-2">
-                    <span className="fa fa-cloud text-success mr-2"></span> Bulk Uploads books</Button>
-              </>  
-            )}
                 <SearchBook />
 
                 <CategoryBook />    
 
                 <Pagination pagination={data && data.pagination}/>
-                
             </div>    
         </div>
         {!isLoading && (

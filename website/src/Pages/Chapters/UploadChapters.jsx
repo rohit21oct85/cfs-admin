@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default function UploadChapters() {
     const history = useHistory();
     const params = useParams();
-    const location = useParams();
+    const location = useLocation();
     const {state} = useContext(AuthContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
     const {data:singleBook} = useSingleBook();
@@ -28,6 +28,13 @@ export default function UploadChapters() {
     const formDataUpload = new FormData();
     
     const [loading, setLoading] = useState(false);
+
+    useEffect(()=> {
+        if(location.pathname === '/books-upload-chapters'){
+            history.push(`/books/upload-chapters`)
+        }
+    },[state, params?.isbn]);
+
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
         API_URL = cons.LOCAL_API_URL;

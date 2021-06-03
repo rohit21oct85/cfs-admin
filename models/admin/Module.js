@@ -8,15 +8,14 @@ const ModuleSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-        unique: true,
     },
-    role_access:{
-        type: Number,
-        required: true
-    },
-    
     icon:{
         type: String
+    },
+    
+    showMenu:{
+        type: Boolean,
+        default: true
     },
 
     status:{

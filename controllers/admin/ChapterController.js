@@ -1242,6 +1242,26 @@ const BartelbyClearChapters = async (req, res) => {
         })
     }
 }
+const BartelbyDeleteAllChapters = async (req, res) => {
+    try {
+        let book_isbn = req?.body?.book_isbn;
+        await BartelbyChapter.deleteMany({book_isbn: book_isbn});
+        await Chapter.deleteMany({book_isbn: book_isbn});
+        await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: 0, bartlyby_imported: false, question_uploaded: false});
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "Chapter Cleared"
+        })
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 const BartelbyClearAllChapters = async (req, res) => {
     try {
         let book_isbn = req?.body?.book_isbn;
@@ -1314,6 +1334,7 @@ module.exports = {
     BartelbyProblems,
     BartelbyUpdateChaptersAnswer,
     BartelbyClearAllChapters,
+    BartelbyDeleteAllChapters,
     BartelbyClearChapters,
     BartelbyChaptersChangeStatus,
     BartelbyQuestionAnswers,

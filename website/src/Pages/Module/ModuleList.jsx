@@ -1,154 +1,146 @@
-import React, {useContext, useEffect, useState} from 'react'
-import '../mainDash.css';
-import {  useHistory, Link  } from "react-router-dom";
-import { Button } from 'react-bootstrap'
+import React, { useContext, useEffect, useState } from "react";
+import "../mainDash.css";
+import { useHistory, Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
-import {AuthContext} from '../../context/AuthContext';
-import {AdminContext} from '../../context/AdminContext';
-import {ErrorContext} from '../../context/ErrorContext';
-import {Notification} from '../../components/Notification';
-import {LoadingComp} from '../../components/LoadingComp';
-
-import useAxios from '../../hooks/useAxios';
-import * as utils from '../../utils/MakeSlug'
+import { AuthContext } from "../../context/AuthContext";
+import * as utils from "../../utils/MakeSlug";
+import useAppModules from "../../hooks/useAppModules";
+import { LoadingComp } from "../../components/LoadingComp";
+import CreateModule from "./CreateModule";
 
 export default function ModuleList() {
+  const history = useHistory();
+  const { state } = useContext(AuthContext);
+  const { data: appModules, isLoading: appLoading } = useAppModules();
 
-    const history = useHistory();
-    const {state} = useContext(AuthContext);
-    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
-    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    
-    const {response, isLoading, error} = useAxios({
-        method: 'get', url: 'master-module/view-all'
-    });
-    
-    const [appModule, setAppModule] = useState();
-    const handleDelete = async (e) => {
-        const module_id = e.id;
-        history.push(`delete-data/master-module/delete/${module_id}`) 
-    }
-    const handleUpdate = async (e) => {
-        history.push(`/master-module/update/${e}`);
-    }
-    
-    const handlePage = async (e) => {
-        history.push(`/${utils.MakeSlug(e)}`);
-    }
+  const handleDelete = async (e) => {
+    const module_id = e.id;
+    history.push(`delete-data/master-module/delete/${module_id}`);
+  };
+  const handleUpdate = async (e) => {
+    history.push(`/app-modules/update/${e}`);
+  };
 
-    
-    const handleLock = async (e) => {
-        const module_id = e.id;
-        const module_name = e.module_name.toLowerCase().replace(' ','-');
-        history.push(`/view-data/master-module/${module_name}/view/${module_id}`);
-    }
+  const handlePage = async (e) => {
+    history.push(`/${utils.MakeSlug(e)}`);
+  };
 
-    useEffect(() => {
-        if(response !== null){
-            const ModuleRes = response.data;
-            adminDispatch({ type: 'GET_ALL_MODLISTS', payload: ModuleRes})
-            if(ModuleRes){
-                setAppModule(ModuleRes);
-            }
-        }
-    }, [response,appModule]);
-    useEffect( () => {
-        let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
-        let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
-        return () => {
-        clearTimeout(timerError)
-        clearTimeout(timerSuccess)
-        }
-    },[errorState])
-return (
+  const handleLock = async (e) => {
+    const module_id = e.id;
+    const module_name = e.module_name.toLowerCase().replace(" ", "-");
+    history.push(`/view-data/master-module/${module_name}/view/${module_id}`);
+  };
 
+  return (
     <>
-    {state.isLoggedIn && errorState && adminState.ModLists && (
-      
-    <div className="col-lg-10 col-md-10 main_dash_area">
-        <div className="main-area-all">
+      {state.isLoggedIn && (
+        <div className="col-lg-10 col-md-10 main_dash_area">
+          <div className="main-area-all">
             <div className="dashboard_main-container">
-                <div className="dash-main-head">
-                    <h2>Module List</h2>
-                </div>
-                {errorState.success && ( <Notification>{errorState.success}</Notification>)}
-                {isLoading && (<LoadingComp />)}
-                <div className="dash-con-heading">
-                    <div className="col-md-3 pl-0">
-                    <Link to={`/master-module/create`} className="btn btn-sm dark">
-                        <span className="fa fa-plus-circle"></span>   
-                        &nbsp;
-                        Add New Module
-                    </Link>
-                    </div>    
-                </div>
-                <div className="dash-cont-start">
+              {appLoading && <LoadingComp />}
+              <div className="dash-main-head">
+                <h2>Module List</h2>
+              </div>
+              <div className="dash-con-heading"></div>
+
+              <div className="dash-cont-start">
+                <div className="col-md-12 row pr-0">
+                  <div className="col-md-3 pl-0">
+                    <CreateModule />
+                  </div>
+
+                  <div className="col-md-9 pr-0">
+                  <p className="mt-1 mb-1"><b><span className="fa fa-gears"></span> App Modules</b></p>    
+        <hr className="mt-1 mb-2"/>
                     <div className="org-main-area">
-                        {!isLoading && (
-                        <div className="subject-main-container">
-                            
-                        {adminState.ModLists.map( module => (
-                            <div className="subject-card" key={module._id} id={`card-${module._id}`}>
-                                <div className="subject-card-body mt-2">
-                                    <div className="admin-name"> 
-                                        <div className="name-label">
-                                            Module Name: 
-                                        </div>
-                                        <div className="name-main">
-                                            {module.module_name}
-                                        </div>
-                                    </div> 
-                                    
-                                    <div className="admin-name"> 
-                                        <div className="name-label">
-                                            Status: 
-                                        </div>
-                                        <div className="name-main">
-                                            {(module.status == 1) ? 'Active':'Inactive'}
-                                        </div>
-                                    </div> 
-                                    <div className="admin-name"> 
-                                        <div className="name-label">
-                                            Description: 
-                                        </div>
-                                        <div className="name-main desc">
-                                            {utils.GetString(module.description,30)}
-                                        </div>
-                                    </div> 
-                                </div>
-
-                                <hr className="mt-1 mb-1"/>
-                                <div className="subject-card-heading">
-                                    <div></div>
-                                    <div>
-                                        <Button className="delBtn pl-1 pr-1 " onClick={handlePage.bind(this,module.module_name)}>
-                                            <span className="fa fa-eye mr-2 text-success"></span>
-                                        </Button>
-                                        <Button className="delBtn pl-1 pr-1" onClick={handleUpdate.bind(this,module._id)}>
-                                            <span className="fa fa-edit mr-2 text-danger"></span>
-                                        </Button>
-                                        
-                                        <Button className="delBtn pl-1 pr-1" onClick={handleLock.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <span className="fa fa-lock mr-2 text-success"></span>
-                                        </Button>
-                    
-                                        <Button className="delBtn pl-1 pr-1" onClick={handleDelete.bind(this,{id: module._id,module_name: module.module_name})}>
-                                            <span className="fa fa-trash mr-2 text-danger"></span>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                      <div className="dark mb-2" style={{ display: 'flex', justifyContent: 'space-between'}}>
+                        <div className="col-md-4 pl-2">
+                          <span>Module Name</span>
                         </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        
-    )}  
-    </>
 
-)
+                        <div className="col-md-6 pl-2">
+                          <span>Module Description</span>
+                        </div>
+                        
+                        <div className="col-md-2 pl-2">
+                          <span>Module Action</span>
+                        </div>
+
+                      </div>
+                      {!appLoading && (
+                        
+                        <div className="pr-2" 
+                        style={{ height: '420px', overflow: 'scroll'}}>
+                          {appModules?.map((module) => (
+                            <>
+                            <div style={{ display: 'flex',flexDirection: 'row', justifyContent: 'space-between'}}
+                            className="card mb-2 mb-2"
+                            key={module._id}
+                            id={`card-${module._id}`}>
+                            <div className="col-md-4 pl-2 pr-0">
+                                <span className={`fa ${module?.icon} mr-2 mt-1`}></span>
+                                {module.module_name}
+                            </div>
+
+                            <div className="col-md-6 pl-2 pr-0">
+                              {utils.GetString(module.description, 100)}
+                            </div>
+                            
+                            <div className="col-md-2 pl-2 pr-0">
+                            <Button
+                                    className="delBtn pl-1 pr-1 "
+                                    onClick={handlePage.bind(
+                                      this,
+                                      module.module_name
+                                    )}
+                                  >
+                                    <span className="fa fa-eye mr-2 text-success"></span>
+                                  </Button>
+                                  <Button
+                                    className="delBtn pl-1 pr-1"
+                                    onClick={handleUpdate.bind(
+                                      this,
+                                      module._id
+                                    )}
+                                  >
+                                    <span className="fa fa-edit mr-2 text-danger"></span>
+                                  </Button>
+
+                                  <Button
+                                    className="delBtn pl-1 pr-1"
+                                    onClick={handleLock.bind(this, {
+                                      id: module._id,
+                                      module_name: module.module_name,
+                                    })}
+                                  >
+                                    <span className="fa fa-lock mr-2 text-success"></span>
+                                  </Button>
+
+                                  <Button
+                                    className="delBtn pl-1 pr-1"
+                                    onClick={handleDelete.bind(this, {
+                                      id: module._id,
+                                      module_name: module.module_name,
+                                    })}
+                                  >
+                                    <span className="fa fa-trash mr-2 text-danger"></span>
+                                  </Button>
+                            </div>
+                            </div>
+                          </>
+
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

@@ -6,7 +6,7 @@ export default function BookSummery({data, qc_data}) {
         <div className="subject-card" style={{ width: '90%'}}>
         <div className="row col-md-12 pr-0">
             <div className="col-md-4 pl-0 pr-0">
-                <BookImage isbn={data.ISBN13} width="76%" />
+                <BookImage isbn={data?.ISBN13} width="76%" />
             </div>
             <div className="col-md-8 pr-0 pl-0">
                 
@@ -15,7 +15,7 @@ export default function BookSummery({data, qc_data}) {
                         Author: 
                     </div>
                     <div className="name-main">
-                        {data.Author1}
+                        {data?.Author1}
                     </div>
                 </div>
                 <div className="admin-name mt-1 mb-1"> 
@@ -23,7 +23,7 @@ export default function BookSummery({data, qc_data}) {
                         ISBN-13: 
                     </div>
                     <div className="name-main">
-                        {data.ISBN13}
+                        {data?.ISBN13}
                     </div>
                 </div>
                 <div className="admin-name mt-1 mb-1"> 
@@ -31,7 +31,7 @@ export default function BookSummery({data, qc_data}) {
                         Subject: 
                     </div>
                     <div className="name-main">
-                        {data.subject_name}
+                        {data?.subject_name}
                     </div>
                 </div>
                 
@@ -40,7 +40,7 @@ export default function BookSummery({data, qc_data}) {
                         Sub Subject: 
                     </div>
                     <div className="name-main">
-                        {data.sub_subject_name}
+                        {data?.sub_subject_name}
                     </div>
                 </div>
 
@@ -49,7 +49,7 @@ export default function BookSummery({data, qc_data}) {
                         Total Reviews: 
                     </div>
                     <div className="name-main">
-                        {data.reviews.length}
+                        {data?.reviews?.length}
                     </div>
                 </div>
             </div>

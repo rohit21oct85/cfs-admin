@@ -33,14 +33,13 @@ export default function ViewData() {
         setFormData({...formData, [e.target.name]: data});
     }
     
-
     const handleSubmit = async () => {
         let response = null;
         if(formData.password == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter password to view this resource'});
         }else{
-            if(formData.password === 'wrongpassword'){
-                history.push(`/master-module/password/${params.rmodule}/${params.id}`);
+            if(formData.password === 'wrong-password'){
+                history.push(`/app-module/password/${params.rmodule}/${params.id}`);
             }else{
                 errorDispatch({type: 'SET_ERROR', payload: "you have entered a Wrong Password"});    
             }
@@ -59,7 +58,7 @@ return (
                 <div className="dash-cont-start">
                     <div className="org-main-area">
                         <div className="col-md-3 pl-0">
-                        <Link to={`/${params.module}`} className="btn btn-sm dark">
+                        <Link to={`/app-modules`} className="btn btn-sm dark">
                         <span className="fa fa-arrow-left"></span>
                         </Link>
                         </div>

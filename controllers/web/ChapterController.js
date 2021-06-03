@@ -5,26 +5,34 @@ const getBookChapters = async (req, res) => {
         
         const chapters = [];
         const map = new Map();
-        const results = await Chapter.find({
-            "book_isbn": `${req.params.isbn}`,
-        },{
-            _id: 0,
-            chapter_no: 1,
-            chapter_name: 1
-        });
-        results.forEach( item => {
-            if(!map.has(item.chapter_no)){
-                map.set(item.chapter_no, true);
-                chapters.push({
-                    chapter_no: item.chapter_no, 
-                    chapter_name: item.chapter_name, 
-                })
-            }
-        });
-        res.status(200).json({
-            isbn: req.params.isbn,
-            chapters
-        });
+        try {
+            const results = await Chapter.find({
+                "book_isbn": `${req.params.isbn}`,
+            },{
+                _id: 0,
+                chapter_no: 1,
+                chapter_name: 1
+            });
+            results.forEach( item => {
+                if(!map.has(item.chapter_no)){
+                    map.set(item.chapter_no, true);
+                    chapters.push({
+                        chapter_no: item.chapter_no, 
+                        chapter_name: item.chapter_name, 
+                    })
+                }
+            });
+            res.status(200).json({
+                isbn: req.params.isbn,
+                chapters
+            });   
+        } catch (error) {
+            res.status(501).json({
+                error: true,
+                message: error.message
+            }) 
+        }
+        
     } catch (error) {
         res.status(501).json({
             error: true,

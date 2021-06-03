@@ -67,17 +67,17 @@ return (
                         <div className="subject-main-container">
                         {adminState.Admins.map( admin => {
                             const renderRoles = () => {
-                                if(admin.role == "1"){
+                                if(admin.role === "1"){
                                     return(
                                         <b>Super Admin</b>
                                     )
                                 }
-                                else if(admin.role == "2"){
+                                else if(admin.role === "2"){
                                     return(
                                         <b>Admin</b>
                                     )
                                 }
-                                else if(admin.role == "3"){
+                                else if(admin.role === "3"){
                                     return(
                                         <b>Other Admin</b>
                                     )
@@ -101,7 +101,7 @@ return (
                                         <div className="name-label">
                                             Email: 
                                         </div>
-                                        <div className="name-main">
+                                        <div className="textlower name-main">
                                             {admin.email}
                                         </div>
                                     </div> 
@@ -111,19 +111,7 @@ return (
                                             Role: 
                                         </div>
                                         <div className="name-main">
-                                            {admin?.role == "1" ? (
-                                                <b>Super Admin</b>
-                                            ): (
-                                                <>
-                                                {
-                                                    admin?.role == "2" ? (
-                                                        <b>Admin</b>
-                                                    ) : (
-                                                        <b>Other Admin</b>
-                                                    )
-                                                }
-                                                </>
-                                            )}
+                                            {renderRoles}
                                         </div>
                                     </div> 
                                     

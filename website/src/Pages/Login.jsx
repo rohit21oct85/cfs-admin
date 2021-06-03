@@ -93,9 +93,9 @@ export default function Login() {
     }
     return (
         <div className="container-fluid p-0 m-0 text-center LoginBg">
-            <div className="col-md-12">
+            <div className="col-md-2">
                 <NavLink to="/">
-                    <img className="logo" alt="company Logo" src="/logo.png"/>
+                    <img className="logo img-responsive" style={{ width: '250px'}} alt="company Logo" src="/logo_2.png"/>
                 </NavLink>
             </div>
             <div className="row no-gutter">

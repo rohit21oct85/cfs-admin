@@ -34,6 +34,7 @@ export default function CreateAdmin() {
     const [formData, setFormData] = useState({});
     const [fullname, setFullName] = useState("")
     const [email, setEmail] = useState("")
+    const [mobile, setMobile] = useState("")
     const [password, setPassword] = useState("")
     const [role, setRole] = useState("")
     const [status, setStatus] = useState("")
@@ -42,6 +43,7 @@ export default function CreateAdmin() {
         let response = null;
         formData['fullname'] = params?.id ? user?.fullname : fullname;
         formData['email'] = params?.id ? user?.email : email;
+        formData['mobile'] = mobile;
         formData['password'] = password === "" ? 'password': password;
         formData['role'] = params?.id ? user?.role: role;
         formData['status'] = params?.id ? user?.status: status;
@@ -140,6 +142,26 @@ return (
                                         }
                                     }
                                 } placeholder="Enter Admin Email"/>
+                            </Form.Group>
+                            <Form.Group method="POST">
+                                <Form.Label>Admin Mobile</Form.Label>
+                                <Form.Control name="mobile" autoComplete="nope"
+                                value={params?.id ? user?.mobile: mobile}
+                                onChange={e => {
+                                    e.preventDefault();
+                                    if(params?.id){
+                                        setUser({...user, mobile: e.target.value});
+                                    }else{
+                                        setMobile(e.target.value);
+                                    }
+                                }}
+                                onKeyDown={ 
+                                    event => {
+                                        if(event.key === 'Enter'){
+                                            event.preventDefault()
+                                        }
+                                    }
+                                } placeholder="Enter Mobile"/>
                             </Form.Group>
                                 
                             <Form.Group method="POST">

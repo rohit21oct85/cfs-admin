@@ -1,162 +1,237 @@
 import React, {useContext,useState, useEffect} from 'react'
 import '../mainDash.css';
-import {  useHistory, Link, useParams  } from "react-router-dom";
+import {  useHistory, useParams  } from "react-router-dom";
 import { Button,Form } from 'react-bootstrap'
-import * as api from '../../Helper/ApiHelper.jsx';
-import useAxios from '../../hooks/useAxios'
+
+import axios from 'axios'
+import * as cons from '../../Helper/Cons';
+import useAppModules from "../../hooks/useAppModules";
 import {AuthContext} from '../../context/AuthContext';
-import {Notification} from '../../components/Notification';
-import {ErrorContext} from '../../context/ErrorContext';
-import {AdminContext} from '../../context/AdminContext';
+import { useToasts } from 'react-toast-notifications';
+import { useMutation, useQueryClient } from "react-query";
 
 export default function CreateModule() {
+    const queryClient = useQueryClient();
     const history = useHistory();
     const params = useParams();
-    
-    const {state} = useContext(AuthContext);
-    const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
-    const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
+    const { addToast } = useToasts();
 
-    const [formData, setFormData] = useState("");
+    const {state} = useContext(AuthContext);
+    const { data, isLoading} = useAppModules();
+    const [singleModule, setSingleModule] = useState({})
+    useEffect(handleSingleModule, [data, params?.id])
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const options = {
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization':'Bearer '+state.access_token,
+
+        }
+    };
+
+    async function handleSingleModule(){
+        console.log(params?.id)
+        const module = data?.filter( smodule => smodule?._id === params?.id);
+        setSingleModule(module && module[0]);
+
+    }
+    const [formData, setFormData] = useState({});
+    const [module_name, setModuleName] = useState("")
+    const [description, setModuleDescription] = useState("")
+    const [icon, setModuleIcon] = useState("")
+    const [showMenu, setShowMenu] = useState(true)
 
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
-        // return;
-        if(formData.module_name == ''){
-            errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Module Name'});
+        if(params.id){
+            await UpdateModule.mutate(singleModule);
         }else{
-            if(params.id){
-                response = await api.patch(`master-module/update/${params.id}`,formData);
-            }else{
-                response = await api.post('master-module/create',formData);
+            const data ={
+                module_name: module_name,
+                description: description,
+                icon: icon,
+                showMenu: showMenu,
             }
-            errorDispatch({type: 'SET_SUCCESS', payload: response.message});
-            history.push('/master-module');
+            console.log(data)
+            await CreateModule.mutate(data);
         }
+            
     }
-    async function handelChange(e){
-        const data = e.target.value;
-        const filedValue = data.replace(/[^a-zA-Z0-9, ]/g, "");
-        setFormData({...formData, [e.target.name]: filedValue});
-    }
-
-    const {response} = useAxios({
-        method: 'get', url: `master-module/view/${params.id}`
-    });
     
-    const {response:roleResponse} = useAxios({
-        method: 'get', url: `master-role/view-all`
-    });
-
-    const [module, setModule] = useState('');
-    useEffect( () => {
-        if(response !== null){
-            const modRes = response.data;
-            adminDispatch({type: 'GET_MODLIST', payload: modRes});
-            if(adminState){
-                setModule(modRes)
-            }
-        }   
-        if(roleResponse !== null){
-            console.log(roleResponse)
-            const RolesResponse = roleResponse.data;
-            adminDispatch({type: 'GET_ALL_ROLE', payload: RolesResponse});
+    const UpdateModule = useMutation(
+        (singleModule) => {
+          return axios.patch(
+            `${API_URL}master-module/update/${params.id}`,
+            singleModule,
+            options
+          );
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries([
+              `app-modules`,
+            ]);
+            history.push(
+              `/app-modules`
+            );
+            setModuleName("");
+            setModuleDescription("");
+            setModuleIcon("");
+            setShowMenu("");
+            
+            addToast("Module updated successfully", {
+                appearance: "success",
+                autoDismiss: true,
+            });
+          },
         }
-    },[response,module,roleResponse]);
-
-    useEffect( () => {
-        let timerError = setTimeout(() => errorDispatch({type: 'SET_ERROR', payload: ''}), 1500);
-        let timerSuccess = setTimeout(() => errorDispatch({type: 'SET_SUCCESS', payload: ''}), 1500);
-        return () => {
-            clearTimeout(timerError)
-            clearTimeout(timerSuccess)
+      );
+    const CreateModule = useMutation(
+        (data) => {
+          return axios.post(
+            `${API_URL}master-module/create`,
+            data,
+            options
+          );
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries([
+              `app-modules`,
+            ]);
+            history.push(
+              `/app-modules`
+            );
+            setModuleName("");
+            setModuleDescription("");
+            setModuleIcon("");
+            setShowMenu("");
+            
+            addToast("Module created successfully", {
+                appearance: "success",
+                autoDismiss: true,
+            });
+          },
         }
-    },[errorState.error, errorState.success])
+      );
+
+       
+
 
 return (
 
     <>
     {state.isLoggedIn && (
-    
-    <div className="col-lg-10 col-md-10 main_dash_area">
-        <div className="main-area-all">
-            <div className="dashboard_main-container">
-                <div className="dash-main-head">
-                    <h2>Create New Module</h2>
-                </div>
-                
-                <div className="dash-cont-start">
-                    <div className="org-main-area">
-                        <div className="col-md-3 pl-0">
-                        <Link to={`/master-module`} className="btn btn-sm dark">
-                        <span className="fa fa-arrow-left text-success mr-2"></span>
-                        </Link>
-                        </div>
-                        <div className="col-md-12 no-gutter p-0 mt-2">
-                        {errorState.error && ( 
-                            <Notification>{errorState.error}</Notification>
-                        )}
-                            
-                        {errorState.success && ( 
-                            <Notification>{errorState.success}</Notification>
-                        )}
 
-                        <Form autoComplete="off" className="col-md-6 p-0">
-                            <Form.Group method="POST">
-                                <Form.Label>Module Name</Form.Label>
-                                <Form.Control name="module_name" autoComplete="off"
-                                defaultValue={module.module_name}
-                                onChange={handelChange}
-                                onKeyDown={ 
-                                    event => {
-                                        if(event.key === 'Enter'){
-                                            event.preventDefault()
-                                        }
-                                    }
-                                } placeholder="Enter Module Name"/>
-                            </Form.Group>
-                                
-                            <Form.Group method="POST">
-                                <Form.Label>Module Description</Form.Label>
-                                <Form.Control name="description" autoComplete="off"
-                                defaultValue={module.description}
-                                onChange={handelChange}
-                                onKeyDown={ 
-                                    event => {
-                                        if(event.key === 'Enter'){
-                                            event.preventDefault()
-                                        }
-                                    }
-                                } placeholder="Enter Module description"/>
-                            </Form.Group>
-                            
-                            <Form.Group method="POST">
-                                <Form.Label>Module Access</Form.Label>
-                                <select name="role_access" className="form-control"
-                                onChange={handelChange}>
-                                    <option>Select Module Access</option>
-                                    {adminState.Roles.map(role => (
-                                        <option value={role.role}>{role.name}</option>
-                                    ))}
-                                </select>
-                            </Form.Group>
-                            
-                            <Form.Group className="mt-3">
-                                <Button 
-                                onClick={handleSubmit}
-                                className="btn dark btn-sm">
-                                    {params.id ? 'Update Module':'Save Module'}
-                                </Button>
-                            </Form.Group>
-                        </Form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className="col-md-12 no-gutter p-0 mt-2">
+        <p className="mt-1 mb-1"><b><span className="fa fa-gear mr-2"></span>Add New Module</b></p>    
+        <hr className="mt-1 mb-2"/>
+        <Form autoComplete="off" method="POST" className="col-md-12 p-0">
+            <Form.Group >
+                <Form.Label>Module Name</Form.Label>
+                <Form.Control name="module_name" autoComplete="off"
+                value={params?.id ? singleModule?.module_name: module_name}
+                onChange={e => {
+                    e.preventDefault()
+                    if(params?.id){
+                        setSingleModule({...singleModule, module_name: e.target.value})
+                    }else{
+                        setModuleName(e.target.value)
+                    }
+                }}
+                onKeyDown={ 
+                    event => {
+                        if(event.key === 'Enter'){
+                            event.preventDefault()
+                        }
+                    }
+                } placeholder="Enter Module Name"/>
+            </Form.Group>
+                
+            <Form.Group>
+                <Form.Label>Module Description</Form.Label>
+                <Form.Control name="description" autoComplete="off"
+                value={params?.id ? singleModule?.description: description}
+                onChange={e => {
+                    e.preventDefault()
+                    if(params?.id){
+                        setSingleModule({...singleModule, description: e.target.value})
+                    }else{
+                        setModuleDescription(e.target.value)
+                    }
+                }}
+                onKeyDown={ 
+                    event => {
+                        if(event.key === 'Enter'){
+                            event.preventDefault()
+                        }
+                    }
+                } placeholder="Enter Module description"/>
+            </Form.Group>
+
+            
+            <Form.Group>
+                <Form.Label>Module Icon</Form.Label>
+                <Form.Control name="icon" autoComplete="off"
+                value={params?.id ? singleModule?.icon: icon}
+                onChange={e => {
+                    e.preventDefault()
+                    if(params?.id){
+                        setSingleModule({...singleModule, icon: e.target.value})
+                    }else{
+                        setModuleIcon(e.target.value)
+                    }
+                }}
+                onKeyDown={ 
+                    event => {
+                        if(event.key === 'Enter'){
+                            event.preventDefault()
+                        }
+                    }
+                } placeholder="Enter Module Icons"/>
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Show in Menu</Form.Label>
+                <Form.Control 
+                as="select"
+                className="form-control"
+                value={params?.id ? singleModule?.showMenu: showMenu}
+                onChange={
+                    e => {
+                        e.preventDefault();
+                        if(params?.id){
+                            setSingleModule({...singleModule, showMenu: e.target.value})
+                        }else{
+                            setShowMenu(e.target.value)
+                        }
+                    }
+                }
+                >
+                    <option value="_">Select Menu Type</option>
+                    <option value="true">Show in Menu</option>
+                    <option value="false">Hide from Menu</option>
+                </Form.Control>
+            </Form.Group>
+
+
+            
+            <Form.Group className="mt-3">
+                <Button 
+                onClick={handleSubmit}
+                className="btn dark btn-sm">
+                    {params?.id ? 'Update Module':'Save Module'}
+                </Button>
+            </Form.Group>
+        </Form>
         </div>
-        
-    </div>
+    
+            
         
     )}  
     </>
