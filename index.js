@@ -67,11 +67,15 @@ const options = {
     useUnifiedTopology: true, 
     useCreateIndex: true
 };
-
-const MONGO_URI = process.env.MONGO_URI
-mongoose.connect(MONGO_URI, options)
-    .then(() => console.log('Mongo DB Connected on Server'))
-    .catch(err => console.log(err.message));
+try {
+    const MONGO_URI = process.env.MONGO_URI
+    mongoose.connect(MONGO_URI, options)
+        .then(() => console.log('Mongo DB Connected on Server'))
+        .catch(err => console.log(err.message));
+    
+} catch (error) {
+    console.log(error)
+}
 
 app.listen(PORT, () => {
     console.log(`App is running on PORT ${PORT}`);

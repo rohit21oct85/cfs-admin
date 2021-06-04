@@ -1,5 +1,5 @@
 import React , {useState, useEffect,useRef, useContext} from 'react';
-import { NavLink, useHistory, useLocation } from 'react-router-dom'
+import { NavLink, useHistory, useLocation, Redirect } from 'react-router-dom'
 
 
 import {AuthContext} from '../context/AuthContext';
@@ -70,10 +70,10 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
-                    if(role === 6){
-                        history.push('/upload-question');
+                    if(role == "6"){
+                        Redirect.to('/upload-question');
                     }
-                    history.push('/dashboard');
+                    Redirect.to('/dashboard');
                 }
             }
             
