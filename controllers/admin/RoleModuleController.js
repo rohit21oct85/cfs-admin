@@ -2,27 +2,12 @@ const RoleModule = require('../../models/admin/RoleModule.js');
 
 const CreateRoleModule = async (req, res) => {
     try {
-        var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
-        await RoleModule.findOneAndUpdate({
-            role_name: req.body.role_name,
-            role_id: req.body.role_id
-        },{ $set: req.body}, options, async (err, result) => {
-            if(err) {
-                return res.status(409).json({
-                    message: "Error occured",
-                    error: err.message
-                });
-            }else{
-                const AllRoleModules = await RoleModule.find({},{__v: 0});
-                return res.status(201).json({
-                    status: 200,
-                    message: "Submitted, Successfully",
-                    data: AllRoleModules
-                });
-            }
-        });
+        await RoleModule.insertMany(req.body);
+        res.status(201).json({
+            message: "Role Added Successfully"
+        })
     } catch (error) {
-        return res.status(502).json({
+        res.status(502).json({
             message: "Error occured",
             errors: error.message
         })
@@ -49,11 +34,25 @@ const UpdateRoleModule = async (req, res) =>{
         });
     }
 }
+const ViewRoleDetails = async (req, res) => {
+    try{
+        const RoleModuleData = await RoleModule.find({
+            role_id: req.params.role_id
+        },{__v: 0});
+        return res.status(200).json({ 
+            data: RoleModuleData
+        });    
+    } catch(error){
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 const ViewRoleModule = async (req, res) => {
     try{
-        const RoleModuleData = await RoleModule.findOne({
-            role_id: req.params.role_id,
-            role_name: req.params.role_name,
+        const RoleModuleData = await RoleModule.find({
+            role: req.params.role_id
         },{__v: 0});
         return res.status(200).json({ 
             data: RoleModuleData
@@ -110,6 +109,7 @@ const DeleteAllRoleModule = async (req, res) =>{
 
 
 module.exports = {
+    ViewRoleDetails,
     CreateRoleModule,
     UpdateRoleModule,
     ViewRoleModule,

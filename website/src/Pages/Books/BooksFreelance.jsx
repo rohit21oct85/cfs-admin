@@ -125,7 +125,7 @@ export default function BooksFreelance() {
           `chapters-bartelby-${params?.isbn}-${params?.status}`,
         ]);
         history.push(
-          `/books-bartelby/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
+          `/books-freelance/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
         );
         addToast("Question Imported", {
           appearance: "success",
@@ -465,6 +465,7 @@ export default function BooksFreelance() {
       },
     }
   );
+  console.log(state.role)
 
   return (
     <>
@@ -481,7 +482,7 @@ export default function BooksFreelance() {
               <div className="dash-con-heading">
                 <div className="col-md-12 row">
                   <div className="p-0">
-                    <Link to="/books" className="btn btn-sm dark">
+                    <Link to={`${state?.role == "1" ? '/books': '/upload-question'}`} className="btn btn-sm dark">
                       <span className="fa fa-arrow-left"></span>
                     </Link>
                     {doDeleteISBN === false && (

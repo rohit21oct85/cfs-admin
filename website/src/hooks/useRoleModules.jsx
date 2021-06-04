@@ -5,9 +5,8 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useRoleModules() {
+export default function useRoleModules(role) {
     const params = useParams();
-    
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -15,16 +14,16 @@ export default function useRoleModules() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery('rolepermissions', async () => {
-        if((params?.role_id !== undefined)){
-            const result = await axios.get(`${API_URL}master-role-modules/view/${params.role_id}/${params.role_name}`,{
+    return useQuery('roledmoules', async () => {
+        
+            const result = await axios.get(`${API_URL}role-module/view/${role}`,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token
                 }
             });
-            return result.data.data.permissions; 
-        }
+            return result.data.data; 
+        
     });
     
 }

@@ -81,6 +81,7 @@ app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
 app.use("/api/v1/master-module", Routes.moduleRoutes);
 app.use("/api/v1/master-role-module", Routes.roleModuleRoutes);
+app.use("/api/v1/role-module", Routes.roleModuleRoutes);
 app.use("/api/v1/master-admin", Routes.adminRoutes);
 app.use("/api/v1/master-delete", Routes.removeDataRoutes);
 app.use("/api/v1/subject", Routes.subjectRoutes);

@@ -49,6 +49,7 @@ router
     .get('/all-books/:sub_subject', checkAuth, Book.relatedBooks)
     .get('/similar-books/:book_id', checkAuth, Book.smimilarBooks)
     .post('/add-similar-books', checkAuth, Book.addSimilarBooks)
+    .get('/upload-questions', checkAuth, Book.uploadQuestion)
 ;
 
 module.exports = router;

@@ -9,8 +9,9 @@ import {AuthContext} from '../../context/AuthContext';
 import {useMutation, useQueryClient} from 'react-query'
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
-
+import * as utils from '../../utils/MakeSlug';
 import useRoleModules from '../../hooks/useRoleModules';
+import useRoleDetails from '../../hooks/useRoleDetails';
 import useRoles from '../../hooks/useRoles';
 
 import { useToasts } from 'react-toast-notifications';
@@ -24,7 +25,9 @@ export default function RoleModuleList() {
     const checkRef = useRef('');
     const { addToast } = useToasts();
     const {state} = useContext(AuthContext);
-    const {data:roleModules} = useRoleModules();
+    const {data:roleModules} = useRoleModules(params?.role);
+    const {data:roleDetails} = useRoleDetails(params?.role_id);
+    console.log(roleDetails)
     const {data:modules, isLoading}  = useAppModules();
     const [moduleLists, setModuleLists] = useState([]);
     const [checkClick, setCheckClick] = useState(false);
@@ -92,7 +95,7 @@ export default function RoleModuleList() {
             queryClient.invalidateQueries('role-modules')
             setLoading(false);
             clearFields();
-            history.push(`/role-module/update/${params?.role_name}/${params?.role_id}`);
+            history.push(`/role-modules/update/${params?.role}/${params?.role_name}/${params?.role_id}`);
             addToast('Module Modified successfully', { appearance: 'success',autoDismiss: true });
         }
 });
@@ -109,12 +112,18 @@ export default function RoleModuleList() {
                 if (checkboxes[i].checked) {
                    let data = checkboxes[i].value
                    let split_data = data.split('_'); 
-                   checkboxesChecked.push({method_name: split_data[0],module_name: split_data[1] });
+                    checkboxesChecked.push({
+                       module_id: split_data[0],
+                       module_name: split_data[1],
+                       module_slug: utils.MakeSlug(split_data[1]),
+                       module_icon: split_data[2],
+                       role: params?.role, 
+                       role_name: params?.role_name, 
+                       role_id: params?.role_id
+                     });
                 }
              }
-            const data = {permissions: checkboxesChecked, role_name: params?.role_name, role_id: params?.role_id} 
-            
-            await createMutation.mutate(data);
+            await createMutation.mutate(checkboxesChecked);
             
         }
     }
@@ -138,22 +147,24 @@ return (
                     name="role"
                     id="role"
                     ref={roleRef}
-                    value={`${params?.role_name}_${params?.role_id}`}
+                    value={`${params?.role_name}_${params?.role_id}_${params?.role}`}
                     className="roles col-md-6 form-control"
                     onChange={e=>{
                         const d = e.target.value;
                         const sl = d.split('_');
                         const role_name = sl[0];
                         const role_id = sl[1];
-                        history.push(`/role-permission/update/${role_name}/${role_id}`)
+                        const role = sl[2];
+                        history.push(`/role-modules/update/${role}/${role_name}/${role_id}`)
                     }}
                 >
                 <option value="">Select Roles</option>
-                    
                 {Roles?.map( role => { return(
                     <option 
-                        value={`${role.name.toLowerCase().trim().replaceAll(' ','-')}_${role._id}`}
-                        key={role._id}>{role.name}</option>
+                        value={`${utils?.MakeSlug(role.name)}_${role._id}_${role?.role}`}
+                        key={role._id}
+                        >
+                        {role.name}</option>
                 )})}
                 </select>
                 
@@ -191,21 +202,22 @@ return (
         </div>
         <hr />
         <div className="row col-md-12">
+            
             {moduleLists?.map((module, index) => {
                 return(
                     <div className="card col-md-3 pl-2" key={module?._id}>
                         <label className="mb-0" htmlFor={`module-${index}`}
-                        value={`${module?._id}`}
-                        onChange={handleCheckbox.bind(this, module?._id)}
-                        onClick={e => setCheckClick(true)}
-                        
                         >
+
                             <input type="checkbox"
                                 name="permissions"
                                 className="mr-2" 
                                 id={`module-${index}`}
-                                value={`${module?._id}`}
-                                checked={module?.checked?.toString() === 'false' ? false : true}
+                                value={`${module?._id}_${module?.module_name}_${module?.icon}`}
+                                onChange={handleCheckbox.bind(this, module?._id)}
+                                onClick={e => setCheckClick(true)}
+                                {...module.checked === true ? 'checked' : ''}
+                                {...roleDetails?.some(rolem => rolem.module_id === module?._id) ? 'checked':''}
                                 />
                                 {module?.module_name}
                                 <span className="pull-right">{module?.checked?.toString()}</span>

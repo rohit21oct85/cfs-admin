@@ -5,6 +5,7 @@ import { Navbar,Nav} from 'react-bootstrap'
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as utils from '../utils/MakeSlug';
 import useAppModules from '../hooks/useAppModules';
+import useRoleModules from '../hooks/useRoleModules';
 
 export default function Navigation() {
     const history = useHistory();
@@ -14,19 +15,8 @@ export default function Navigation() {
         dispatch({type: 'LOGOUT'})
         history.push('/')
     }
-    const {data} = useAppModules();
-
-    const [AllRoutes, SetAllRoutes] = useState([]);
-    useEffect(filterRoutes,[state, data]);
-    async function filterRoutes(){
-        let AllRoutesData = [];
-        if(state?.role == "1"){
-            AllRoutesData = data;
-        }else{
-            AllRoutesData = await data?.filter( routes => routes.role_access == state.role);
-        }
-        SetAllRoutes(AllRoutesData);
-    }
+    const {data:routes} = useAppModules();
+    const {data:roleRoutes} = useRoleModules(state.role);
 
 return (
 <>
@@ -74,19 +64,31 @@ return (
                     <NavLink to="/dashboard" > <span className="fa fa-dashboard"></span> Dashboard</NavLink>
                 </Nav>
             </li>
-            
+            {state?.role == '1' && (
             <li>
                 <Nav className="ml-auto">
                     <NavLink to="/app-modules" > <span className="fa fa-gears"></span> App Modules</NavLink>
                 </Nav>
             </li>
+            )}
             
-            {AllRoutes?.map(routes => { 
+            {state?.role == "1" && routes?.map(routes => { 
                 return (
                 <li key={routes?._id}>
                 <Nav className="ml-auto">
                     <NavLink to={`/${utils.MakeSlug(routes?.module_name)}`} >
                     <span className={`fa ${routes?.icon} mr-2 mt-1`}></span>
+                        {routes?.module_name}</NavLink>
+                </Nav>
+                </li>
+                )
+            })}
+            {state?.role == '6' && roleRoutes?.map(routes => { 
+                return (
+                <li key={routes?._id}>
+                <Nav className="ml-auto">
+                    <NavLink to={`/${routes?.module_slug}`} >
+                    <span className={`fa ${routes?.module_icon} mr-2 mt-1`}></span>
                         {routes?.module_name}</NavLink>
                 </Nav>
                 </li>

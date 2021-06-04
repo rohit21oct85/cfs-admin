@@ -1,7 +1,8 @@
 const Book = require('../../models/admin/Book.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const csv = require('csv-parser')
-const fs = require('fs')
+const fs = require('fs');
+const UploadQuestion = require('../../models/admin/UploadQuestion.js');
 
 const BooksBySubSubjectId = async(req, res) => {
     try {
@@ -725,8 +726,22 @@ const addSimilarBooks = async(req, res) => {
     }
 }
 
+const uploadQuestion = async(req, res) => {
+    try {
+        const books = await UploadQuestion.find({});
+        res.status(201).json({
+            data: books
+        })
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 
 module.exports = {
+    uploadQuestion,
     smimilarBooks,
     addSimilarBooks,
     relatedBooks,

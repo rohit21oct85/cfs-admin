@@ -70,6 +70,9 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
+                    if(role === 6){
+                        history.push('/upload-question');
+                    }
                     history.push('/dashboard');
                 }
             }

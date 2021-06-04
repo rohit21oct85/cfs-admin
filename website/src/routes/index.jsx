@@ -17,6 +17,7 @@ import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
 import BookFaqQuestion from '../Pages/Books/BookFaqQuestion.jsx';
 import BookSEO from '../Pages/Books/BookSEO.jsx';
 import BooksFreelance from '../Pages/Books/BooksFreelance';
+import UploadQuestion from '../Pages/Books/UploadQuestion';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 import SimilarBooks from '../Pages/Books/SimilarBooks.jsx';
 import QAData from '../Pages/QandA/QAData.jsx';
@@ -44,6 +45,7 @@ import RoleModuleList from '../Pages/Permission/RoleModuleList.jsx';
 
 import UploadChapters from '../Pages/Chapters/UploadChapters.jsx';
 import ModifyChapters from '../Pages/Chapters/ModifyChapters.jsx';
+
 
 import SamplePage from '../Pages/Sample/SamplePage.jsx'
 
@@ -147,6 +149,10 @@ export const privateRoutes = [
     {
         path: '/books-chapters/:isbn?/:book_name?/:book_id?',
         component: BooksChapters
+    },
+    {
+        path: '/upload-question',
+        component: UploadQuestion
     },
     {
         path: '/books-upload-chapters/:isbn?/:book_name?/:book_id?',
@@ -264,7 +270,7 @@ export const adminRoutes = [
     
 
     {
-        path: '/role-modules/:type?/:role_name?/:role_id?',
+        path: '/role-modules/:type?/:role?/:role_name?/:role_id?',
         component: RoleModuleList
     }
 ]
