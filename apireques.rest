@@ -1,0 +1,15 @@
+### Login ### 
+
+POST http://localhost:8080/api/v1/admin/login 
+Content-Type: application/json
+
+{
+      "email": "rohit21oct85@gmail.com",
+      "password": "password"
+}
+
+### Update Module ###
+POST http://localhost:8080/api/v1/master-module/update-all
+
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyNzI4NDAzNywiZXhwIjoxNjI5ODc2MDM3fQ.qOU4ntpwyJfkYlej17yiXPhEReHJldDZzeL4oJegOIM

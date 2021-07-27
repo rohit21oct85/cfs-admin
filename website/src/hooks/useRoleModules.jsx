@@ -5,7 +5,7 @@ import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as cons from '../Helper/Cons.jsx'
 
-export default function useRoleModules(role) {
+export default function useRoleModules(role,email) {
     const params = useParams();
     const {state } = useContext(AuthContext);
     let API_URL = '';
@@ -14,15 +14,16 @@ export default function useRoleModules(role) {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery('roledmoules', async () => {
-        
-            const result = await axios.get(`${API_URL}role-module/view/${role}`,{
-                headers: {
-                    'Content-Type': 'Application/json',
-                    'Authorization':'Bearer '+state.access_token
-                }
-            });
-            return result.data.data; 
+    return useQuery(`rolemodules-${params?.role}-${params?.email}`, async () => {
+            if(params?.role && params?.email){
+                const result = await axios.get(`${API_URL}role-module/view/${params?.role}/${params?.email}`,{
+                    headers: {
+                        'Content-Type': 'Application/json',
+                        'Authorization':'Bearer '+state.access_token
+                    }
+                });
+                return result.data.data; 
+            }
         
     });
     

@@ -9,7 +9,7 @@ function Question({problem, search}) {
     
     const history = useHistory();
     const manageQuestion = (e) => {
-        history.push(`/book-chapter-add-question/${e?.q_id}`)
+        history.push(`/books-chapter-add-question/${e?.q_id}`)
     }
     let answers = '';
     if(problem?.source == "bartelby"){

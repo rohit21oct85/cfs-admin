@@ -58,11 +58,10 @@ export default function ModuleList() {
                         <div className="col-md-4 pl-2">
                           <span>Module Name</span>
                         </div>
-
                         <div className="col-md-6 pl-2">
-                          <span>Module Description</span>
+                          <span>Module Slug</span>
                         </div>
-                        
+
                         <div className="col-md-2 pl-2">
                           <span>Module Action</span>
                         </div>
@@ -84,7 +83,7 @@ export default function ModuleList() {
                             </div>
 
                             <div className="col-md-6 pl-2 pr-0">
-                              {utils.GetString(module.description, 100)}
+                              {utils.GetString(module.module_slug, 100)}
                             </div>
                             
                             <div className="col-md-2 pl-2 pr-0">

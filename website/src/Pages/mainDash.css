@@ -825,3 +825,10 @@ p.nameCard{
 .cursor{
     cursor: pointer
 }
+input[disabled]{
+    color: #f00;
+    cursor: no-drop;
+}
+:disabled{
+    cursor: no-drop;
+}

@@ -270,7 +270,7 @@ export const adminRoutes = [
     
 
     {
-        path: '/role-modules/:type?/:role?/:role_name?/:role_id?',
+        path: '/role-modules/:type?/:role?/:role_name?/:role_id?/:email?',
         component: RoleModuleList
     }
 ]

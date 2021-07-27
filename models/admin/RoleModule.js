@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const RoleModuleSchema = new mongoose.Schema({
+    email: {
+        type: String
+    },
     role: {
         type: Number
     },

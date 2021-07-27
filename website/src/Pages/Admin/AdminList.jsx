@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react'
 import '../mainDash.css';
-import {  useHistory, Link  } from "react-router-dom";
+import {  useHistory, Link, useParams  } from "react-router-dom";
 import { Button } from 'react-bootstrap'
 
 import {AuthContext} from '../../context/AuthContext';
@@ -13,10 +13,13 @@ import useAxios from '../../hooks/useAxios';
 import TopMenu from './TopMenu';
 
 export default function AdminList() {
+    const params = useParams();
     const history = useHistory();
+
     const {state} = useContext(AuthContext);
     const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
+    
     const {response, isLoading} = useAxios({
         method: 'get', url: 'master-admin/view-all'
     });
@@ -66,24 +69,6 @@ return (
                         {!isLoading && (
                         <div className="subject-main-container">
                         {adminState.Admins.map( admin => {
-                            const renderRoles = () => {
-                                if(admin.role === "1"){
-                                    return(
-                                        <b>Super Admin</b>
-                                    )
-                                }
-                                else if(admin.role === "2"){
-                                    return(
-                                        <b>Admin</b>
-                                    )
-                                }
-                                else if(admin.role === "3"){
-                                    return(
-                                        <b>Other Admin</b>
-                                    )
-                                }
-                            }
-                        
                             return(
                                 <div className="small-card" key={admin._id} id={`card-${admin._id}`}>
                                 
@@ -111,7 +96,7 @@ return (
                                             Role: 
                                         </div>
                                         <div className="name-main">
-                                            {renderRoles}
+                                            {admin.role_name}
                                         </div>
                                     </div> 
                                     

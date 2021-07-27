@@ -14,7 +14,7 @@ export default function useAppModules() {
         API_URL = cons.LIVE_API_URL;
     }
     return useQuery('app-modules', async () => {
-        if(state.access_token){
+        if(state.access_token && state.isLoggedIn){
             const result = await axios.get(`${API_URL}master-module/view-all`,{
                 headers: {
                     'Content-Type': 'Application/json',

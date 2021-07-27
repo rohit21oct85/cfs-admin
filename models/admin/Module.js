@@ -5,6 +5,9 @@ const ModuleSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    module_slug: {
+        type: String
+    },
     description: {
         type: String,
         required: true,

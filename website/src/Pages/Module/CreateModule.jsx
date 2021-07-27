@@ -5,6 +5,7 @@ import { Button,Form } from 'react-bootstrap'
 
 import axios from 'axios'
 import * as cons from '../../Helper/Cons';
+import * as utils from '../../utils/MakeSlug'
 import useAppModules from "../../hooks/useAppModules";
 import {AuthContext} from '../../context/AuthContext';
 import { useToasts } from 'react-toast-notifications';
@@ -50,15 +51,16 @@ export default function CreateModule() {
         e.preventDefault();
         let response = null;
         if(params.id){
+            singleModule['module_slug'] = utils.MakeSlug(params?.id ? singleModule?.module_name : moduleName);
             await UpdateModule.mutate(singleModule);
         }else{
             const data ={
                 module_name: module_name,
+                module_slug: utils.MakeSlug(module_name),
                 description: description,
                 icon: icon,
                 showMenu: showMenu,
             }
-            console.log(data)
             await CreateModule.mutate(data);
         }
             

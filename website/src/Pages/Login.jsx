@@ -70,28 +70,26 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
-                    if(role == "6"){
-                        Redirect.to('/upload-question');
+                    if(state.role == "6"){
+                        window.location.href = '/upload-question';
+                        emailRef.current.value = ''
+                        passwordRef.current.value = ''
+                
+                    }else{
+                        emailRef.current.value = ''
+                        passwordRef.current.value = ''
+                        window.location.href = '/dashboard';
                     }
-                    Redirect.to('/dashboard');
+        
                 }
             }
             
         }   
     }
-    const goToLogin = () => {
-        if(location.pathname === '/admin' || location.pathname === '/admin/'){
-            history.push('/admin/login');
-        }
-        emailRef.current.value = ''
-        passwordRef.current.value = ''
-    }
-    useEffect(goToLogin,[state])
-    
     useEffect(checkLoggedInUser,[state]);
     async function checkLoggedInUser(){
         if(state?.isLoggedIn == "true"){
-            history.push(`/dashboard`)
+            window.location.href = '/dashboard';
         }
     }
     return (

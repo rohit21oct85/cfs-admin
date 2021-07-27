@@ -10,6 +10,7 @@ import {AdminContext} from '../../context/AdminContext';
 
 import axios from 'axios'
 import * as cons from '../../Helper/Cons.jsx'
+import useRoles from '../../hooks/useRoles';
 
 
 export default function CreateRole() {
@@ -19,7 +20,7 @@ export default function CreateRole() {
     const {state} = useContext(AuthContext);
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
     const {state: adminState, dispatch: adminDispatch} = useContext(AdminContext);
-
+    const {data: roleData } = useRoles();
     const [formData, setFormData] = useState("");
 
     let API_URL = '';
@@ -40,12 +41,14 @@ export default function CreateRole() {
         let response = null;
         // console.log(formData); 
         // // return;
+        
         if(formData == ''){
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter Subject Name'});
         }else{
             if(params.id){
                 response = await axios.patch(`${API_URL}master-role/update/${params.id}`,formData, options);
             }else{
+                formData.role = roleData.length+1
                 response = await axios.post(`${API_URL}master-role/create`,formData, options);
             }
             errorDispatch({type: 'SET_SUCCESS', payload: response.message});
@@ -137,7 +140,7 @@ return (
                             <Form.Group method="POST">
                                 <Form.Label>Role No</Form.Label>
                                 <Form.Control name="role" autoComplete="off"
-                                defaultValue={role.role}
+                                value={role.role ?? roleData.length+1}
                                 onChange={handelChange}
                                 onKeyDown={ 
                                     event => {

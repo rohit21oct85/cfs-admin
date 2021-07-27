@@ -8,7 +8,7 @@
         "client": "cd website && npm run start",
         "backend": "nodemon index.js",
         "dev": "npm-run-all --parallel backend client",
-        "prod:build": "cd public && rm -rf build && cd ../website && npm run build"
+        "create:build": "cd public && rm -rf build && cd ../website && npm run build"
     },
     "keywords": [
         "acadmic search engine, nodejs, mongodb, react js"
