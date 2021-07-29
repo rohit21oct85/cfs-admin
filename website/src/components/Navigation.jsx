@@ -5,11 +5,20 @@ import { Navbar,Nav} from 'react-bootstrap'
 import {AuthContext} from '../context/AuthContext.jsx';
 import * as utils from '../utils/MakeSlug';
 import useMainModules from '../hooks/useMainModules';
+import useRoles from '../hooks/useRoles';
 
 export default function Navigation() {
     const history = useHistory();
     const params  = useParams();
     const { state, dispatch } = useContext(AuthContext);
+    const {data: roles, isLoading: roleLoading } = useRoles();
+    const [roleName, setRoleName] = useState(null)
+    useEffect(() => {
+        let rol = roles?.filter(r => r?.role == state.role);
+        if(roles !== undefined){
+            setRoleName(rol[0]?.name)
+        }
+    },[state])
     function logout(){
         dispatch({type: 'LOGOUT'})
         history.push('/')
@@ -25,27 +34,16 @@ return (
     </div>
     <div className="user_area">
         <div className="user_icon">
-            <img src="/user.png" alt="User"/>
+            <img src="/user.jpg" alt="User"/>
         </div>
         <div className="user_details">
-            <span className="user_name">{state.fullname}</span>
-            <span className="user_name"></span>
+            <p className="user_name mb-0 mt-1">{state.fullname}</p>
+            <p className="user_name mb-1 mt-1">{state.email}</p>
         </div>
         <div className="user_options flex pl-2 pr-2 pb-3">
             <button className="btn btn-sm pt-0 pb-0 dark bg-success br-15" as={Link} alt="Logout">
-                {(state.role == "1") ? (
-                        <>
-                        <span className="fa fa-lock"></span> Master Admin
-                        </>
-                    ):(
-                        <>
-                        {(state.role == "2") ? (
-                            <><span className="fa fa-lock"></span> Admin</>
-                        ): (
-                            <><span className="fa fa-lock"></span> Other Admin</>
-                        )}
-                        </>
-                    )}
+            <span className="fa fa-lock mr-2"></span>
+                {roleName}
             </button>
             <button className="btn btn-sm pt-0 pb-0 bg-danger br-15" as={Link} onClick={logout} alt="Logout">
                 <span className="fa fa-power-off mr-2"></span>

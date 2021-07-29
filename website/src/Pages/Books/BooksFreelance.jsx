@@ -369,6 +369,13 @@ export default function BooksFreelance() {
     );
   }
   
+  async function handleAnotherAnswer(id) {
+    history.push(
+      `/books-freelance/${params?.isbn}/update-another-answer/${params?.section_id}/${id}`
+    );
+  }
+
+  
 
   useEffect(GetSingleQuestion, [Banswers, params]);
   async function GetSingleQuestion() {
@@ -406,7 +413,6 @@ export default function BooksFreelance() {
       );
       content.forEach((value, index) => {
         if (index > 0) {
-          console.log(value);
           setConverted((converted) => [
             ...converted,
             {
@@ -419,23 +425,47 @@ export default function BooksFreelance() {
     setSourceCode("");
   }
   
+  async function handleExtractAnotherAnswer(e) {
+    e.preventDefault();
+    if (sourceCode !== "") {
+      let content = document.querySelectorAll(
+        ".r8gl7vf"
+      );
+      // console.log(content)
+      content.forEach((value, index) => {
+         setConverted((converted) => [
+            ...converted,
+            {
+              data: value,
+            },
+          ]);
+        
+      });
+    }
+    setSourceCode("");
+  }
+
+  
   async function UpdateExpertAnswer(e) {
     e.preventDefault();
     setUploading(true);
     let AnswersArray = [];
     let answer = {};
+    
     await converted?.map((answers, i) => {
       answer = { answer_sequence: i, answer: answers.data.innerHTML };
       AnswersArray.push(answer);
     });
     const convertedAnswer = JSON.stringify(AnswersArray);
     const data = {
+      source: 'bartelby',
       expert_answer: convertedAnswer,
       question: question,
       question_id: params?.question_id,
     };
     await MutateExpertAnswer.mutate(data);
   }
+
   const MutateExpertAnswer = useMutation(
     (formData) => {
       return axios.post(
@@ -465,7 +495,28 @@ export default function BooksFreelance() {
       },
     }
   );
-  console.log(state.role)
+
+  async function UpdateAnotherAnswer(e) {
+    e.preventDefault();
+    setUploading(true);
+    let AnswersArray = [];
+    let answer = {};
+    
+    await converted?.map((answers, i) => {
+      answer = { answer_sequence: i, answer: answers.data.innerHTML };
+      AnswersArray.push(answer);
+    });
+    const convertedAnswer = JSON.stringify(AnswersArray);
+    const data = {
+      source: 'quizlet',
+      expert_answer: convertedAnswer,
+      question: question,
+      question_id: params?.question_id,
+    };
+    await MutateExpertAnswer.mutate(data);
+  }
+
+ 
 
   return (
     <>
@@ -782,7 +833,7 @@ export default function BooksFreelance() {
                         style={{ display: 'flex', justifyContent: 'space-between'}}
                         >
                           <div className="dark br-10 pl-2">
-                            Chapters:
+                            Questions:
                             <span className="badge-success ml-3 br-10 pull-right pl-2 pr-2">
                               {singleChapter?.total_question}
                             </span>
@@ -899,15 +950,23 @@ export default function BooksFreelance() {
 
                                 {chapter?.sequence > 0 && (
                                   <div
-                                    className="col-md-6 pull-right"
+                                    className="col-md-8 pull-right pr-0"
+                                  >
+                                    <button className="btn bg-success text-white btn-sm br-5 ml-3 pull-right"
+                                    onClick={handleAnotherAnswer.bind(
+                                      this,
+                                      chapter?._id
+                                    )}>
+                                      <span className="fa fa-question-circle mr-2"></span>
+                                      Quizlet Solution
+                                    </button>
+                                    <button className="btn dark btn-sm br-5 pull-right"
                                     onClick={handleExpertAnswer.bind(
                                       this,
                                       chapter?._id
-                                    )}
-                                  >
-                                    <button className="btn dark btn-sm br-5 pull-right">
+                                    )}>
                                       <span className="fa fa-question-circle mr-2"></span>
-                                      Update Expert Solution
+                                      Bartelby Solution
                                     </button>
                                   </div>
                                 )}
@@ -1046,10 +1105,15 @@ export default function BooksFreelance() {
                         })}
                       </div>
                       <div className="col-md-12 mt-3 pr-0 pull-right">
+                        <button className="dark bg-succcess"
+                        onClick={() => history.push(`/books-freelance/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
+                          <span className="fa fa-times mr-2"></span>
+                          Cancel
+                        </button>
                         <button
                           className="btn btn-md dark pull-right"
                           onClick={UpdateExpertAnswer}
-                          disabled={uploading}
+                          disabled={converted}
                         >
                           {uploading ? (
                             <>
@@ -1068,6 +1132,116 @@ export default function BooksFreelance() {
                   </div>
                 </div>
               )}
+
+              {params?.status === 'update-another-answer' && (
+                <div className="dash-cont-start" style={{ height: "90vh" }}>
+                <div className="row col-md-12 pr-0">
+                    <h5>Update Another Answer</h5>
+                    <hr />
+                    <div className="col-md-12 flex pl-2">
+                      <div className="col-md-5 pl-0 pr-0">
+                        <p>
+                          Chapter No: {singleQuestion?.chapter_no} -{" "}
+                          {singleQuestion?.chapter_name}
+                        </p>
+                        <p>Problem No: {singleQuestion?.problem_no}</p>
+
+                        <form>
+                          <div className="form-group">
+                            <input
+                              type="text"
+                              value={question}
+                              onChange={(e) => setQuestion(e.target.value)}
+                              className="form-control"
+                              placeholder="Please Enter Question"
+                            />
+                          </div>
+
+                          <div className="form-group">
+                            <textarea
+                              value={sourceCode}
+                              id="sourceCode"
+                              onChange={(e) => {
+                                e.preventDefault();
+                                setSourceCode(e.target.value);
+                              }}
+                              className="form-control"
+                              style={{ height: "250px" }}
+                              placeholder="Enter Source Code"
+                            ></textarea>
+                          </div>
+
+                          <div className="form-group">
+                            <button
+                              className="btn btn-md dark"
+                              onClick={handleExtractAnotherAnswer}
+                            >
+                              <span className="fa fa-save mr-2"></span>
+                              Extract Answer
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                      {sourceCode && (
+                        <div className="col-md-6 pl-2" style={{ display: "none" }}>
+                          {htmlConverterReact(sourceCode)}
+                        </div>
+                      )}
+                      <div className="col-md-6 pr-0">
+                      <h4>
+                        Expert Solutions {converted?.length}{" "}
+                        {sourceCode?.length}
+                      </h4>
+                      <hr className="mt-1 mb-2" />
+                      <div
+                        className="col-md-12 pl-0 pr-0"
+                        style={{
+                          height: "340px",
+                          overflow: "scroll",
+                          borderBottom: "1px solid #ededed",
+                        }}
+                      >
+                        {converted?.map((content, i) => {
+                          return (
+                            <div
+                              className="card p-2 br-5 mb-2"
+                              key={Date.now() + i}
+                            >
+                              {htmlConverterReact(content?.data)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="col-md-12 mt-3 pr-0 pull-right">
+                        <button className="dark bg-succcess"
+                        onClick={() => history.push(`/books-freelance/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
+                          <span className="fa fa-times mr-2"></span>
+                          Cancel
+                        </button>
+                        <button
+                          className="btn btn-md dark pull-right"
+                          onClick={UpdateAnotherAnswer}
+                          disabled={converted?.length == "0"}
+                        >
+                          {uploading ? (
+                            <>
+                              <span className="fa fa-spinner mr-2"></span>
+                              Updating ....
+                            </>
+                          ) : (
+                            <>
+                              <span className="fa fa-save mr-2"></span>
+                              Update Solutions
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+              )}
+
             </div>
           </div>
         </div>

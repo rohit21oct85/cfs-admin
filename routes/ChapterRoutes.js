@@ -32,6 +32,7 @@ router
     .get('/bartelby-answers/:question_id',  checkAuth, Chapter.BartelbyQuestionAnswers)
     .post('/bartelby-chapter-change-status',  checkAuth, Chapter.BartelbyChaptersChangeStatus)
     .post('/bartelby-update-chapter-answer',  checkAuth, Chapter.BartelbyUpdateChaptersAnswer)
+    
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
     .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
     .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)

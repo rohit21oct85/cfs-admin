@@ -144,3 +144,57 @@ img.MathJax_strut {border: 0!important; padding: 0!important; margin: 0!importan
 @font-face {font-family: MathJax_Blank; src: url('about:blank')}
 @font-face {font-family: STIXMathJax_Main; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/fonts/HTML-CSS/STIX-Web/woff/STIXMathJax_Main-Regular.woff?V=2.7.4') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/fonts/HTML-CSS/STIX-Web/otf/STIXMathJax_Main-Regular.otf?V=2.7.4') format('opentype')}
 @font-face {font-family: STIXMathJax_Main-italic; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/fonts/HTML-CSS/STIX-Web/woff/STIXMathJax_Main-Italic.woff?V=2.7.4') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/fonts/HTML-CSS/STIX-Web/otf/STIXMathJax_Main-Italic.otf?V=2.7.4') format('opentype')}
+
+
+.t13k0vvr {
+      display: inline;
+  }
+  .FormattedText, .TermText {
+      -webkit-font-smoothing: antialiased;
+  }
+  .FormattedText {
+      position: relative;
+      word-wrap: break-word;
+  }
+  .h1ejaztj {
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+  }
+  .s1wwu7g8 {
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+  }
+  
+  .AssemblyMediumCard {
+      box-shadow: 0 .25rem 1rem 0 var(--shadow-with-opacity);
+      border-radius: 1rem;
+      border-bottom: .5rem solid transparent;
+  }
+  
+  .AssemblyCard {
+      box-sizing: border-box;
+      display: inline-block;
+      background-color: var(--neutral-100-ink-300);
+      width: 90%;
+  }
+  .r8gl7vf {
+      -webkit-animation: stepFadeIn-r8gl7vf;
+      animation: stepFadeIn-r8gl7vf;
+      -webkit-animation-duration: .8s;
+      animation-duration: .8s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      display: block;
+      margin-top: 1rem;
+  }
+  .mi4ni5d .FormattedTextWithKatex--paragraph:not(:last-child) {
+      margin-bottom: 1rem;
+  }

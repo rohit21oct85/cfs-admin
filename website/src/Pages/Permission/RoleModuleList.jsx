@@ -16,8 +16,6 @@ import useRoles from '../../hooks/useRoles';
 import { useToasts } from 'react-toast-notifications';
 import useAppModules from '../../hooks/useAppModules';
 import useRoleUsers from '../../hooks/useRoleUsers';
-import useAccessModules from '../../hooks/useAccessModules';
-import useUserPermission from '../../hooks/useUserPermission';
 import useUserAllPermission from '../../hooks/useUserAllPermission';
 import useDeleteModulePermission from './hooks/useDeleteModulePermission';
 import useDeletePermission from './hooks/useDeletePermission';
@@ -27,16 +25,7 @@ export default function RoleModuleList() {
     const history = useHistory();
     const params = useParams();
     
-    let accessUrl = useAccessModules();
-    let permissions = useUserPermission();
     
-    // useEffect(checkPageAccessControl,[accessUrl]);
-    // function checkPageAccessControl(){
-    //     if(accessUrl === false){
-    //         history.push('/403');
-    //     }
-    // }
-
     const roleRef = useRef('');
     const checkRef = useRef('');
     const { addToast } = useToasts();
@@ -46,7 +35,6 @@ export default function RoleModuleList() {
 
     const {data:roleUsers} = useRoleUsers(params?.role);
     
-    console.log(allPermissions);
     const methods = [
         {
             key: 'create',
@@ -273,7 +261,7 @@ return (
                     <option value="">Select User</option>
                     {roleUsers?.map(user => {
                         return(
-                            <option value={user.email}>{user.fullname}</option>
+                            <option value={user.email} key={user?._id}>{user.fullname}</option>
                         )
                     })}
                 </select>
@@ -326,6 +314,7 @@ return (
                                 : <span className="fa fa-check-circle text-danger"></span>
                             }
                             </span>
+                            {moduleCheck && (
                             <span className="pointer pl-2 pull-right bi bi-trash text-white"
                             style={{
                                 cursor: 'pointer',
@@ -334,6 +323,7 @@ return (
                             onClick={(e) => handleDeleteModule(module?.module_slug, state.email)}
                             >
                             </span>
+                            )}
                         </div>
                         </div>
                         <div className="row ml-2 mr-2 pt-2 pb-2">

@@ -1288,12 +1288,24 @@ const BartelbyUpdateChaptersAnswer = async (req, res) => {
         let question_id = req?.body?.question_id;
         let expert_answer = req?.body?.expert_answer;
         let question = req?.body?.question;
-        const ChapterData = await Chapter.findOne({_id: question_id,source: 'bartelby'})
-        await Chapter.findByIdAndUpdate({_id: question_id,source: 'bartelby'},{
-            expert_answer: expert_answer,
-            question:question,
-            answer_uploaded: true
-        });
+        let source = req?.body?.source;
+        const ChapterData = await Chapter.findOne({_id: question_id,source: 'bartelby'});
+        let updateData;
+        if(source === 'bartelby'){
+            updateData = {
+                expert_answer: expert_answer,
+                question:question,
+                answer_uploaded: true
+            }
+        }else{
+            updateData = {
+                another_answer: expert_answer,
+                question:question,
+                answer_uploaded: true
+            }
+        }
+        await Chapter.findByIdAndUpdate({_id: question_id,source: 'bartelby'},updateData);
+
         const BChapterSectionID = ChapterData?.section_id
         const BChapter = await BartelbyChapter.findOne({section_id: BChapterSectionID});
         const ChapterCount = await BartelbyChapter.countDocuments({section_id: BChapterSectionID});

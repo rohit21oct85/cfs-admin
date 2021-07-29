@@ -52,11 +52,12 @@ p{
     background-color: #2f3348;
 }
 .user_icon {
-    height: 80px;
+    height: 50px;
     margin: 5px 0px;
 }
-.user_icon img {
-    width: 80px;
+.user_icon > img {
+    width: 50px;
+    border-radius: 50%;
 }
 .user_details {
     font-size: 14px;

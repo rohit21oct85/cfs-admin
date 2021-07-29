@@ -62,9 +62,9 @@ app.use((req, res, next) => {
 
 // DB Cofiguration
 const options = { 
+    useUnifiedTopology: true, 
     useFindAndModify: false, 
     useNewUrlParser: true, 
-    useUnifiedTopology: true, 
     useCreateIndex: true
 };
 
