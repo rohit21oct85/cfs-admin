@@ -203,8 +203,8 @@ const DeleteRoleModule = async (req, res) =>{
     }
 };
 const DeleteAllRoleModule = async (req, res) =>{
-    const ids = req.params.id;
     try {
+        console.log(req.body);
         await RoleModule.deleteMany({email: req.body.email, module_slug: req.body.module_slug});
         await RolePermission.deleteMany({email: req.body.email, module_slug: req.body.module_slug});
         res.status(201).json({

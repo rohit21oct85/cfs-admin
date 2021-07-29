@@ -320,7 +320,7 @@ return (
                                 cursor: 'pointer',
                                 fontSize: '0.90rem'
                             }}
-                            onClick={(e) => handleDeleteModule(module?.module_slug, state.email)}
+                            onClick={(e) => handleDeleteModule(module?.module_slug, params?.email)}
                             >
                             </span>
                             )}

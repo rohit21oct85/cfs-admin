@@ -24,7 +24,7 @@ const Login = async (req, res) => {
          
         await Admin.findOne({email: req.body.email},{__v: 0}).then( admin => {
             if(admin){
-                bcrypt.compare(req.body.password, admin.password, function(err,response){
+                bcrypt.compare(req.body.password, admin.password,async function(err,response){
                     if(err){
                         return res.status(409).json({ 
                             message: "Password does not match"
@@ -32,36 +32,50 @@ const Login = async (req, res) => {
                     }
                     else{
                         if(response){
-                            const accessToken = generateAccessToken(admin);
-                            const refreshToken = generateRefreshToken(admin);
-                            refreshTokens.push(refreshToken);
-                            
-                            return res.status(200).json({ 
-                                accessToken, 
-                                refreshToken,
-                                admin
-                            });
+                            if(admin.isActive === false){
+                                await Admin.findByIdAndUpdate({
+                                    _id: admin?._id
+                                },{
+                                    isActive: true
+                                });
+                                let adminData = await Admin.findOne({
+                                    _id: admin?._id
+                                })
+                                const accessToken = generateAccessToken(adminData);
+                                const refreshToken = generateRefreshToken(adminData);
+                                refreshTokens.push(refreshToken);
+                                
+                                res.status(200).json({ 
+                                    accessToken, 
+                                    refreshToken,
+                                    admin: adminData
+                                });
+                            }else{
+                                res.status(203).json({ 
+                                    message: "your account is already loggedIn !!!"
+                                });
+                            }
                         } else {
-                            return res.status(401).json({ 
+                            res.status(203).json({ 
                                 message: "Password does not match"
                             });
                         }                      
                     }
                 });
             }else{
-                return res.status(401).json({ 
+                res.status(203).json({ 
                     message: "Email or Password doesnot matched"
                 })
             }
         }).catch(error => {
-            return res.status(500).json({
+            res.status(203).json({
                 message: "Email Does not exists in our database",
                 errors: error.message
             });     
         })
         
     } catch (error) {
-        return res.status(401).json({
+        res.status(203).json({
             message: error.message
         });  
     }
@@ -97,14 +111,17 @@ const RefreshToken = async (req,res) => {
 }
 
 const Logout = async (req, res) => {
+    // console.log(req); return;
     const accessTokenSecret = 'CFSAT2021';
     const authorizationHeader = req.headers.authorization;
     if (authorizationHeader){
         const accessToken = req.headers.authorization.split(' ')[1];  
         const decode = await jwt.verify(accessToken, accessTokenSecret);
+        // console.log(decode); return;
         const UserData = {id: decode.id, role: decode.role};
+        await Admin.findByIdAndUpdate({_id: decode.id},{isActive: false});
         let newAccessToken = await jwt.sign(UserData, 'sasdasd', {expiresIn: '0s'});
-        return res.status(402).json({
+        res.status(201).json({
             message: "successfully loggedout",
             accessToken: newAccessToken
         });    
@@ -116,18 +133,25 @@ const ForgotPassword = async (req, res) => {
         const email = req.body.email;
         const data = await User.findOne({email: email});
         if(data){
-            console.log(data);
-            return res.status(201).json(data)
+            res.status(201).json(data)
         }else{
-            return res.status(402).json({message: "Email does not belongs to our Database"})    
+            res.status(402).json({message: "Email does not belongs to our Database"})    
         }
     } catch (error) {
-        return res.status(502).json({message: "Somethign went wrong!"})
+        res.status(502).json({message: "Somethign went wrong!"})
     }
 
 }
-
+const AddField = async (req, res) => {
+    try {
+        await Admin.updateMany({},{isActive: false});
+        res.status(201).json({message: "Updated"})
+    } catch (error) {
+        res.status(502).json({message: "Somethign went wrong!"})
+    }
+}
 module.exports = {
+    AddField,
     Register,
     Login,
     Logout,

@@ -25,6 +25,9 @@ const AdminSchema = new mongoose.Schema({
     role_name:{
         type: String
     },
+    isActive:{
+        type: Boolean,
+    },
     status:{
         type: Boolean,
         required: true,

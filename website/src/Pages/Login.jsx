@@ -39,9 +39,9 @@ export default function Login() {
             setLoading(true);
             const formData = {email: emailRef.current.value , password: passwordRef.current.value};
             const response = await axios.post(`${API_URL}admin/login`, formData);
-            // console.log(response)
-            if(response.response && response.response.status){
-                addToast('Please enter valid email or password', { appearance: 'error',autoDismiss: true });
+            console.log(response);
+            if(response.status === 203){
+                addToast(response.data.message, { appearance: 'error',autoDismiss: true });
                 setLoading(false);
             }else{
                 let access_token = response.data.accessToken

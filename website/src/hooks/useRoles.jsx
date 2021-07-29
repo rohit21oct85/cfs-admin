@@ -16,13 +16,15 @@ export default function useRoles() {
         API_URL = cons.LIVE_API_URL;
     }
     return useQuery('roles', async () => {
-        const result = await axios.get(`${API_URL}master-role/view-all`,{
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization':'Bearer '+state.access_token
-            }
-        });
-        return result.data.data; 
+        if(state.access_token){
+            const result = await axios.get(`${API_URL}master-role/view-all`,{
+                headers: {
+                    'Content-Type': 'Application/json',
+                    'Authorization':'Bearer '+state.access_token
+                }
+            });
+            return result.data.data; 
+        }
     });
     
 }

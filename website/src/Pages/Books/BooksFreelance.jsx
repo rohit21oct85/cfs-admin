@@ -960,14 +960,14 @@ export default function BooksFreelance() {
                                       <span className="fa fa-question-circle mr-2"></span>
                                       Quizlet Solution
                                     </button>
-                                    <button className="btn dark btn-sm br-5 pull-right"
+                                    {/* <button className="btn dark btn-sm br-5 pull-right"
                                     onClick={handleExpertAnswer.bind(
                                       this,
                                       chapter?._id
                                     )}>
                                       <span className="fa fa-question-circle mr-2"></span>
                                       Bartelby Solution
-                                    </button>
+                                    </button> */}
                                   </div>
                                 )}
                               </h6>

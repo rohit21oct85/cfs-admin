@@ -6,22 +6,49 @@ import {AuthContext} from '../context/AuthContext.jsx';
 import * as utils from '../utils/MakeSlug';
 import useMainModules from '../hooks/useMainModules';
 import useRoles from '../hooks/useRoles';
+import axios from 'axios'
+import * as cons from '../Helper/Cons'
+import { useToasts } from 'react-toast-notifications';
+
 
 export default function Navigation() {
     const history = useHistory();
     const params  = useParams();
     const { state, dispatch } = useContext(AuthContext);
     const {data: roles, isLoading: roleLoading } = useRoles();
-    const [roleName, setRoleName] = useState(null)
+    const [roleName, setRoleName] = useState(null);
+    const [formData, setFormData] = useState({})
     useEffect(() => {
         let rol = roles?.filter(r => r?.role == state.role);
         if(roles !== undefined){
             setRoleName(rol[0]?.name)
         }
-    },[state])
-    function logout(){
-        dispatch({type: 'LOGOUT'})
-        history.push('/')
+    },[state,roles])
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
+    const { addToast } = useToasts();
+    async function logout(){
+        formData.email = state.email
+        let response = await axios.delete(`${API_URL}admin/logout`,{
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization':'Bearer '+state.access_token
+            }
+        });
+        if(response.status === 201){
+            addToast(response.data.message, { 
+                appearance: 'error',
+                autoDismiss: true
+            });
+            setTimeout(()=> {
+                dispatch({type: 'LOGOUT'})
+                history.push('/')
+            },1000)
+        }
     }
     const {data:routes} = useMainModules(state.role,state.email);
 return (
