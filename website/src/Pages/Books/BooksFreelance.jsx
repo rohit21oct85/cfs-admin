@@ -128,7 +128,7 @@ export default function BooksFreelance() {
           `chapters-bartelby-${params?.isbn}-${params?.status}`,
         ]);
         history.push(
-          `/books-freelance/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
+          `/books-freelance/${params?.solution_type}/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
         );
         addToast("Question Imported", {
           appearance: "success",
@@ -251,7 +251,7 @@ export default function BooksFreelance() {
         setFetching(false);
         setUploaded(false);
         history.push(
-          `/books-freelance/${params?.isbn}/import-chapter/${params?.section_id}`
+          `/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter/${params?.section_id}`
         );
       },
     }
@@ -278,7 +278,7 @@ export default function BooksFreelance() {
         queryClient.invalidateQueries("chapters-bartelby");
         setDeleteISBN(false);
         history.push(
-          `/books-freelance/${params?.isbn}/import-chapter/${params?.section_id}`
+          `/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter/${params?.section_id}`
         );
       },
     }
@@ -307,7 +307,7 @@ export default function BooksFreelance() {
         setUploaded(false);
         setClearing(false);
         history.push(
-          `/books-freelance/${params?.isbn}/import-chapter/${params?.section_id}`
+          `/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter/${params?.section_id}`
         );
       },
     }
@@ -332,7 +332,7 @@ export default function BooksFreelance() {
         setUploaded(false);
         setClearingAll(false);
         setEnterPassword(false);
-        history.push(`/books-freelance/${params?.isbn}/import-chapter`);
+        history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter`);
       },
     }
   );
@@ -368,13 +368,13 @@ export default function BooksFreelance() {
 
   async function handleExpertAnswer(id) {
     history.push(
-      `/books-freelance/${params?.isbn}/update-expert-answer/${params?.section_id}/${id}`
+      `/books-freelance/${params?.solution_type}/${params?.isbn}/update-expert-answer/${params?.section_id}/${id}`
     );
   }
   
   async function handleAnotherAnswer(id) {
     history.push(
-      `/books-freelance/${params?.isbn}/update-another-answer/${params?.section_id}/${id}`
+      `/books-freelance/${params?.solution_type}/${params?.isbn}/update-another-answer/${params?.section_id}/${id}`
     );
   }
 
@@ -472,7 +472,7 @@ export default function BooksFreelance() {
             autoDismiss: true,
           });
         history.push(
-          `/books-freelance/${params.isbn}/view-uploaded-chapter/${params?.section_id}/${problems[1]?._id}`
+          `/books-freelance/${params?.solution_type}/${params.isbn}/view-uploaded-chapter/${params?.section_id}/${problems[1]?._id}`
         );
       },
     }
@@ -578,12 +578,12 @@ export default function BooksFreelance() {
                             setQuestionsData([]);
                             if (section_id === "_") {
                               history.push(
-                                `/books-freelance/${params?.isbn}/${params?.status}`
+                                `/books-freelance/${params?.solution_type}/${params?.isbn}/${params?.status}`
                               );
                             } else {
                               setSectionId(section_id);
                               history.push(
-                                `/books-freelance/${params?.isbn}/${params?.status}/${section_id}`
+                                `/books-freelance/${params?.solution_type}/${params?.isbn}/${params?.status}/${section_id}`
                               );
                             }
                           }}
@@ -766,7 +766,7 @@ export default function BooksFreelance() {
                         onChange={(e) => {
                           if (e.target.value !== "-")
                             history.push(
-                              `/books-freelance/${params?.isbn}/view-uploaded-chapter/${e.target.value}`
+                              `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${e.target.value}`
                             );
                         }}
                       >
@@ -831,7 +831,7 @@ export default function BooksFreelance() {
                                   id={problem?._id}
                                   onClick={(e) => {
                                     history.push(
-                                      `/books-freelance/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${problem?._id}`
+                                      `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${problem?._id}`
                                     );
                                   }}
                                 >
@@ -1063,7 +1063,7 @@ export default function BooksFreelance() {
                       </div>
                       <div className="col-md-12 mt-3 pr-0 pull-right">
                         <button className="dark bg-succcess"
-                        onClick={() => history.push(`/books-freelance/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
+                        onClick={() => history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
                           <span className="fa fa-times mr-2"></span>
                           Cancel
                         </button>
