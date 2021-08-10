@@ -158,6 +158,10 @@ const BookSchema = new mongoose.Schema({
         type: Boolean,
         default: 0
     },
+    quizlet_imported: {
+        type: Boolean,
+        default: 0
+    },
     created_at: {
         type: Date,
         default: Date.now

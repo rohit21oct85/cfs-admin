@@ -17,6 +17,7 @@ import Answers from "./Answers";
 import { htmlConverterReact } from "html-converter-react";
 import Button from "./Button";
 import useGetProblems from "../../hooks/useGetProblems";
+import QZSolution from "./freelance/QZSolution";
 
 export default function BooksFreelance() {
   
@@ -70,7 +71,8 @@ export default function BooksFreelance() {
 
   useEffect(getSampleJSON, [params, singleBook]);
   async function getSampleJSON() {
-    if (singleBook && singleBook[0]?.bartlyby_imported === false) {
+    
+    if(singleBook && singleBook[0]?.bartlyby_imported === false) {
       const response = await axios.get(
         `https://www.crazyforstudy.com/api/chapters.php?isbn=${params?.isbn}`
       );
@@ -86,6 +88,7 @@ export default function BooksFreelance() {
           total_uploaded: 0,
         });
       });
+      // console.log(sections); return;
       await importBarteybyChapters.mutate({
         bartley: chaptersData,
         book_isbn: params?.isbn,
@@ -425,27 +428,6 @@ export default function BooksFreelance() {
     setSourceCode("");
   }
   
-  async function handleExtractAnotherAnswer(e) {
-    e.preventDefault();
-    if (sourceCode !== "") {
-      let content = document.querySelectorAll(
-        ".r8gl7vf"
-      );
-      // console.log(content)
-      content.forEach((value, index) => {
-         setConverted((converted) => [
-            ...converted,
-            {
-              data: value,
-            },
-          ]);
-        
-      });
-    }
-    setSourceCode("");
-  }
-
-  
   async function UpdateExpertAnswer(e) {
     e.preventDefault();
     setUploading(true);
@@ -496,28 +478,6 @@ export default function BooksFreelance() {
     }
   );
 
-  async function UpdateAnotherAnswer(e) {
-    e.preventDefault();
-    setUploading(true);
-    let AnswersArray = [];
-    let answer = {};
-    
-    await converted?.map((answers, i) => {
-      answer = { answer_sequence: i, answer: answers.data.innerHTML };
-      AnswersArray.push(answer);
-    });
-    const convertedAnswer = JSON.stringify(AnswersArray);
-    const data = {
-      source: 'quizlet',
-      expert_answer: convertedAnswer,
-      question: question,
-      question_id: params?.question_id,
-    };
-    await MutateExpertAnswer.mutate(data);
-  }
-
- 
-
   return (
     <>
       {state.isLoggedIn && (
@@ -530,10 +490,13 @@ export default function BooksFreelance() {
                 </h2>
               </div>
 
+              {params?.solution_type == 'QZ' && <QZSolution />}
+
+              {params?.solution_type == 'BB' && (
               <div className="dash-con-heading">
                 <div className="col-md-12 row">
                   <div className="p-0">
-                    <Link to={`${state?.role == "1" ? '/books': '/upload-question'}`} className="btn btn-sm dark">
+                    <Link to={`${state?.role == "1" ? '/books/freelance': '/upload-question'}`} className="btn btn-sm dark">
                       <span className="fa fa-arrow-left"></span>
                     </Link>
                     {doDeleteISBN === false && (
@@ -572,7 +535,7 @@ export default function BooksFreelance() {
                       onClick={(e) => {
                         e.preventDefault();
                         history.push(
-                          `/books-freelance/${params?.isbn}/import-chapter`
+                          `/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter`
                         );
                         setViewUploaded(false);
                       }}
@@ -588,7 +551,7 @@ export default function BooksFreelance() {
                       onClick={(e) => {
                         e.preventDefault();
                         history.push(
-                          `/books-freelance/${params?.isbn}/view-uploaded-chapter`
+                          `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter`
                         );
                         setViewUploaded(true);
                       }}
@@ -599,7 +562,8 @@ export default function BooksFreelance() {
                   </div>
                 </div>
               </div>
-              {params?.status === "import-chapter" && (
+              )}
+              {params?.status === "import-chapter" && params?.solution_type == 'BB' && (
                 <>
                   <div className="dash-con-heading">
                     <div className="col-md-12 row">
@@ -748,7 +712,7 @@ export default function BooksFreelance() {
                   </div>
                 </>
               )}
-              {params?.status === "view-uploaded-chapter" && (
+              {params?.status === "view-uploaded-chapter" &&  params?.solution_type == 'BB' && (
                 <div className="dash-cont-start" style={{ height: "90vh" }}>
                   <div className="row col-md-12 pr-0">
                     <div className="col-md-3 pl-0">
@@ -952,22 +916,15 @@ export default function BooksFreelance() {
                                   <div
                                     className="col-md-8 pull-right pr-0"
                                   >
-                                    <button className="btn bg-success text-white btn-sm br-5 ml-3 pull-right"
-                                    onClick={handleAnotherAnswer.bind(
-                                      this,
-                                      chapter?._id
-                                    )}>
-                                      <span className="fa fa-question-circle mr-2"></span>
-                                      Quizlet Solution
-                                    </button>
-                                    {/* <button className="btn dark btn-sm br-5 pull-right"
+                                    
+                                    <button className="btn dark btn-sm br-5 pull-right"
                                     onClick={handleExpertAnswer.bind(
                                       this,
                                       chapter?._id
                                     )}>
                                       <span className="fa fa-question-circle mr-2"></span>
                                       Bartelby Solution
-                                    </button> */}
+                                    </button>
                                   </div>
                                 )}
                               </h6>
@@ -1024,7 +981,7 @@ export default function BooksFreelance() {
                 </div>
               )}
 
-              {params?.status === "update-expert-answer" && (
+              {params?.status === "update-expert-answer" &&  params?.solution_type == 'BB' && (
                 <div className="dash-cont-start" style={{ height: "90vh" }}>
                   <div className="row col-md-12 pr-0">
                     <h5>Upload Expert Answer</h5>
@@ -1133,114 +1090,8 @@ export default function BooksFreelance() {
                 </div>
               )}
 
-              {params?.status === 'update-another-answer' && (
-                <div className="dash-cont-start" style={{ height: "90vh" }}>
-                <div className="row col-md-12 pr-0">
-                    <h5>Update Another Answer</h5>
-                    <hr />
-                    <div className="col-md-12 flex pl-2">
-                      <div className="col-md-5 pl-0 pr-0">
-                        <p>
-                          Chapter No: {singleQuestion?.chapter_no} -{" "}
-                          {singleQuestion?.chapter_name}
-                        </p>
-                        <p>Problem No: {singleQuestion?.problem_no}</p>
 
-                        <form>
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              value={question}
-                              onChange={(e) => setQuestion(e.target.value)}
-                              className="form-control"
-                              placeholder="Please Enter Question"
-                            />
-                          </div>
-
-                          <div className="form-group">
-                            <textarea
-                              value={sourceCode}
-                              id="sourceCode"
-                              onChange={(e) => {
-                                e.preventDefault();
-                                setSourceCode(e.target.value);
-                              }}
-                              className="form-control"
-                              style={{ height: "250px" }}
-                              placeholder="Enter Source Code"
-                            ></textarea>
-                          </div>
-
-                          <div className="form-group">
-                            <button
-                              className="btn btn-md dark"
-                              onClick={handleExtractAnotherAnswer}
-                            >
-                              <span className="fa fa-save mr-2"></span>
-                              Extract Answer
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                      {sourceCode && (
-                        <div className="col-md-6 pl-2" style={{ display: "none" }}>
-                          {htmlConverterReact(sourceCode)}
-                        </div>
-                      )}
-                      <div className="col-md-6 pr-0">
-                      <h4>
-                        Expert Solutions {converted?.length}{" "}
-                        {sourceCode?.length}
-                      </h4>
-                      <hr className="mt-1 mb-2" />
-                      <div
-                        className="col-md-12 pl-0 pr-0"
-                        style={{
-                          height: "340px",
-                          overflow: "scroll",
-                          borderBottom: "1px solid #ededed",
-                        }}
-                      >
-                        {converted?.map((content, i) => {
-                          return (
-                            <div
-                              className="card p-2 br-5 mb-2"
-                              key={Date.now() + i}
-                            >
-                              {htmlConverterReact(content?.data)}
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="col-md-12 mt-3 pr-0 pull-right">
-                        <button className="dark bg-succcess"
-                        onClick={() => history.push(`/books-freelance/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
-                          <span className="fa fa-times mr-2"></span>
-                          Cancel
-                        </button>
-                        <button
-                          className="btn btn-md dark pull-right"
-                          onClick={UpdateAnotherAnswer}
-                          disabled={converted?.length == "0"}
-                        >
-                          {uploading ? (
-                            <>
-                              <span className="fa fa-spinner mr-2"></span>
-                              Updating ....
-                            </>
-                          ) : (
-                            <>
-                              <span className="fa fa-save mr-2"></span>
-                              Update Solutions
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-              )}
+             
 
             </div>
           </div>

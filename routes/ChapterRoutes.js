@@ -21,8 +21,9 @@ var upload = multer({ storage: storage })
 const router = express.Router();
 
 router
+
     .post('/bartley-chapters',  checkAuth, Chapter.SaveBartlebyChapters)
-    .get('/bartelby-chapters/:isbn/:status',  checkAuth, Chapter.BartelbyChapters)
+    .get('/bartelby-chapters/:isbn?/:status?',  checkAuth, Chapter.BartelbyChapters)
     .post('/bartelby-update-chapters',  checkAuth, Chapter.BartelbyUpdatesChapters)
     .post('/bartelby-clear-chapter',  checkAuth, Chapter.BartelbyClearChapters)
     .post('/bartelby-upload-data', checkAuth, Chapter.BartelbyImportChapter)
@@ -32,7 +33,10 @@ router
     .get('/bartelby-answers/:question_id',  checkAuth, Chapter.BartelbyQuestionAnswers)
     .post('/bartelby-chapter-change-status',  checkAuth, Chapter.BartelbyChaptersChangeStatus)
     .post('/bartelby-update-chapter-answer',  checkAuth, Chapter.BartelbyUpdateChaptersAnswer)
-    
+
+    .post('/quizlet-import-chapters',  checkAuth, Chapter.SaveQuizletChapters)
+    .get('/quizlet-chapters/:isbn?',  checkAuth, Chapter.quizletChapters)
+
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
     .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)
     .get('/qc-data/:isbn',  checkAuth, Chapter.getQCData)

@@ -59,8 +59,8 @@ function BookHeading({books}) {
         history.push(`/books-seo/${isbn}/${id}`);
     }
     
-    const handleBookData = async (isbn) => {
-        history.push(`/books-freelance/${isbn}`);
+    const handleBookData = async (isbn,solution_type) => {
+        history.push(`/books-freelance/${solution_type}/${isbn}`);
     }
 
     const queryClient = useQueryClient();
@@ -97,10 +97,19 @@ function BookHeading({books}) {
                 </>     
                 )}
                 {location?.pathname == '/books/freelance' && (
-                    <Button className="dark text-warning br-10" onClick={handleBookData.bind(this,books.ISBN13)}>
+                    <div className="flex col-md-12" style={{ 
+                        justifyContent: 'space-between',
+                        
+                    }}>
+                    <Button className="dark text-warning br-10" onClick={handleBookData.bind(this,books.ISBN13, 'BB')}>
                         <span className={`fa fa-cog displayIcon mr-2`}></span>
-                        Manage Books
+                        Solution By BB
                     </Button>
+                    <Button className="dark text-warning br-10" onClick={handleBookData.bind(this,books.ISBN13,'QZ')}>
+                        <span className={`fa fa-cog displayIcon mr-2`}></span>
+                        Solution By QZ
+                    </Button>
+                    </div>
                 )}
                 
                 {location?.pathname == '/books/seo' && (

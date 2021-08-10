@@ -97,7 +97,6 @@ app.use("/api/v1/tutor", Routes.TutorRoutes);
 app.use("/api/v1/faq", Routes.FaqRoutes);
 app.use("/api/v1/vendor", Routes.VendorRoutes);
 
-
 app.use("/web/v1/books", WebRoutes.WebBookRoutes);
 app.use("/web/v1/reviews", WebRoutes.WebReviewRoutes);
 app.use("/web/v1/chapter", WebRoutes.WebChapterRoutes);
@@ -107,7 +106,6 @@ app.use("/web/v1/student", WebRoutes.StudentAuthRoutes);
 app.use("/web/v1/student", WebRoutes.StudentRoutes);
 app.use("/web/v1/payment", WebRoutes.WebPaymentRoutes);
 app.use("/web/v1/assignment", WebRoutes.AssignmentRoutes);
-
 
 // app.use("/web/v1/tutor", WebRoutes.TutorAuthRoutes);
 app.use("/web/v1/subject", WebRoutes.WebSubjectRoutes);

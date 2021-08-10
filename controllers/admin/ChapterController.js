@@ -2,7 +2,8 @@ const BartelbyChapter = require('../../models/admin/BartelbyChapter.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const Book = require('../../models/admin/Book.js');
 const csv = require('csv-parser')
-const fs = require('fs')
+const fs = require('fs');
+const QuizletChapter = require('../../models/admin/QuizletChapter.js');
 
 const getChapters = async (isbn) => {
     try {
@@ -988,7 +989,7 @@ const SaveBartlebyChapters = async (req, res) => {
         
         let FinalData = req.body.bartley;
         let filter = {book_isbn: req.body.book_isbn};
-        // return res.send(FinalData);
+        // res.send(FinalData); return;
         let count = await BartelbyChapter.count(filter) ;
         
         if(count === 0){
@@ -1009,6 +1010,8 @@ const SaveBartlebyChapters = async (req, res) => {
         })
     }
 }
+
+
 const BartelbyChapters = async (req, res) => {
     try {
         let filter = {};
@@ -1032,6 +1035,7 @@ const BartelbyChapters = async (req, res) => {
         })
     }
 }
+
 
 const BartelbyUpdatesChapters = async (req, res) => {
     try {
@@ -1340,9 +1344,52 @@ const BartelbyUpdateChaptersAnswer = async (req, res) => {
 }
 
 
+const SaveQuizletChapters = async (req, res) => {
+    try {
+        
+        let FinalData = req.body.quizlet;
+        let filter = {book_isbn: req.body.book_isbn};
+        let count = await QuizletChapter.count(filter) ;
+        // res.send(count); return;
+        if(count === 0){
+            await QuizletChapter.insertMany(FinalData);
+            await Book.findOneAndUpdate({ISBN13: req?.body?.book_isbn},{quizlet_imported: 1})
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: 'chapter inserted'
+            })
+        }
 
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error
+        })
+    }
+}
+const quizletChapters = async (req, res) => {
+    try {
+        let filter = {book_isbn: req.params.isbn, uploaded: 0, answer_uploaded: 0};
+        let data = await QuizletChapter.find(filter);
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
+    SaveQuizletChapters,
+    quizletChapters,
     BartelbyProblems,
     BartelbyUpdateChaptersAnswer,
     BartelbyClearAllChapters,
