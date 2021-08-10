@@ -1070,7 +1070,7 @@ export default function BooksFreelance() {
                         <button
                           className="btn btn-md dark pull-right"
                           onClick={UpdateExpertAnswer}
-                          disabled={converted}
+                          disabled={converted?.length === 0}
                         >
                           {uploading ? (
                             <>
