@@ -13,3 +13,18 @@ POST http://localhost:8080/api/v1/master-module/update-all
 
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyNzI4NDAzNywiZXhwIjoxNjI5ODc2MDM3fQ.qOU4ntpwyJfkYlej17yiXPhEReHJldDZzeL4oJegOIM
+
+
+
+### Add Fields ###
+POST http://localhost:8080/api/v1/admin/add-fields
+Content-Type: application/json
+
+### delete Chapters ###
+POST http://localhost:8080/api/v1/chapter/delete-chapters
+Content-Type: application/json
+
+{
+      "isbn":"9781323156759",
+      "chapter_no":"2"
+}

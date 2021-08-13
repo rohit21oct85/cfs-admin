@@ -55,6 +55,7 @@ router
     .get('/download/:isbn', checkAuth,Chapter.downloadBooks)
     .get('/clearfields',checkAuth, Chapter.clearFields)
     .get('/addfields',checkAuth, Chapter.addFields)
+    .post('/delete-chapters', Chapter.deleteChapters)
     .get('/search-question/:isbn/:search', checkAuth,Chapter.searchQuestion)
 ;
 

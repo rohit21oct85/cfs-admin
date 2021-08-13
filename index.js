@@ -1,3 +1,7 @@
+const OS = require('os');
+const cluster = require('cluster');
+let numCPUs = OS.cpus().length
+
 const dotenv = require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -17,7 +21,7 @@ const app = express();
 app.use(responseTime())
 /* Cron Task */
 var job = new cronJob({
-    cronTime: '10 * * * * *',
+    cronTime: '00 05 00 * * *',
     onTick: function() {
         cfsCronTask()
    },
@@ -75,9 +79,25 @@ const options = {
     .catch(err => console.log(err));
     mongoose.Promise = global.Promise;
 })()
-app.listen(PORT, () => {
-    console.log(`App is running on PORT ${PORT}`);
-})
+
+if(cluster.isMaster) {
+    console.log('Master cluster setting up ' + numCPUs + ' workers...');
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+    cluster.on('online', function(worker) {
+        console.log('Worker ' + worker.process.pid + ' is online');
+    });
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('Worker ' + worker.process.pid + ' died.');
+        console.log('Starting a new worker with new pid ' + worker.process.pid);
+        cluster.fork();
+    });
+}else{
+    app.listen(PORT, () => {
+        console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
+    })
+}
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
@@ -116,9 +136,9 @@ app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
 
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('public/build'));
+    app.use(express.static('build'));
     app.get('/*', (req, res) => {
-        const index = path.join(__dirname, 'public', 'build', 'index.html');
+        const index = path.join(__dirname, 'build', 'index.html');
         res.sendFile(index);
     });
 }

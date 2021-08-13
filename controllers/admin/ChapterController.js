@@ -1386,6 +1386,23 @@ const quizletChapters = async (req, res) => {
         })
     }
 }
+const deleteChapters = async (req, res) => {
+    try {
+        let filter = {book_isbn: req.body.isbn, chapter_no: req.body.chapter_no};
+        let data = await Chapter.deleteMany(filter);
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "deleted"
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     SaveQuizletChapters,
@@ -1419,5 +1436,6 @@ module.exports = {
     GetQCChapterQuestions,
     QCAnswer,
     clearFields,
-    addFields
+    addFields,
+    deleteChapters
 }

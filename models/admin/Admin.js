@@ -27,6 +27,7 @@ const AdminSchema = new mongoose.Schema({
     },
     isActive:{
         type: Boolean,
+        default: false
     },
     status:{
         type: Boolean,

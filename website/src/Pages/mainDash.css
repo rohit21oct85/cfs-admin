@@ -516,7 +516,7 @@ label.form-lable.form-input{
 
 .main-box {
     color: #fff;
-    height: 110px;
+    height: auto;
 }
 .gradient-deepblue {
     background: #6a11cb;
