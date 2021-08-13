@@ -121,7 +121,7 @@ const Logout = async (req, res) => {
         const UserData = {id: decode.id, role: decode.role};
         await Admin.findByIdAndUpdate({_id: decode.id},{isActive: false});
         let newAccessToken = await jwt.sign(UserData, 'sasdasd', {expiresIn: '0s'});
-        res.status(201).json({
+        res.status(200).json({
             message: "successfully loggedout",
             accessToken: newAccessToken
         });    
