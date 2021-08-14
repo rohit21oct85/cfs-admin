@@ -1,6 +1,6 @@
 let API_URL='';
-if(process.env.NODE_ENV === 'development'){
-    API_URL = 'https://cfs-admin-panel.herokuapp.com/api/v1/';
+if(process.env.NODE_ENV === 'production'){
+    API_URL = 'http://65.0.252.57/api/v1';
 }else{
     API_URL = 'http://localhost:8080/api/v1/'
 }
