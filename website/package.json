@@ -30,7 +30,6 @@
     "eject": "react-scripts eject",
     "postbuild": "mv build ../"
   },
-  "proxy": "https://www.crazyforstudy.com/api/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -49,5 +48,5 @@
       "last 1 safari version"
     ]
   },
-"proxy": "http://localhost:3000"
+  "proxy": "https://www.crazyforstudy.com/api/"
 }
