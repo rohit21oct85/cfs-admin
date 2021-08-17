@@ -30,7 +30,7 @@ Content-Type: application/json
 }
 
 ### dashboard ###
-GET http://localhost:3000/api/v1/master-admin/statics
+GET https://admin.crazyforstudy.com/api/v1/master-admin/statics
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyODg1Nzc1NiwiZXhwIjoxNjMxNDQ5NzU2fQ.gmy8WYziVIIg_qcV4SyUfXKxFJPnmEP9BTHOanxPfeA
 
