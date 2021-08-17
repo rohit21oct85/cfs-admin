@@ -39,7 +39,6 @@ export default function Navigation() {
                 'Authorization':'Bearer '+state.access_token
             }
         });
-        alert(response.status)
         if(response.status === 200){
             addToast(response.data.message, { 
                 appearance: 'error',
