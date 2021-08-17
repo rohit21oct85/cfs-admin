@@ -1,41 +1,47 @@
 import React , {useState, useEffect,useRef, useContext} from 'react';
-import { NavLink, useHistory } from 'react-router-dom'
-import { Form } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-import * as api from '../Helper/ApiHelper.jsx';
-import {AuthContext} from '../context/AuthContext.jsx';
-import {AdminContext} from '../context/AdminContext.jsx';
-import useAxios from '../hooks/useAxios';
-import axios from 'axios';
-import * as cons from '../Helper/Cons'
+import { NavLink, useHistory, useLocation, Redirect } from 'react-router-dom'
+
+
+import {AuthContext} from '../context/AuthContext';
 import './login.css';
+import axios from 'axios'
+import * as cons from '../Helper/Cons'
+import { useToasts } from 'react-toast-notifications';
 
 export default function Login() {
     const history = useHistory();
+    const location = useLocation();
+    const { addToast } = useToasts();
     const emailRef = useRef();
     const passwordRef = useRef();
     const [error, setError] = useState(null);
-    const { dispatch:adminDispatch } = useContext(AdminContext);
-    const {state,dispatch } = useContext(AuthContext);
+    const {dispatch,state } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    
+    let API_URL = '';
+    if(process.env.NODE_ENV === 'development'){
+        API_URL = cons.LOCAL_API_URL;
+    }else{
+        API_URL = cons.LIVE_API_URL;
+    }
     const submitForm = async (e) => {
         e.preventDefault();
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         if(email === ''){
-            setError("Please enter email address");
+            addToast('Please enter email address', { appearance: 'error',autoDismiss: true });
             return false;
         }else if(password === ''){
-            setError("Please enter password");
-
+            addToast('Please enter password', { appearance: 'error',autoDismiss: true });
+            passwordRef.current.focus()
             return false;
         }else{
             setLoading(true);
             const formData = {email: emailRef.current.value , password: passwordRef.current.value};
-            const response = await api.post('admin/login', formData);
-            // console.log(response)
-            if(response.response && response.response.status){
-                setError("Email or password not matched");
+            const response = await axios.post(`${API_URL}admin/login`, formData);
+            // console.log(response);
+            if(response.status === 203){
+                addToast(response.data.message, { appearance: 'error',autoDismiss: true });
                 setLoading(false);
             }else{
                 let access_token = response.data.accessToken
@@ -63,71 +69,77 @@ export default function Login() {
                     refresh_token
                 }
                 if(isLoggedIn){
-                    setLoading(false);
-                    await dispatch({type: 'LOGIN', payload: payloadData});
-                    history.push('/dashboard');
-                    window.location.href = '/dashboard'
+                    dispatch({type: 'LOGIN', payload: payloadData});
+                    if(state.role == "6"){
+                        window.location.href = '/upload-question';
+                        emailRef.current.value = ''
+                        passwordRef.current.value = ''
+                
+                    }else{
+                        emailRef.current.value = ''
+                        passwordRef.current.value = ''
+                        window.location.href = '/dashboard';
+                    }
+        
                 }
             }
             
         }   
     }
-    
-    useEffect( () => {
-        let timer1 = setTimeout(() => setError(null), 2500);
-        return () => {
-        clearTimeout(timer1)
-        }
-    },[error]);
-
-    useEffect(checkLoggedUser, [state]);
-    async function checkLoggedUser(){
+    useEffect(checkLoggedInUser,[state]);
+    async function checkLoggedInUser(){
         if(state?.isLoggedIn == "true"){
-            history.push(`/dashboard`);
+            window.location.href = '/dashboard';
         }
     }
-
     return (
-        <>
         <div className="container-fluid p-0 m-0 text-center LoginBg">
-            <NavLink to="/">
-                <img className="logo" src="/logo.png" />
-            </NavLink>
+            <div className="col-md-2">
+                <NavLink to="/">
+                    <img className="logo img-responsive" style={{ width: '250px'}} alt="company Logo" src="/logo_2.png"/>
+                </NavLink>
+            </div>
             <div className="row no-gutter">
                 <div className="col-md-3 loginDiv">
-                    
                 <h4>Administrator Login </h4>    
-                {error && (<p style={{ color: 'red', margin: '0px' }}>{error}</p>)} 
                 <hr />
-                <Form autoComplete="new-password" onSubmit={submitForm}>
-                    <Form.Group controlId="formBasicEmail" className="text-left">
-                        <Form.Label><span className="fa fa-envelope text-success"></span> Email address</Form.Label>
-                        <Form.Control type="email" autoComplete="Off" ref={emailRef} placeholder="Enter email" />
-                        <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                        </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword"  className="text-left">
-                        <Form.Label><span className="fa fa-key text-success"></span> Password</Form.Label>
-                        <div style={{ position: 'relative'}}>
-                            <Form.Control type="password" autoComplete="Off" ref={passwordRef} placeholder="Password" />
-                        </div>
-                    </Form.Group>
-                    <Button 
-                        className="btn btn-md btn-block dark mt-3" 
+                
+                <form autoComplete="Off" onSubmit={submitForm}>
+                    <div className="form-group text-left">
+                        <label> <span className="fa fa-send mr-2"></span> Email address</label>
+                        <input className="form-control" type="email" autoComplete="off" ref={emailRef} placeholder="Enter email" />
+                        <p className="text-muted mt-2">
+                            We'll never share your email with anyone else.
+                        </p>
+                    </div>
+                    <hr />
+                    <div className="form-group text-left">
+                        <label> <span className="fa fa-lock mr-2"></span> Password</label>
+                        <input className="form-control" type="password" autoComplete="Off" ref={passwordRef} placeholder="Password" />
+                        <p className="text-muted mt-2">
+                            We'll never share your password with anyone else.
+                        </p>
+                    </div>
+                    <hr />
+                    <button 
+                        className="btn btn-md btn-block btn-success dark w-100" 
                         type="submit"
-                        style={{ width: '100%'}}
                     >
-                        <span className="fa fa-lock mr-2 p-2"></span>
-                        {loading ? 'Authenticating...':'Login Account'}
-                    </Button>
-                    </Form>
+                        {loading ? (
+                            <>
+                            <span className="fa fa-spinner mr-2"> </span> Authenticating...
+                            </>
+                        ):(
+                            <>
+                            <span className="fa fa-lock mr-2"> </span> Login Your Account
+                            </>
+                        )}
+                    </button>
+                    </form>
                 </div>
             </div>
             
         </div>
-        </>
     )
 }
  

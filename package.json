@@ -8,7 +8,7 @@
         "client": "cd website && npm run start",
         "backend": "nodemon index.js",
         "dev": "npm-run-all --parallel backend client",
-        "prod:build": "cd public && rm -rf build && cd ../website && npm run build"
+        "create:build": "rm -rf build && cd website && npm run build"
     },
     "keywords": [
         "acadmic search engine, nodejs, mongodb, react js"
@@ -27,6 +27,7 @@
         "express": "^4.17.1",
         "express-session": "^1.17.1",
         "jsonwebtoken": "^8.5.1",
+        "loadtest": "^5.1.2",
         "md5": "^2.3.0",
         "mongodb": "^3.6.7",
         "mongoose": "^5.12.10",

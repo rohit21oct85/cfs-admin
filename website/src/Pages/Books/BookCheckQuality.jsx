@@ -35,6 +35,12 @@ const {data, isLoading} = useSingleBook();
 const {data: qc_data, isLoading: qcd_loading} = useBookQCData();
 const {data: qc_questions, isLoading: qc_loading} = useChapterQuestions();
 
+useEffect(()=> {
+    if(location.pathname === '/books-check-quality'){
+        history.push(`/books/check-quality`)
+    }
+},[state, params?.isbn]);
+
 
 let API_URL = '';
 if(process.env.NODE_ENV === 'development'){
@@ -48,6 +54,8 @@ const options = {
         'Authorization':'Bearer '+state.access_token
     }
 };
+
+
 
 const [formData, setFormData] = useState({});
 const [error, setError] = useState();

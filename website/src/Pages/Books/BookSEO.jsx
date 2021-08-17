@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect, useRef} from 'react'
 import '../mainDash.css';
-import {  useParams, Link, useHistory  } from "react-router-dom";
+import {  useParams, Link, useHistory, useLocation  } from "react-router-dom";
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
 import {LoadingComp} from '../../components/LoadingComp';
@@ -23,11 +23,19 @@ export default function BookSEO() {
 
 const history = useHistory();
 const params = useParams();
+const lodation = useLocation();
 const { addToast } = useToasts();
 const {state} = useContext(AuthContext);
 const {data:book} = useSingleBook();
 const {data:total} = useTotalBookQuestion();
 const {data:seo, isLoading} = useBookSEO();
+
+useEffect(()=> {
+    if(location.pathname === '/books-seo'){
+        history.push(`/books/seo`)
+    }
+  },[state, params?.isbn]);
+
 
 let API_URL = '';
 if(process.env.NODE_ENV === 'development'){
@@ -67,7 +75,7 @@ const mutation = useMutation(formData => {
     onSuccess: () => {
         queryClient.invalidateQueries('faqs')
         setLoading(false);
-        history.push(`/book-seo/${params.isbn}/${params.book_id}`);
+        history.push(`/books-seo/${params.isbn}/${params.book_id}`);
         addToast('FAQ`s added successfully', { appearance: 'success',autoDismiss: true });
     }
 });

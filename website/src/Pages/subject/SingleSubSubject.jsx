@@ -9,7 +9,7 @@ function SingleSubSubject({sub}) {
         history.push(`delete-data/sub-subject/delete/${e}`);
     }
     return (
-        <div className="small-card" key={sub._id} id={`card-${sub._id}`}>
+        <div className="lg-card" key={sub._id} id={`card-${sub._id}`}>
         <div className="subject-card-body">
             <div className="admin-name"> 
                 <div className="name-label">

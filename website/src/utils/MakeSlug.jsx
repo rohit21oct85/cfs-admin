@@ -54,6 +54,19 @@ const downloadData = async (data,isbn) => {
     a.click();
     document.body.removeChild(a);
 }
+export function checkExists(arr = [], field, el){
+    if(typeof arr !== "undefined") {
+        return Array.from(arr)?.some(elem => elem[field] == el);
+    }
+}
+export function getFilteredData(arrayData, match_field,field_value,field_name){
+    if(typeof arrayData !== "undefined"){
+     const filtereData = Array?.from(arrayData)?.filter(element => element[match_field] == field_value);
+     if(filtereData[0] !== undefined){
+       return filtereData && filtereData[0][field_name];
+     }
+    }
+  }
 
 export {
     MakeSlug,

@@ -16,11 +16,21 @@ const BartelbyChapterSchema = new mongoose.Schema({
     uploaded: {
         type: Number,
         default: 0
+        
+    },
+    answer_uploaded: {
+        type: Number,
+        default: 0
     },
     total_question: {
         type: Number,
         default: 0
+    },
+    total_uploaded: {
+        type: Number,
+        default: 1
     }
+
 });
 
 module.exports = mongoose.model('BartelbyChapter', BartelbyChapterSchema);

@@ -11,10 +11,33 @@ import * as cons from '../../Helper/Cons.jsx'
 import useRoles from '../../hooks/useRoles';
 import { useToasts } from 'react-toast-notifications';
 import useSingleAdmin from '../../hooks/useSingleAdmin';
+import useAccessModules from '../../hooks/useAccessModules';
+import useAccessModulePermission from '../../hooks/useAccessModulePermission';
 
 export default function CreateAdmin() {
     const history = useHistory();
     const params = useParams();
+    
+    let accessUrl = useAccessModules();
+    useEffect(checkPageAccessControl,[accessUrl]);
+    function checkPageAccessControl(){
+        if(accessUrl === false){
+            history.push('/403');
+        }
+    }
+    const create = useAccessModulePermission('create');
+    const update = useAccessModulePermission('update');
+    const upload = useAccessModulePermission('upload');
+    const Delete = useAccessModulePermission('delete');
+    const view = useAccessModulePermission('view');
+    
+    useEffect(manageAccess,[create, update, upload, view]);
+    function manageAccess(){
+        if(create === false || update === false || upload === false || view === false){
+            history.push(`/admin/students-management`)
+        }
+    }
+
     const {state} = useContext(AuthContext);
     const { addToast } = useToasts();
     const {data:roles , isLoading:roleLoading} = useRoles()
@@ -34,25 +57,32 @@ export default function CreateAdmin() {
     const [formData, setFormData] = useState({});
     const [fullname, setFullName] = useState("")
     const [email, setEmail] = useState("")
+    const [mobile, setMobile] = useState("")
     const [password, setPassword] = useState("")
     const [role, setRole] = useState("")
     const [status, setStatus] = useState("")
     async  function handleSubmit(e){
         e.preventDefault();
         let response = null;
+        let userole = params?.id ? user?.role: role;
+        let roleName = roles.filter(r => r?.role == userole);
+        // console.log(roleName[0].name); return;
         formData['fullname'] = params?.id ? user?.fullname : fullname;
         formData['email'] = params?.id ? user?.email : email;
+        formData['mobile'] = mobile;
         formData['password'] = password === "" ? 'password': password;
-        formData['role'] = params?.id ? user?.role: role;
+        formData['role'] = userole;
+        formData['role_name'] = roleName[0].name
         formData['status'] = params?.id ? user?.status: status;
         // console.log(formData); return;
 
         if(params.id){
             response = await axios.patch(`${API_URL}master-admin/update/${params.id}`,formData, options);
-            addToast("admin added successfully", { appearance: 'success',autoDismiss: true });
-        }else{
-            response = await axios.post(`${API_URL}master-admin/create`,formData, options);
             addToast("admin updated successfully", { appearance: 'success',autoDismiss: true });
+        }else{
+
+            response = await axios.post(`${API_URL}master-admin/create`,formData, options);
+            addToast("admin added successfully", { appearance: 'success',autoDismiss: true });
         }
         history.push('/master-admin');
     
@@ -99,9 +129,8 @@ return (
                         <div className="col-md-12 no-gutter p-0 mt-2">
                        
 
-                        <Form autoComplete="off" className="col-md-6 p-0">
+                        <Form autoComplete="off" className="col-md-3 p-0">
                             <Form.Group method="POST">
-                                <Form.Label>Admin Full Name</Form.Label>
                                 <Form.Control name="fullname" autoComplete="off"
                                 value={params?.id ? user?.fullname: fullname}
                                 onChange={e => {
@@ -122,7 +151,6 @@ return (
                             </Form.Group>
                                 
                             <Form.Group method="POST">
-                                <Form.Label>Admin Email</Form.Label>
                                 <Form.Control name="email" autoComplete="nope"
                                 value={params?.id ? user?.email: email}
                                 onChange={e => {
@@ -141,9 +169,7 @@ return (
                                     }
                                 } placeholder="Enter Admin Email"/>
                             </Form.Group>
-                                
                             <Form.Group method="POST">
-                                <Form.Label>Admin Password</Form.Label>
                                 <Form.Control name="password" autoComplete="off"
                                 type="password"
                                 onChange={e => {
@@ -160,15 +186,14 @@ return (
 
                             <div className="row">
                                 <div className="col-md-6">
-                                    <label> Role</label>
                                     <select className="form-control" name="role"
-                                    value={params?.id ? user?.role : role}
+                                    value={user?.role ?? role}
                                     onChange={e => {
                                         e.preventDefault();
                                         if(params?.id){
                                             setUser({...user, role: e.target.value})
                                         }else{
-                                            setRole(e.target.value)
+                                             setRole(e.target.value)
                                         }
                                     }}
                                     >
@@ -176,7 +201,7 @@ return (
                                         {roles?.map( role => {
                                             if(role.role > 1){
                                                 return(
-                                                    <option value={role?.role} key={role?._id}>{role?.name}</option>
+                                                    <option value={role?.role}  key={role?._id}>{role?.name}</option>
                                                 )
                                             }
                                         })}
@@ -184,7 +209,6 @@ return (
                                 </div>
                                 
                                 <div className="col-md-6">
-                                    <label> Status</label>
                                     <select className="form-control" name="role"
                                     value={params?.id ? user?.status : status}
                                     onChange={e => {

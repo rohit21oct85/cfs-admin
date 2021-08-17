@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect, useRef} from 'react'
 import '../mainDash.css';
-import {  useParams, Link, useHistory  } from "react-router-dom";
+import {  useParams, Link, useHistory, useLocation  } from "react-router-dom";
 
 import {AuthContext} from '../../context/AuthContext';
 import {Notification} from '../../components/Notification';
@@ -16,7 +16,8 @@ export default function BooksChapters() {
 
 const history = useHistory();
 const params = useParams();
-    
+const location = useLocation();
+
 const {state} = useContext(AuthContext);
 
 const {data, isLoading, error} = useChapters();
@@ -26,6 +27,11 @@ const [sections, setSections] = useState([]);
 const [excerise, setExcerise] = useState([]);
 const [problems, setProblems] = useState([]);
 
+useEffect(()=> {
+    if(location?.pathname === '/books-chapters'){
+        history.push(`/books/chapters`)
+    }
+},[state, params?.isbn]);
 
 let API_URL = '';
 if(process.env.NODE_ENV === 'development'){
@@ -134,7 +140,7 @@ return (
                 <span className="fa fa-arrow-left"></span>
                 </Link>
                 <br />
-                <Link to={`/upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`} className="btn btn-sm mt-2 dark">
+                <Link to={`/books-upload-chapters/${params.isbn}/${params.book_name}/${params.book_id}`} className="btn btn-sm mt-2 dark">
                 <span className="fa fa-cloud"></span>
                 </Link>
 

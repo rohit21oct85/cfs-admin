@@ -9,6 +9,7 @@ export default function useQuestionAnswers() {
     const params = useParams();
     const isbn = params.isbn;
     const section_id = params?.section_id;
+    const question_id = params?.question_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -16,9 +17,9 @@ export default function useQuestionAnswers() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery([`question-answeres-${section_id}`], async () => {
-        if(section_id){
-            const result = await axios.get(`${API_URL}chapter/bartelby-question-answers/${isbn}/${section_id}`,{
+    return useQuery([`question-answeres-${section_id}-${question_id}`], async () => {
+        if(section_id && question_id){
+            const result = await axios.get(`${API_URL}chapter/bartelby-answers/${question_id}`,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token

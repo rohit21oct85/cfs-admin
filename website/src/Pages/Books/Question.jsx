@@ -9,8 +9,12 @@ function Question({problem, search}) {
     
     const history = useHistory();
     const manageQuestion = (e) => {
-        history.push(`/book-chapter-add-question/${e?.q_id}`)
+        history.push(`/books-chapter-add-question/${e?.q_id}`)
     }
+    const manageQuestionSolutions = (e) => {
+        history.push(`/books-chapter-question-answer/${e?.q_id}`)
+    }
+
     let answers = '';
     if(problem?.source == "bartelby"){
         answers = JSON.parse(problem?.answer);
@@ -25,6 +29,9 @@ function Question({problem, search}) {
             <div className="subject-card-heading pt-2"> 
                 <div className="problem_no">Q.No: {problem?.problem_no} </div>
                 <div>
+                    <button className="btn btn-sm bg-primary text-white mr-2"
+                    onClick={manageQuestionSolutions.bind(this,{q_id: problem?.q_id})}>
+                        <span className="fa fa-eye mr-2"></span>View Solution</button>
                     <button className="btn btn-sm dark"
                     onClick={manageQuestion.bind(this,{q_id: problem?.q_id})}>Manage Question</button>
                 </div>    

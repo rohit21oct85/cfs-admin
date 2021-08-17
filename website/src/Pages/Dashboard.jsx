@@ -22,19 +22,148 @@ return (
                 <div className="row">
                     <div className="col-md-12 pl-0">
                     {state.role == 1 && (
-                    <div className="col-md-3 card ml-3  pt-2 pb-2 main-box gradient-ibiza">
-                        <div className="card-body pt-0 pb-0 pl-0">
+                    <div className="row" style={{
+                        flexWrap: 'wrap',
+                        marginLeft: '15px',
+                        marginBottom: '10px'
+                    }}>
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
                             <div className="box-head">
-                                <h4>Admin</h4>
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of User Registered</h4>
                                 <div className="box-icon">
-                                <span className="fa fa-users"></span>
+                                    <span className="fa fa-users" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        top: '25%',
+                                        bottom: '25%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
                                 </div>
                             </div>
-                            <div className="main-box-text">
-                                <b>Total: 1 </b> 
-                            </div>
-                            
                         </div>
+                    </div>
+                    
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of Tutor Registered</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-users" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        top: '25%',
+                                        bottom: '25%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of Book Listed</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-book" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        bottom: '5%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of Questions</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-question" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        bottom: '5%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of Unsolved Questions</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-question" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        bottom: '5%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 pl-3 pr-3 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of TBS Requests</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-question" style={{
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        bottom: '5%',
+                                        textShadow: '2px 2px #000'
+                                    }}>25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     </div>
                     )}    
                     

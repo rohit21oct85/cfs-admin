@@ -2,7 +2,8 @@ const BartelbyChapter = require('../../models/admin/BartelbyChapter.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const Book = require('../../models/admin/Book.js');
 const csv = require('csv-parser')
-const fs = require('fs')
+const fs = require('fs');
+const QuizletChapter = require('../../models/admin/QuizletChapter.js');
 
 const getChapters = async (isbn) => {
     try {
@@ -952,13 +953,8 @@ const clearFields = async (req, res) => {
 }
 const addFields = async (req, res) => {
 
-    await Chapter.updateMany({},
-    {
-        "flag": "notassigned",
-        "option": "",
-        "assigned_to": "",
-        "assigned_at": null
-    });
+    // await Chapter.updateMany({},{answer_uploaded: false});
+    // await BartelbyChapter.updateMany({},{answer_uploaded: 0});
     res.status(201).json({
         error: false,
         message: "field cleared"
@@ -993,7 +989,7 @@ const SaveBartlebyChapters = async (req, res) => {
         
         let FinalData = req.body.bartley;
         let filter = {book_isbn: req.body.book_isbn};
-        // return res.send(FinalData);
+        // res.send(FinalData); return;
         let count = await BartelbyChapter.count(filter) ;
         
         if(count === 0){
@@ -1014,13 +1010,16 @@ const SaveBartlebyChapters = async (req, res) => {
         })
     }
 }
+
+
 const BartelbyChapters = async (req, res) => {
     try {
         let filter = {};
+
         if(req?.params?.status === "import-chapter"){
             filter = {book_isbn: req.params.isbn, uploaded: 0};
-        }else{
-            filter = {book_isbn: req.params.isbn, uploaded: 1};
+        }else if(req?.params?.status === "view-uploaded-chapter"){
+            filter = {book_isbn: req.params.isbn, uploaded: 1, answer_uploaded: 0};
         }
         let data = await BartelbyChapter.find(filter);
         res.status(201).json({
@@ -1037,12 +1036,18 @@ const BartelbyChapters = async (req, res) => {
     }
 }
 
+
 const BartelbyUpdatesChapters = async (req, res) => {
     try {
-        await BartelbyChapter.findOneAndUpdate({
+        const filter = {
             book_isbn: req.body.book_isbn, 
             section_id: req.body.section_id
-        },{uploaded: 1});
+        };
+        const updateData = {
+            uploaded: 1,
+            total_uploaded: 1
+        }
+        await BartelbyChapter.findOneAndUpdate(filter,updateData);
         res.status(201).json({
             error: false,
             status: 201,
@@ -1063,7 +1068,11 @@ const BartelbyImportChapter = async (req, res) => {
         const FinalData = req?.body?.chapters;
         const book_isbn = req?.body?.book_isbn;
         const section_id = req?.body?.section_id;
-        const countChapter = await Chapter.countDocuments({book_isbn: book_isbn, section_id: section_id});
+        const filter = {
+            book_isbn: book_isbn,
+            section_id: section_id
+        }
+        const countChapter = await Chapter.countDocuments(filter);
         let message = '';
         if(countChapter > 0){
             var options = { upsert: true, new: true, setDefaultsOnInsert: true };  
@@ -1082,6 +1091,7 @@ const BartelbyImportChapter = async (req, res) => {
                     problem_no: data.problem_no,
                     question: data.question,
                     answer: data.answer,
+                    answer_uploaded: data.answer_uploaded,
                 }}, options, async (err, result) => {
                     if(err){
                         return res.status(409).json({
@@ -1102,11 +1112,10 @@ const BartelbyImportChapter = async (req, res) => {
             "question_uploaded": true,
             "total_question": +uploaded?.total_question + +FinalData?.length
         });
-        await BartelbyChapter.findOneAndUpdate({
-            book_isbn: book_isbn,
-            section_id: section_id
-        },{
-            "total_question": +FinalData?.length
+        
+        await BartelbyChapter.findOneAndUpdate(filter,{
+            "total_question": +FinalData?.length,
+            "total_uploaded": 1
         });
         
         res.status(201).json({
@@ -1123,12 +1132,17 @@ const BartelbyImportChapter = async (req, res) => {
         })
     }
 }
-const BartelbyQuestionAnswers = async (req, res) => {
+const BartelbyProblems = async (req, res) => {
     try {
         
         const data = await Chapter.find({
             book_isbn: req?.params?.book_isbn,
-            section_id: req?.params?.section_id
+            section_id: req?.params?.section_id,
+            answer_uploaded: false  
+        },{
+            _id: 1,
+            sequence: 1,
+            problem_no: 1
         }).sort({
             sequence: 1,
         })
@@ -1146,15 +1160,49 @@ const BartelbyQuestionAnswers = async (req, res) => {
         })
     }
 }
+const BartelbyQuestionAnswers = async (req, res) => {
+    try {
+        const projection = {
+            _id: 1,
+            chapter_name: 1,
+            chapter_no:1 ,
+            problem_no: 1,
+            question: 1,
+            answer: 1,
+            expert_answer: 1,
+            sequence:1
+        }
+        const data = await Chapter.find({
+            _id: req?.params?.question_id
+        },projection);
+
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+
+
 const BartelbyChaptersChangeStatus = async (req, res) => {
     try {
         let section_id = req?.body?.section_id;
         let book_isbn = req?.body?.book_isbn;
+        
         await BartelbyChapter.findOneAndUpdate({
             section_id: section_id, 
             book_isbn: book_isbn
         },{
-            uploaded: 0
+            uploaded: 0,
+            total_uploaded: 1
         });
         
         res.status(201).json({
@@ -1176,16 +1224,34 @@ const BartelbyClearChapters = async (req, res) => {
         let section_id = req?.body?.section_id;
         let book_isbn = req?.body?.book_isbn;
         const total_chapters = await Chapter.count({book_isbn: book_isbn, section_id: section_id, source: 'bartelby'});
-        await Chapter.deleteMany({book_isbn: book_isbn, section_id: section_id, source: 'bartelby'});
         await BartelbyChapter.findOneAndUpdate({
             section_id: section_id, 
             book_isbn: book_isbn
-        },{
-            uploaded: 0
-        });
-        // await Chapter.deleteMany({book_isbn: book_isbn,source: 'bartelby'});
+        },{uploaded: 0, total_question: 0, total_uploaded: 0});
+        
         const uploaded = await Book.findOne({ISBN13: book_isbn});
+        
         await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: +uploaded?.total_question - +total_chapters});
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "Chapter Cleared"
+        })
+        
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const BartelbyDeleteAllChapters = async (req, res) => {
+    try {
+        let book_isbn = req?.body?.book_isbn;
+        await BartelbyChapter.deleteMany({book_isbn: book_isbn});
+        await Chapter.deleteMany({book_isbn: book_isbn});
+        await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: 0, bartlyby_imported: false, question_uploaded: false});
         res.status(201).json({
             error: false,
             status: 201,
@@ -1203,8 +1269,8 @@ const BartelbyClearChapters = async (req, res) => {
 const BartelbyClearAllChapters = async (req, res) => {
     try {
         let book_isbn = req?.body?.book_isbn;
-        await BartelbyChapter.updateMany({book_isbn: book_isbn},{uploaded: 0},{multi: true});
-        await Chapter.deleteMany({book_isbn: book_isbn,source: 'bartelby'});
+        await BartelbyChapter.updateMany({book_isbn: book_isbn},{uploaded: 0, total_question: 0, total_uploaded: 0},{multi: true});
+        
         await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: 0});
         
         res.status(201).json({
@@ -1221,16 +1287,47 @@ const BartelbyClearAllChapters = async (req, res) => {
         })
     }
 }
-const BartelbyChaptersAnswer = async (req, res) => {
+const BartelbyUpdateChaptersAnswer = async (req, res) => {
     try {
         let question_id = req?.body?.question_id;
         let expert_answer = req?.body?.expert_answer;
         let question = req?.body?.question;
-        await Chapter.findByIdAndUpdate({_id: question_id,source: 'bartelby'},{
-            expert_answer: expert_answer,
-            question:question
+        let source = req?.body?.source;
+        const ChapterData = await Chapter.findOne({_id: question_id,source: 'bartelby'});
+        let updateData;
+        if(source === 'bartelby'){
+            updateData = {
+                expert_answer: expert_answer,
+                question:question,
+                answer_uploaded: true
+            }
+        }else{
+            updateData = {
+                another_answer: expert_answer,
+                question:question,
+                answer_uploaded: true
+            }
+        }
+        await Chapter.findByIdAndUpdate({_id: question_id,source: 'bartelby'},updateData);
+
+        const BChapterSectionID = ChapterData?.section_id
+        const BChapter = await BartelbyChapter.findOne({section_id: BChapterSectionID});
+        const ChapterCount = await BartelbyChapter.countDocuments({section_id: BChapterSectionID});
+        const total_uploaded = BChapter?.total_uploaded;
+        const total_question = BChapter?.total_question;
+        const sequence = ChapterData?.sequence;
+
+        if(total_question === ChapterCount){
+            await BartelbyChapter.findOneAndUpdate({section_id: BChapterSectionID},{
+                answer_uploaded: 1
+            });
+        }
+        await BartelbyChapter.findOneAndUpdate({section_id: BChapterSectionID},{
+            total_uploaded: total_uploaded + 1
         });
         
+       
+       
         res.status(201).json({
             error: false,
             status: 201,
@@ -1247,11 +1344,73 @@ const BartelbyChaptersAnswer = async (req, res) => {
 }
 
 
+const SaveQuizletChapters = async (req, res) => {
+    try {
+        
+        let FinalData = req.body.quizlet;
+        let filter = {book_isbn: req.body.book_isbn};
+        let count = await QuizletChapter.count(filter) ;
+        // res.send(count); return;
+        if(count === 0){
+            await QuizletChapter.insertMany(FinalData);
+            await Book.findOneAndUpdate({ISBN13: req?.body?.book_isbn},{quizlet_imported: 1})
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: 'chapter inserted'
+            })
+        }
 
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error
+        })
+    }
+}
+const quizletChapters = async (req, res) => {
+    try {
+        let filter = {book_isbn: req.params.isbn, uploaded: 0, answer_uploaded: 0};
+        let data = await QuizletChapter.find(filter);
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const deleteChapters = async (req, res) => {
+    try {
+        let filter = {book_isbn: req.body.isbn, chapter_no: req.body.chapter_no};
+        let data = await Chapter.deleteMany(filter);
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "deleted"
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
-    BartelbyChaptersAnswer,
+    SaveQuizletChapters,
+    quizletChapters,
+    BartelbyProblems,
+    BartelbyUpdateChaptersAnswer,
     BartelbyClearAllChapters,
+    BartelbyDeleteAllChapters,
     BartelbyClearChapters,
     BartelbyChaptersChangeStatus,
     BartelbyQuestionAnswers,
@@ -1277,5 +1436,6 @@ module.exports = {
     GetQCChapterQuestions,
     QCAnswer,
     clearFields,
-    addFields
+    addFields,
+    deleteChapters
 }

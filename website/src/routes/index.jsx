@@ -16,7 +16,8 @@ import BooksChapters from '../Pages/Books/BooksChapters.jsx';
 import BookRatingReview from '../Pages/Books/BookRatingReview.jsx';
 import BookFaqQuestion from '../Pages/Books/BookFaqQuestion.jsx';
 import BookSEO from '../Pages/Books/BookSEO.jsx';
-import BooksBartleby from '../Pages/Books/BooksBartleby.jsx';
+import BooksFreelance from '../Pages/Books/BooksFreelance';
+import UploadQuestion from '../Pages/Books/UploadQuestion';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 import SimilarBooks from '../Pages/Books/SimilarBooks.jsx';
 import QAData from '../Pages/QandA/QAData.jsx';
@@ -24,6 +25,8 @@ import QAData from '../Pages/QandA/QAData.jsx';
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import AllTutors from '../Pages/Tutor/AllTutors.jsx';
 import TutorDetails from '../Pages/Tutor/TutorDetails.jsx';
+
+import VendorList from '../Pages/vendor/VendorList.jsx';
 
 import FaqComponent from '../Pages/FAQ/AllFaq.jsx';
 import CreateFaq from '../Pages/FAQ/CreateFaq.jsx';
@@ -37,15 +40,14 @@ import CreateAdmin from '../Pages/Admin/CreateAdmin.jsx';
 import RoleList from '../Pages/Role/RoleList.jsx';
 import CreateRole from '../Pages/Role/CreateRole.jsx';
 import ModuleList from '../Pages/Module/ModuleList.jsx';
-import CreateModule from '../Pages/Module/CreateModule.jsx';
 import CreateModulePassword from '../Pages/Module/CreateModulePassword.jsx';
-import PermissionGroupList from '../Pages/PermissionGroup/PermissionGroupList.jsx';
-import RolePermissionList from '../Pages/Permission/RolePermissionList.jsx';
-import RolePermissions from '../Pages/Role/RolePermissions.jsx';
-import UserPermissionList from '../Pages/Permission/UserPermissionList.jsx';
+import RoleModuleList from '../Pages/Permission/RoleModuleList.jsx';
+
 import UploadChapters from '../Pages/Chapters/UploadChapters.jsx';
 import ModifyChapters from '../Pages/Chapters/ModifyChapters.jsx';
 
+
+import SamplePage from '../Pages/Sample/SamplePage.jsx'
 
 export const guestRoutes =  [
     { 
@@ -59,6 +61,10 @@ export const privateRoutes = [
     {
         path: '/dashboard',
         component: Dashboard
+    },
+    {
+        path: '/sample',
+        component: SamplePage
     },
     {
         path: '/my-profile',
@@ -109,6 +115,16 @@ export const privateRoutes = [
         component: ViewData
     },
     {
+        path: '/books/:type',
+        component: AllBookList
+    },
+    
+    {
+        path: '/books-authoring',
+        component: AllBookList
+    },
+
+    {
         path: '/books/:subject?/:sub_subject_name?/:sub_subject_id?',
         component: AllBookList
     },
@@ -131,43 +147,47 @@ export const privateRoutes = [
         component: UploadBooks
     },
     {
-        path: '/book-chapters/:isbn/:book_name/:book_id',
+        path: '/books-chapters/:isbn?/:book_name?/:book_id?',
         component: BooksChapters
     },
     {
-        path: '/upload-chapters/:isbn/:book_name/:book_id',
+        path: '/upload-question',
+        component: UploadQuestion
+    },
+    {
+        path: '/books-upload-chapters/:isbn?/:book_name?/:book_id?',
         component: UploadChapters
     },
     {
-        path: '/book-chapter-add-question/:q_id',
+        path: '/books-chapter-add-question/:q_id?',
         component: ModifyChapters
     },
     {
-        path: '/book-rating-review/:isbn/:book_id/:review_id?',
+        path: '/books-rating-review/:isbn/:book_id/:review_id?',
         component: BookRatingReview
     },
     
     {
-        path: '/book-faq/:isbn/:book_id/:faq_id?',
+        path: '/books-faq/:isbn/:book_id/:faq_id?',
         component: BookFaqQuestion
     },
     
     
     {
-        path: '/book-seo/:isbn/:book_id?/:seo_id?',
+        path: '/books-seo/:isbn?/:book_id?/:seo_id?',
         component: BookSEO
     },
     {
-        path: '/books-bartleby/:isbn?/:status?/:section_id?/:question_id?',
-        component: BooksBartleby
+        path: '/books-freelance/:solution_type?/:isbn?/:status?/:section_id?/:question_id?',
+        component: BooksFreelance
     },
     {
-        path: '/book-similar-books/:isbn/:book_id?',
+        path: '/books-similar-books/:isbn?/:book_id?',
         component: SimilarBooks
     },
 
     {
-        path: '/book-check-quality/:isbn/:book_id/:chapter?/:chapter_no?/:status?/:remark?/:question_id?',
+        path: '/books-check-quality/:isbn?/:book_id?/:chapter?/:chapter_no?/:status?/:remark?/:question_id?',
         component: BookCheckQuality
     },
 
@@ -201,7 +221,11 @@ export const privateRoutes = [
     {
         path: '/qa-data/:subject?/:subject_id?/:sub_subject?/:sub_subject_id?/:status?/:chield_subject_id?/:chield_subject?/:page?',
         component: QAData
-    }
+    },
+    {
+        path: '/manage-vendor/:vendor_id?',
+        component: VendorList
+    },
     
 ];
 
@@ -223,35 +247,17 @@ export const adminRoutes = [
     {
         path: '/master-role',
         component: RoleList
-    },    
-    {
-        path: '/view-permission/:role_name/:role_id',
-        component: RolePermissions
-    },    
+    },       
     
     {
-        path: '/master-module',
+        path: '/app-modules/:type?/:id?',
         component: ModuleList
     }, 
-    {
-        path: '/master-module/create',
-        component: CreateModule
-    }, 
-    {
-        path: '/master-module/update/:id',
-        component: CreateModule
-    }, 
     
     {
-        path: '/master-module/password/:module_name/:module_id',
+        path: '/app-module/set-password/:module_name?/:module_id?/:module_method?/:id?',
         component: CreateModulePassword
     },
-     
-    {
-        path: '/master-module/password/:module_name/:module_id/:module_method/:id',
-        component: CreateModulePassword
-    },
-
     {
         path: '/master-role/create',
         component: CreateRole
@@ -262,28 +268,9 @@ export const adminRoutes = [
         component: CreateRole
     },
     
-    {
-        path: '/master-permission-group',
-        component: PermissionGroupList
-    },
-        
-    {
-        path: '/master-permission-group/:module_name/update/:id',
-        component: PermissionGroupList
-    },
 
     {
-        path: '/role-permission',
-        component: RolePermissionList
-    },
-    {
-        path: '/role-permission/update/:role_name/:role_id',
-        component: RolePermissionList
-    },
-    
-    {
-        path: '/user-permission',
-        component: UserPermissionList
+        path: '/role-modules/:type?/:role?/:role_name?/:role_id?/:email?',
+        component: RoleModuleList
     }
-
 ]

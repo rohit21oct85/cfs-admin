@@ -11,15 +11,23 @@ const AdminSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    mobile: {
+        type: String,
+    },
     password: {
         type: String,
         required: true,
         trim: true
     },
     role:{
-        type: String,
-        required: true,
-        default: 2
+        type: Number
+    },
+    role_name:{
+        type: String
+    },
+    isActive:{
+        type: Boolean,
+        default: false
     },
     status:{
         type: Boolean,

@@ -38,6 +38,23 @@ const UpdateModule = async (req, res) =>{
         });
     }
 }
+const UpdateAllModule = async (req, res) =>{
+    try {
+        let AllModules = Module.find({});
+
+        await AllModules.map( module => {
+            Module.findByIdAndUpdate({_id: module?._id},{
+                module_slug: module_name.toLowerCase().replace(" ","-")
+            })
+        })
+
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+}
+
 const ViewModule = async (req, res) => {
     try{
         const ModuleData = await Module.findOne({_id: req.params.id},{__v: 0});
@@ -82,6 +99,7 @@ const DeleteModule = async (req, res) =>{
 module.exports = {
     CreateModule,
     UpdateModule,
+    UpdateAllModule,
     ViewModule,
     ViewAllModule,
     DeleteModule,

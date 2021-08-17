@@ -5,18 +5,20 @@ const ModuleSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    module_slug: {
+        type: String
+    },
     description: {
         type: String,
         required: true,
-        unique: true,
     },
-    role_access:{
-        type: Number,
-        required: true
-    },
-    
     icon:{
         type: String
+    },
+    
+    showMenu:{
+        type: Boolean,
+        default: true
     },
 
     status:{
