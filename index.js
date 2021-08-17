@@ -72,9 +72,30 @@ mongoose.connect(MONGO_URI, options)
     .then(() => console.log('Mongo DB Connected on Server'))
     .catch(err => console.log(err.message));
 
-app.listen(PORT, () => {
+var server = app.listen(PORT, () => {
     console.log(`App is running on PORT ${PORT}`);
 })
+
+const io = require('socket.io')(server);
+
+io.on('connection', function(socket) {
+    console.log('Socket Connected',socket.id);
+
+    socket.on('disconnect', () => { 
+        console.log("Client disconnected");
+    });
+
+    // socket.on('orderCreated', ()=>{
+    //     console.log('order created');
+    //     io.sockets.emit('refreshOrder');  //emit to everyone
+    // })
+    // socket.on('firstTimeTableRefresh',()=>{
+    //     console.log('first time')
+    //     io.sockets.emit('refreshOrder');
+    // })
+    
+});
+
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);

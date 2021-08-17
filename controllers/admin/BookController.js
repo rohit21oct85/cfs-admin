@@ -5,7 +5,7 @@ const fs = require('fs')
 
 const BooksBySubSubjectId = async(req, res) => {
     try {
-
+        
         const Books = await Book.find({ sub_subject_id: req.params.sub_subject_id }, { __v: 0 })
                                 .sort({created_at: -1}).limit(20);
         return res.status(200).json({

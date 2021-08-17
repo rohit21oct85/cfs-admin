@@ -59,7 +59,7 @@ const saveAssignmentTwo = async (req, res) => {
         console.log(tutor[0])
         const filter = {_id:req.body.id,user_id:req.body.user_Id}
         const content = {   deadline_date: req.body.deadline_date,deadline_time: req.body.deadline_time, 
-                            pages: req.body.pages, reference: req.body.reference,
+                            pages: req.body.pages, reference: req.body.reference,amount:req.body.amount,
                             tutor_id: tutor[0]._id, tutor_name: tutor[0].fname+" "+tutor[0].lname
                         };
         const assignment = await Assignment.findOneAndUpdate(filter, content);
@@ -101,7 +101,7 @@ const getAssignmentAll = async (req, res) => {
     try {
         // return res.send(req.body.user_Id.user_Id)
         const filter = { user_id: req.body.user_Id.user_Id }
-        const assignment = await Assignment.find(filter);
+        const assignment = await Assignment.find(filter).sort({created_at: -1});
         if(assignment){
             return res.status(200).json({
                 error: false,
