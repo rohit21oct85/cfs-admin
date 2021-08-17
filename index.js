@@ -18,6 +18,7 @@ const {cfsCronTask} = require('./cfsCronTask.js');
 const responseTime = require('response-time')
 
 const app = express();
+
 app.use(responseTime())
 /* Cron Task */
 var job = new cronJob({
@@ -75,29 +76,36 @@ const options = {
 (async() => {
     const MONGO_URI = process.env.MONGO_URI;
     await mongoose.connect(MONGO_URI, options)
-    .then(() => console.log(`Mongo DB Connected`))
-    .catch(err => console.log(err));
-    mongoose.Promise = global.Promise;
-})()
-
-if(cluster.isMaster) {
-    console.log('Master cluster setting up ' + numCPUs + ' workers...');
-    for (var i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
-    cluster.on('online', function(worker) {
-        console.log('Worker ' + worker.process.pid + ' is online');
-    });
-    cluster.on('exit', function(worker, code, signal) {
-        console.log('Worker ' + worker.process.pid + ' died.');
-        console.log('Starting a new worker with new pid ' + worker.process.pid);
-        cluster.fork();
-    });
-}else{
-    app.listen(PORT, () => {
-        console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
+    .then(() => {
+        console.log(`Mongo DB Connected`)
+        if(cluster.isMaster) {
+            console.log('Master cluster setting up ' + numCPUs + ' workers...');
+            for (var i = 0; i < numCPUs; i++) {
+                cluster.fork();
+            }
+            cluster.on('online', function(worker) {
+                console.log('Worker ' + worker.process.pid + ' is online');
+            });
+            cluster.on('exit', function(worker, code, signal) {
+                console.log('Worker ' + worker.process.pid + ' died.');
+                console.log('Starting a new worker with new pid ' + worker.process.pid);
+                cluster.fork();
+            });
+        }else{
+            app.listen(PORT, () => {
+                console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
+            })
+        }
     })
-}
+    .catch(err => console.log(err));
+})()
+// test 
+app.get('/api/v1/test', (req, res) => {
+    res.status(res.statusCode).json({
+        status: res.statusCode,
+        message: "Server OK"
+    })
+})
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);
@@ -133,9 +141,6 @@ app.use("/web/v1/subsubject", WebRoutes.WebSubjectRoutes);
 
 app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
 app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
-
-
-
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('build'));

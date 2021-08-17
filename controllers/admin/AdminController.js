@@ -1,4 +1,8 @@
 const Admin = require('../../models/admin/Admin.js');
+const Student = require('../../models/student/Student.js');
+const Tutor = require('../../models/tutor/Tutor.js');
+const Book = require('../../models/admin/Book.js');
+const Chapter = require('../../models/admin/Chapter.js');
 
 const CreateAdmin = async (req, res) => {
     const body = req.body;
@@ -82,8 +86,32 @@ const DeleteAdmin = async (req, res) =>{
         });
     }
 };
+const DashboardStatics = async (req, res) => {
+    try {
+        let students = await Student.estimatedDocumentCount({});
+        let tutors = await Tutor.estimatedDocumentCount({});
+        let books = await Book.estimatedDocumentCount({});
+        let chapters = await Chapter.estimatedDocumentCount({});
 
+        res.status(res.statusCode).json({
+            status: res.statusCode,
+            data: {
+                total_student: students,
+                total_tutor: tutors,
+                total_books: books,
+                total_chapters: chapters
+            }
+        })
+        
+    } catch (error) {
+        res.status(res.statusCode).json({
+            status: res.statusCode,
+            message: error.message
+        })
+    }
+}
 module.exports = {
+    DashboardStatics,
     CreateAdmin,
     UpdateAdmin,
     ViewAdmin,
