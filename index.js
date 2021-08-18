@@ -92,6 +92,7 @@ const options = {
                 cluster.fork();
             });
         }else{
+            
             app.listen(PORT, () => {
                 console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
             })
@@ -99,13 +100,15 @@ const options = {
     })
     .catch(err => console.log(err));
 })()
-// test 
+
 app.get('/api/v1/test', (req, res) => {
+    let today = new Date();
     res.status(res.statusCode).json({
         status: res.statusCode,
-        message: "Server OK"
+        message: `Server OK Ronning @ ${today}`
     })
 })
+
 // login
 app.use("/api/v1/admin", Routes.AdminAuthRoutes);
 app.use("/api/v1/master-role", Routes.roleRoutes);

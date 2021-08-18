@@ -10,7 +10,7 @@ router
     .get('/view/:id',checkAuth,adminAuth, Auth.ViewAdmin)
     .get('/view-all',checkAuth,adminAuth, Auth.ViewAllAdmin)
     .delete('/delete/:id', checkAuth,adminAuth, Auth.DeleteAdmin)
-    .get('/statics',checkAuth,adminAuth, Auth.DashboardStatics)
+    .get('/dashboard-statics',checkAuth,adminAuth, Auth.DashboardStatics)
 ;
 
 module.exports = router;

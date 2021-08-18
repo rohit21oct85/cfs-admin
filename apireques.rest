@@ -17,7 +17,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4Z
 
 
 ### Add Fields ###
-POST http://localhost:8080/api/v1/admin/add-fields
+POST http://localhost:3000/api/v1/admin/add-fields
 Content-Type: application/json
 
 ### delete Chapters ###

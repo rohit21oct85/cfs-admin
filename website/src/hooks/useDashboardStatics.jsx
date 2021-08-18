@@ -17,7 +17,7 @@ export default function useDashboardStatics() {
     }
     return useQuery('statics', async () => {
         if(state.access_token){
-            const result = await axios.get(`${API_URL}master-admin/statics`,{
+            const result = await axios.get(`${API_URL}master-admin/dashboard-statics`,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token

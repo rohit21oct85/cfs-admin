@@ -93,7 +93,7 @@ const DashboardStatics = async (req, res) => {
         let books = await Book.estimatedDocumentCount({});
         let chapters = await Chapter.estimatedDocumentCount({});
 
-        res.status(res.statusCode).json({
+        return res.status(res.statusCode).json({
             status: res.statusCode,
             data: {
                 total_student: students,

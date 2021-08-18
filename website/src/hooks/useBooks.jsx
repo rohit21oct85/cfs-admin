@@ -1,5 +1,5 @@
 import {useContext}  from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams, useLocation} from 'react-router-dom'
 import {useQuery} from 'react-query';
 import axios from 'axios';
 import {AuthContext} from '../context/AuthContext.jsx';
@@ -9,6 +9,7 @@ import * as cons from '../Helper/Cons.jsx'
 export default function useBooks() {
     const {state } = useContext(AuthContext);
     const params = useParams();
+    const location = useLocation();
     const {state:adminState } = useContext(AdminContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
