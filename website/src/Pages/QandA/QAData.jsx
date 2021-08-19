@@ -65,7 +65,7 @@ export default function QAData() {
             }else{
                 page = params?.page
             }
-            response = await axios.get(`https://build.crazyforstudy.com/api/get-question-and-answer.php?accessKey=crazyforstudy&id=${params?.chield_subject_id}&page=${page}`);    
+            response = await axios.get(`https://backup.crazyforstudy.com/api/get-question-and-answer.php?accessKey=crazyforstudy&id=${params?.chield_subject_id}&page=${page}`);    
             questionData = response?.data?.data; 
             setPagination(response?.data?.pagination);
             setTotalQuestion(response?.data?.pagination?.itemCount);
