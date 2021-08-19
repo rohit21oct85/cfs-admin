@@ -8,17 +8,17 @@ module.exports = (req, res, next) => {
             message: 'you are not authorised!'
         });
     } else {
-        jwt.verify(token, accessTokenSecret, (err, decoded) => {
-
-        if (err) {
-            res.status(401).json({
-                message: 'Authorization failed'
-            });
-        } else {
-            req.body.user_Id = decoded.id;
-            req.body.user_role = decoded.role;
-            next()
-        }
+            jwt.verify(token, accessTokenSecret, (err, decoded) => {
+            if (err) {
+                res.status(401).json({
+                    message: 'Authorization failed'
+                });
+            } else {
+                req.body.user_Id = decoded.id;
+                req.body.user_role = decoded.role;
+                next()
+            }
+            
         })
     }
 }

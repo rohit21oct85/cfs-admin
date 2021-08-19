@@ -8,6 +8,8 @@ Content-Type: application/json
       "password": "password"
 }
 
+
+
 ### Update Module ###
 POST http://localhost:8080/api/v1/master-module/update-all
 
@@ -56,4 +58,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4Z
 }
 
 
+### Login ### 
+DELETE http://localhost:3000/api/v1/admin/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
+
+{
+      "email": "rohit21oct85@gmail.com"
+}
 

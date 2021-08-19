@@ -8,6 +8,6 @@ router
     .post('/create',checkAuth,adminAuth, Auth.CreateRole)
     .patch('/update/:id',checkAuth,adminAuth, Auth.UpdateRole)
     .get('/view/:id',checkAuth,adminAuth, Auth.ViewRole)
-    .get('/view-all',checkAuth,adminAuth, Auth.ViewAllRole)
+    .get('/view-all',checkAuth, Auth.ViewAllRole)
     .delete('/delete/:id',checkAuth,adminAuth, Auth.DeleteRole);
 module.exports = router;
