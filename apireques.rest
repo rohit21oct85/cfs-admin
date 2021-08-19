@@ -51,8 +51,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
 
 {
-      "chield_subject_id":"170",
-      "delete_salt":""
+      "chield_subject_id":"169",
+      "delete_salt":"server-delete"
 }
 
 

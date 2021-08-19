@@ -53,7 +53,14 @@ const deleteChieldSbjects = async (req, res) => {
         }else if(req?.body?.delete_salt === 'server-delete'){
             let filter = {chield_subject_id: req.body.chield_subject_id};
             await Question.deleteMany(filter);
-            
+            await ChieldSubject.updateMany(filter,
+                {
+                    "toal_question": 0,
+                    "total_page": 0,
+                    "page_uploaded": 0,
+                    "total_uploaded": 0,
+                    "status": false,
+                });
             res.status(201).json({
                 error: false,
                 status: 201,
