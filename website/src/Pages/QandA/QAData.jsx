@@ -343,7 +343,7 @@ onChange={e => {
                         <div className="col-md-12 p-0 ">
                             <hr className="mt-2 mb-2"/>
                         </div>
-                        {questions?.length > 0 && params?.status === "true" && (
+                        {questions?.length > 0 && (
                         <div className="col-md-12 row bg-info ml-1 text-white pl-2">
                             <div className="col-md-1">Old QID</div>
                             <div className="col-md-6">Question</div>
