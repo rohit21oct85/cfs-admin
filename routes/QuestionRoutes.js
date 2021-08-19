@@ -6,9 +6,9 @@ const adminAuth = require("../middleware/admin-auth.js");
 const router = express.Router();
 
 router
-    .post('/import-data',  checkAuth,adminAuth, Question.importData)
-    .get('/chield-question/:chield_subject_id',  checkAuth,adminAuth, Question.chieldQuestion)
-    .get('/delete/:chield_subject_id',  checkAuth,adminAuth, Question.deleteChieldQuestion)
+    .post('/import-data',  checkAuth, Question.importData)
+    .get('/chield-question/:chield_subject_id',  checkAuth, Question.chieldQuestion)
+    .get('/delete/:chield_subject_id',  checkAuth, Question.deleteChieldQuestion)
 ;
 
 module.exports = router;
