@@ -97,7 +97,7 @@ function BookHeading({books}) {
                 </>     
                 )}
                 {location?.pathname == '/books/freelance' && (
-                    <div className="flex col-md-12" style={{ 
+                    <div className="flex col-md-12 pl-0 pr-0" style={{ 
                         justifyContent: 'space-between',
                         
                     }}>
