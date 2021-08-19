@@ -78,25 +78,33 @@ const options = {
     await mongoose.connect(MONGO_URI, options)
     .then(() => {
         console.log(`Mongo DB Connected`)
-        if(cluster.isMaster) {
-            console.log('Master cluster setting up ' + numCPUs + ' workers...');
-            for (var i = 0; i < numCPUs; i++) {
-                cluster.fork();
+        if(process.env.NODE_ENV === 'production'){
+            if(cluster.isMaster) {
+                console.log('Master cluster setting up ' + numCPUs + ' workers...');
+                for (var i = 0; i < numCPUs; i++) {
+                    cluster.fork();
+                }
+                cluster.on('online', function(worker) {
+                    console.log('Worker ' + worker.process.pid + ' is online');
+                });
+                cluster.on('exit', function(worker, code, signal) {
+                    console.log('Worker ' + worker.process.pid + ' died.');
+                    console.log('Starting a new worker with new pid ' + worker.process.pid);
+                    cluster.fork();
+                });
+            }else{
+                process.env.UV_THREADPOOL_SIZE = numCPUs
+                app.listen(PORT, () => {
+                    console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
+                })
             }
-            cluster.on('online', function(worker) {
-                console.log('Worker ' + worker.process.pid + ' is online');
-            });
-            cluster.on('exit', function(worker, code, signal) {
-                console.log('Worker ' + worker.process.pid + ' died.');
-                console.log('Starting a new worker with new pid ' + worker.process.pid);
-                cluster.fork();
-            });
         }else{
-            
+            process.env.UV_THREADPOOL_SIZE = numCPUs
             app.listen(PORT, () => {
                 console.log(`App is running pid ${process.pid} on PORT ${PORT}`);
             })
         }
+        
     })
     .catch(err => console.log(err));
 })()

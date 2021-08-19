@@ -58,7 +58,7 @@ export default function QAData() {
         setDataImported(true);
         let response;
         let questionData = '';
-        if(params?.status == "false"){
+        if(params?.status === "false"){
             let page = ''
             if(params?.page === undefined){
                 page = 0
@@ -69,6 +69,11 @@ export default function QAData() {
             questionData = response?.data?.data; 
             setPagination(response?.data?.pagination);
             setTotalQuestion(response?.data?.pagination?.itemCount);
+            questionData?.forEach(question => {
+                question.uuid = uuidv4();
+            })
+            setQuestions(questionData);
+            
             if(response?.data?.pagination){
                 let page = '';
                 if(params?.page === undefined){
@@ -81,18 +86,14 @@ export default function QAData() {
         }else{
             response = await axios.get(`${API_URL}question/chield-question/${params?.chield_subject_id}`, options);
             questionData = response?.data?.data;
-            setPagination({});
-        }
-        if(response){
-            
             questionData?.forEach(question => {
                 question.uuid = uuidv4();
             })
             setQuestions(questionData);
-            
-        }else{
-            setQuestions([])
+            setPagination([]);
         }
+        
+       
         setLoading(false);
         
     }
@@ -141,7 +142,6 @@ export default function QAData() {
                     setLoading(false);
                     history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${params?.page}`)
                 }
-                
             }, 1500);
         }
     }
@@ -349,8 +349,10 @@ onChange={e => {
                             <div className="col-md-6">Question</div>
                         </div>
                         )}
+
+
                         <div style={{ height: '400px', overflowY: 'scroll', overflowX: 'hidden'}}>
-                            {params?.status === "true" && questions?.map(question => {
+                             {questions?.length > 0 && questions?.map(question => {
                                 return(
                                 <div className="col-md-12 row table-bordered border-right mt-2 ml-1 pl-2" key={question?.uuid} id={question?.uuid}>
                                     <div className="col-md-1">{question?.old_qid}</div>

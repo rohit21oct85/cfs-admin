@@ -6,7 +6,7 @@ const importData = async (req, res) => {
     try {
 
         const data = req?.body?.questions;
-        // await Question.insertMany(data);
+        await Question.insertMany(data);
         
         const pageCount = req?.body?.pageCount;
         const perPage = req?.body?.perPage;
@@ -35,7 +35,7 @@ const importData = async (req, res) => {
             });
 
             total_updated = +chieldData?.total_uploaded + +data?.length;
-            return res.send(total_updated);
+            // return res.send(total_updated);
             setTimeout(async () => {
                 await ChieldSubject.findOneAndUpdate(filterData,{
                     "toal_question": totalQuestion,

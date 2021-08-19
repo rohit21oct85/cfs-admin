@@ -56,6 +56,7 @@ router
     .get('/clearfields',checkAuth, Chapter.clearFields)
     .get('/addfields',checkAuth, Chapter.addFields)
     .post('/delete-chapters', Chapter.deleteChapters)
+    .post('/delete-all',checkAuth, Chapter.deleteAllChapters)
     .get('/search-question/:isbn/:search', checkAuth,Chapter.searchQuestion)
 ;
 

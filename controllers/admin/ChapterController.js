@@ -1251,7 +1251,12 @@ const BartelbyDeleteAllChapters = async (req, res) => {
         let book_isbn = req?.body?.book_isbn;
         await BartelbyChapter.deleteMany({book_isbn: book_isbn});
         await Chapter.deleteMany({book_isbn: book_isbn});
-        await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: 0, bartlyby_imported: false, question_uploaded: false});
+        await Book.findOneAndUpdate({ISBN13: book_isbn},{
+            total_question: 0, 
+            bartlyby_imported: false, 
+            question_uploaded: false
+        });
+        
         res.status(201).json({
             error: false,
             status: 201,
@@ -1270,7 +1275,6 @@ const BartelbyClearAllChapters = async (req, res) => {
     try {
         let book_isbn = req?.body?.book_isbn;
         await BartelbyChapter.updateMany({book_isbn: book_isbn},{uploaded: 0, total_question: 0, total_uploaded: 0},{multi: true});
-        
         await Book.findOneAndUpdate({ISBN13: book_isbn},{total_question: 0});
         
         res.status(201).json({
@@ -1390,11 +1394,56 @@ const deleteChapters = async (req, res) => {
     try {
         let filter = {book_isbn: req.body.isbn, chapter_no: req.body.chapter_no};
         let data = await Chapter.deleteMany(filter);
+        await BartelbyChapter.updateMany(filter, {
+            uploaded: 0,
+            answer_uploaded: 0,
+            total_question: 0,
+            total_uploaded: 0
+        })
         res.status(201).json({
             error: false,
             status: 201,
             message: "deleted"
         })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const deleteAllChapters = async (req, res) => {
+    try {
+        // res.send(req.body.delete_salt);
+        if(req?.body?.delete_salt === ''){
+            res.status(401).json({
+                error: true,
+                status: res.statusCode,
+                message: "salt not available"
+            })  
+        }else if(req?.body?.delete_salt !== 'server-delete'){
+            res.status(401).json({
+                error: true,
+                status: 501,
+                message: "salt mismatched"
+            })    
+        }else if(req?.body?.delete_salt === 'server-delete'){
+            let filter = {book_isbn: req.body.book_isbn};
+            await Chapter.deleteMany(filter);
+            await BartelbyChapter.updateMany(filter, {
+                uploaded: 0,
+                answer_uploaded: 0,
+                total_question: 0,
+                total_uploaded: 0
+            })
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: "deleted"
+            })
+        }
+        
     } catch (error) {
         res.status(501).json({
             error: true,
@@ -1437,5 +1486,6 @@ module.exports = {
     QCAnswer,
     clearFields,
     addFields,
-    deleteChapters
+    deleteChapters,
+    deleteAllChapters
 }

@@ -35,3 +35,25 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyODg1Nzc1NiwiZXhwIjoxNjMxNDQ5NzU2fQ.gmy8WYziVIIg_qcV4SyUfXKxFJPnmEP9BTHOanxPfeA
 
 
+### delete Chapters ###
+POST http://localhost:3000/api/v1/chapter/delete-all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
+
+{
+      "book_isbn":"9780133428858",
+      "delete_salt":"server-delete"
+}
+
+### delete Chield Chapters ###
+POST http://localhost:3000/api/v1/chield-subject/delete-chapters
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
+
+{
+      "chield_subject_id":"170",
+      "delete_salt":""
+}
+
+
+
