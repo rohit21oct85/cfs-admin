@@ -74,7 +74,7 @@ export default function BooksFreelance() {
     
     if(singleBook && singleBook[0]?.bartlyby_imported === false) {
       const response = await axios.get(
-        `https://www.crazyforstudy.com/api/chapters.php?isbn=${params?.isbn}`
+        `https://backup.crazyforstudy.com/api/chapters.php?isbn=${params?.isbn}`
       );
       const sections = response?.data?.data?.bookSections;
       let chaptersData = [];

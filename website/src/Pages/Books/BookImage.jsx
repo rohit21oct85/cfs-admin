@@ -18,7 +18,7 @@ function BookImage({isbn, width}) {
                   setImage(`https://pictures.abebooks.com/isbn/${isbn}-us-300.jpg`);
                 }
             }catch(err) {
-                setImage(`https://www.crazyforstudy.com/uploads/book-images-with-text/IMG-${isbn}.jpg`);
+                setImage(`https://backup.crazyforstudy.com/uploads/book-images-with-text/IMG-${isbn}.jpg`);
             }
         }
        fetchCoverImage();
