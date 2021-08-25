@@ -56,7 +56,7 @@ export default function SingleBook({books, width, heading}) {
                 </div> 
                 <div className="admin-name"> 
                     <div className="name-label">
-                        Question: 
+                        Uploaded: 
                     </div>
                     <div className="name-main">
                         {books?.question_uploaded ? (

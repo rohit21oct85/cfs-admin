@@ -136,6 +136,25 @@ function SearchBook() {
                         {books.Edition}
                     </div>
                 </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Uploaded: 
+                    </div>
+                    <div className="name-main">
+                        {books?.question_uploaded ? (
+                        <><span className="fa fa-check-circle mt-1 mr-2 text-success"></span> Uploaded</>) : (
+                        <><span className="fa fa-times-circle mt-1 mr-2 text-danger"></span> Not Uploaded</>
+                        )}
+                    </div>
+                </div> 
+                <div className="admin-name"> 
+                    <div className="name-label">
+                        Total Question: 
+                    </div>
+                    <div className="name-main">
+                        {books?.total_question}
+                    </div>
+                </div> 
         </div>
         
         </div>
