@@ -40,7 +40,7 @@ const importData = async (req, res) => {
             if(+chieldData?.total_uploaded === +chieldData?.total_page){
                 status = true
             }else{
-                status = true
+                status = false
             }
             setTimeout(async () => {
                 await ChieldSubject.findOneAndUpdate(filterData,{
