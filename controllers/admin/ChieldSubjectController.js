@@ -7,9 +7,7 @@ const AllChieldSubject = async(req, res) => {
             subject_id: req.params.subject_id, 
             sub_subject_id: req.params.sub_subject_id,
             status: req.params.status
-        }, {chield_subject_id:1,chield_subject:1, status: 1, _id: 1, uuid: 1}).sort({
-            chield_subject: 1
-        });
+        }, {chield_subject_id:1,chield_subject:1, status: 1, _id: 1, uuid: 1});
         return res.status(200).json({
             data: CSubject
         });

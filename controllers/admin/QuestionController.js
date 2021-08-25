@@ -2,9 +2,9 @@ const Question = require('../../models/admin/Question.js');
 const ChieldSubject = require('../../models/admin/ChieldSubject.js');
 
 const importData = async (req, res) => {
-    // return res.send(req.body)
     try {
-
+        
+        // return res.send(req.body)
         const data = req?.body?.questions;
         await Question.insertMany(data);
         
@@ -26,7 +26,7 @@ const importData = async (req, res) => {
                 "page_uploaded": page,
                 "total_uploaded": total_uploaded
             });    
-        }else if(pageCount > 1){
+        }else if(pageCount > "1"){
             let chieldData = await ChieldSubject.findOne(filterData,{
                 "toal_question": 1,
                 "total_page": 1,
@@ -41,7 +41,7 @@ const importData = async (req, res) => {
                     "toal_question": totalQuestion,
                     "total_page": pageCount,
                     "page_uploaded": page,
-                    "total_uploaded": total_upload
+                    "total_uploaded": total_updated
                 });
             }, 1000);
         }
@@ -51,7 +51,7 @@ const importData = async (req, res) => {
             status: 201,
             message: "Question Added successfully",
             totalQuestion: totalQuestion,
-            uploadedQuestion: total_uploaded
+            uploadedQuestion: total_updated
         });
 
     } catch (error) {

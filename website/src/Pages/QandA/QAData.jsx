@@ -95,7 +95,7 @@ export default function QAData() {
         
        
         setLoading(false);
-        
+        setDataImported(false);
     }
     
     const handleUploadData = async (e) => {
@@ -127,7 +127,6 @@ export default function QAData() {
             setQuestions([]);
 
             setTimeout(() => {
-                
                 if(pagination?.pageCount == "1"){
                     document.getElementById("chield_subject").selectedIndex = "0";
                     history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}`)
@@ -137,12 +136,17 @@ export default function QAData() {
                 }else if(pagination?.pageCount > "1"){
                     let totalQuestion = response?.totalQuestion;
                     let uploadedQuestion = response?.uploadedQuestion
+
                     setIsDataSubmitted(false);
                     setDataImported(false);
                     setLoading(false);
-                    history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${params?.page}`)
+                    if(pagination?.next > pagination?.pageCount){
+                        history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}`)    
+                    }else{
+                        history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${pagination?.next}`)
+                    }
                 }
-            }, 1500);
+            }, 1000);
         }
     }
 
@@ -236,6 +240,7 @@ onChange={e => {
                                     )
                                 })}
                             </select>
+                            
                             <select 
                                 className="col-md-2 ml-2 form-control"
                                 id="chield_subject"
@@ -259,7 +264,7 @@ onChange={e => {
                                 return(
                                     <option 
                                         value={`${subject?.chield_subject_id}_${utils.MakeSlug(subject?.chield_subject)}`} 
-                                        selected={subject?.chield_subject_id == params?.chield_subject_id ? 'selected': ''}
+                                        selected={subject?.chield_subject_id === params?.chield_subject_id ? 'selected': ''}
                                         key={subject?.uuid}>{subject?.chield_subject}</option>
                                 
                                 );
@@ -270,7 +275,7 @@ onChange={e => {
                                 <>
                                 <button className="btn btn-sm dark ml-2"
                                     onClick={handleQandA} 
-                                    disabled={dataImported === true}
+                                    disabled={dataImported}
                                 >
                                     {loading ? (
                                         <><span className="fa fa-spinner mr-2"></span>
