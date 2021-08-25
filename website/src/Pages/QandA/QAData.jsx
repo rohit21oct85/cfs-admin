@@ -115,6 +115,7 @@ export default function QAData() {
             chield_subject_id: params?.chield_subject_id,
             totalQuestion: totalQuestion,
             pageCount: pagination?.pageCount,
+            currentPage: +pagination?.currentPage,
             perPage: pagination?.perPage,
             page: +params?.page
         }

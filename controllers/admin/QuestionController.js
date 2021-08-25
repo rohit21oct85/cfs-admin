@@ -9,6 +9,7 @@ const importData = async (req, res) => {
         await Question.insertMany(data);
         
         const pageCount = req?.body?.pageCount;
+        const currentPage = req?.body?.currentPage;
         const perPage = req?.body?.perPage;
         const page = req?.body?.page;
         const totalQuestion = req?.body?.totalQuestion;
@@ -37,7 +38,7 @@ const importData = async (req, res) => {
             total_updated = +chieldData?.total_uploaded + +data?.length;
             // return res.send(total_updated);
             let status;
-            if(+chieldData?.page_uploaded === +chieldData?.total_page){
+            if(currentPage === pageCount){
                 status = true
             }else{
                 status = false
