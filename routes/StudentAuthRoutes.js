@@ -16,6 +16,6 @@ router
     .post('/verifyotp', Auth.verifyOtp)
     .post('/get-user',studentAuth, Auth.getUser)
     .post('/edit-user-profile',studentAuth, Auth.editUser)
-    .get('/getcountries',studentAuth, Auth.getCountryList);
+    .get('/getcountries', Auth.getCountryList);
 
 module.exports = router;

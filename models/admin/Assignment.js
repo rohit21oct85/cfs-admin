@@ -1,5 +1,24 @@
 const mongoose = require('mongoose');
 
+const TransactionSchema = new mongoose.Schema({ 
+    order_id: 'string', 
+    payment_id: 'string', 
+    type: 'string', 
+    signature: 'string', 
+    OrderDate: {
+        type: Date,
+        default: Date.now
+    }, 
+    status: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    } 
+});
+
 const AssignmentSchema = new mongoose.Schema({
     user_id:{
         type: String,
@@ -9,6 +28,12 @@ const AssignmentSchema = new mongoose.Schema({
         type: String,
     },
     subject_id: {
+        type: String,
+    },
+    tutor_id: {
+        type: String,
+    },
+    tutor_name: {
         type: String,
     },
     subject: {
@@ -23,6 +48,9 @@ const AssignmentSchema = new mongoose.Schema({
     image:{
         type: String,
     },
+    amount:{
+        type:Number,
+    },
     deadline_time:{
         type: String,
     },
@@ -32,8 +60,26 @@ const AssignmentSchema = new mongoose.Schema({
     pages:{
         type: Number,
     },
+    order_id:{
+        type: String,
+    },
     reference:{
         type: String,
+    },
+    payment_status:{
+        type: String,
+        default: "unpaid"
+    },
+    type:{
+        type: String,
+        default: "assignment"
+    },
+    assignment_status:{
+        type: String,
+        default: "Pending"
+    },
+    transactions: {
+        type: [TransactionSchema]
     },
     image:{
         type: String,
