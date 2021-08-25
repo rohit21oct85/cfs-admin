@@ -38,7 +38,7 @@ const importData = async (req, res) => {
             total_updated = +chieldData?.total_uploaded + +data?.length;
             // return res.send(total_updated);
             let status;
-            if(currentPage === pageCount){
+            if(page == pageCount){
                 status = true
             }else{
                 status = false
