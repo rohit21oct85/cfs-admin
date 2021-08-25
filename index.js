@@ -139,6 +139,8 @@ app.use("/web/v1/assignment", WebRoutes.AssignmentRoutes);
 app.use("/web/v1/subject", WebRoutes.WebSubjectRoutes);
 app.use("/web/v1/subsubject", WebRoutes.WebSubjectRoutes);
 
+app.use("/web/v1/question", WebRoutes.WebQuestionRoutes);
+
 app.use("/tutor/v1/auth", TutorRoutes.TutorAuthRoutes);
 app.use("/tutor/v1/books", TutorRoutes.TutorBookRoutes);
 

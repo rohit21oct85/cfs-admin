@@ -26,6 +26,8 @@
         "dotenv": "^8.6.0",
         "express": "^4.17.1",
         "express-session": "^1.17.1",
+        "html-converter-react": "^1.0.3",
+        "html-react-parser": "^1.2.8",
         "http-proxy-middleware": "^2.0.1",
         "jsonwebtoken": "^8.5.1",
         "loadtest": "^5.1.2",
