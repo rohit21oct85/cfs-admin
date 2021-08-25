@@ -161,7 +161,7 @@ return (
                                         right: '1rem',
                                         bottom: '5%',
                                         textShadow: '2px 2px #000'
-                                    }}>25</span>
+                                    }}>{dashboard?.total_book_request}</span>
                                 </div>
                             </div>
                         </div>

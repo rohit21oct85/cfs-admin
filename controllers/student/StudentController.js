@@ -123,7 +123,7 @@ const checkBookIsbn = async (req, res) => {
         }
 
         await TextBook.findOneAndUpdate(filter, updateData, options);
-        res.status(501).json({
+        res.status(201).json({
             error: false,
             message: message
         })

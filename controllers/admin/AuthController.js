@@ -127,6 +127,13 @@ const Logout = async (req, res) => {
         });    
     }
 }
+const AccountLogout = async (req, res) => {
+    await Admin.findOneAndUpdate({email: req.body.email},{isActive: false});
+    res.status(200).json({
+        message: "successfully loggedout"
+    });    
+    
+}
 
 const ForgotPassword = async (req, res) => {
     try {
@@ -154,6 +161,7 @@ module.exports = {
     AddField,
     Register,
     Login,
+    AccountLogout,
     Logout,
     generateAccessToken,
     generateRefreshToken,

@@ -58,10 +58,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4Z
 }
 
 
-### Login ### 
-DELETE http://localhost:3000/api/v1/admin/logout
+### Logout ### 
+POST http://localhost:3000/api/v1/admin/account-logout
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
 
 {
       "email": "rohit21oct85@gmail.com"

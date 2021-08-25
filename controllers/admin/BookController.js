@@ -283,6 +283,34 @@ const viewBook = async(req, res) => {
 const searchBook = async(req, res) => {
     try {
         const isbn = req.params.isbn;
+        const books = await Book.find({ISBN13: {$regex: isbn}}
+            ,{
+                    sub_subject_name: 1,
+                    sub_subject_id: 1,
+                    subject_name: 1,
+                    subject_id: 1,
+                    BookName: 1,
+                    ISBN13: 1,
+                    Edition: 1,
+                    Author1: 1,
+                    published: 1,
+                    bartlyby_imported: 1
+                }).limit(5);
+        
+        return res.status(200).json({
+            data: books
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+
+}
+const searchBookOld = async(req, res) => {
+    try {
+        const isbn = req.params.isbn;
         const books = await Book.aggregate([
             {
                 "$search":{
@@ -310,6 +338,7 @@ const searchBook = async(req, res) => {
                 }
             }
         ]);
+
         return res.status(200).json({
             data: books
         });

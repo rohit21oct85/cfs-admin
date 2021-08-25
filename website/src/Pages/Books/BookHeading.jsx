@@ -84,7 +84,7 @@ function BookHeading({books}) {
 
     return (
         <div className="subject-card-heading mt-2">
-                {params?.type == 'all' && state.role == '1' && (
+                {(params?.type == 'all' || params?.type == undefined) && state.role == '1' && (
                 <> 
                     <Button className="dark text-warning br-10" title="Update Books" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
                         <span className="fa fa-pencil-square-o displayIcon mr-2"></span>

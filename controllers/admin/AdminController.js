@@ -4,6 +4,7 @@ const Tutor = require('../../models/tutor/Tutor.js');
 const Book = require('../../models/admin/Book.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const Question = require('../../models/admin/Question.js');
+const TextBook = require('../../models/admin/TextBook.js');
 
 const CreateAdmin = async (req, res) => {
     const body = req.body;
@@ -94,6 +95,7 @@ const DashboardStatics = async (req, res) => {
         let books = await Book.estimatedDocumentCount({});
         let chapters = await Chapter.estimatedDocumentCount({});
         let qnas = await Question.find({shortanswer: ""}).countDocuments();
+        let book_request = await TextBook.find({inStock: false}).countDocuments();
 
         return res.status(res.statusCode).json({
             status: res.statusCode,
@@ -102,7 +104,8 @@ const DashboardStatics = async (req, res) => {
                 total_tutor: tutors,
                 total_books: books,
                 total_chapters: chapters,
-                total_qna: qnas
+                total_qna: qnas,
+                total_book_request: book_request,
             }
         })
         
