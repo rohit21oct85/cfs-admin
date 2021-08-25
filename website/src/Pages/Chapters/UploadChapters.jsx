@@ -221,7 +221,7 @@ return (
 
                         {data && data.book_isbn && (
                             <Link
-                            className="btn btn-sm dark pull-right" to={`/book-chapters/${params.isbn}/${params.book_name}/${params.book_id}`}>View Question</Link>
+                            className="btn btn-sm dark pull-right" to={`/books-chapters/${params.isbn}/${params.book_name}/${params.book_id}`}>View Question</Link>
                         )}
                     </div>
                     <hr className="mb-1 mt-2"/>
