@@ -294,7 +294,9 @@ const searchBook = async(req, res) => {
                     Edition: 1,
                     Author1: 1,
                     published: 1,
-                    bartlyby_imported: 1
+                    bartlyby_imported: 1,
+                    question_uploaded: 1,
+                    total_question: 1
                 }).limit(5);
         
         return res.status(200).json({
