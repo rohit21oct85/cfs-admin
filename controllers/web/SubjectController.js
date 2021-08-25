@@ -1,5 +1,7 @@
 const Sub_Subject = require('../../models/admin/SubSubject.js');
 const Subject = require('../../models/admin/Subject.js');
+const ChildSubjects = require('../../models/admin/ChieldSubject.js');
+const Questions = require('../../models/admin/Question');
 
 
 const SubSubjects = async(req, res) => {
@@ -29,7 +31,41 @@ const AllSubjects = async (req, res) => {
         });
     }
 }
+
+const GetChildSubjects = async (req, res) => {
+    try {
+        const childSubjects = await ChildSubjects.find({sub_subject:req.params.sub_subject_name});
+        res.status(200).json({
+            data: childSubjects
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
+const GetQuestionAndAnswers = async (req, res) => {
+    try {
+        const childSubjects = await ChildSubjects.findOne({chield_subject:{'$regex' : `^${req.params.child_subject}$`, '$options' : 'i'}});
+        const child_subject_id = childSubjects.chield_subject_id
+        const questions = await Questions.find({chield_subject_id:child_subject_id}).skip(req.body.pageno * req.body.limit).limit(parseInt(req.body.limit))
+        const total = await Questions.countDocuments(Questions.find({ chield_subject_id: child_subject_id }));
+        res.status(200).json({
+            data: questions,
+            total:total
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 module.exports = {
     AllSubjects,
     SubSubjects,
+    GetChildSubjects,
+    GetQuestionAndAnswers
 }
