@@ -1,6 +1,6 @@
 import React ,{ useState, useContext, useEffect} from 'react'
 import renderHTML from 'react-render-html';
-import {useHistory, useParams} from 'react-router-dom'
+import {useHistory, useParams, useLocation} from 'react-router-dom'
 import * as utils from '../../utils/MakeSlug';
 import useAllSubjects from '../../hooks/useAllSubjects';
 import useGetSubSubjects from '../../hooks/useGetSubSubjects';
@@ -12,6 +12,7 @@ import {AuthContext} from '../../context/AuthContext';
 import { useToasts } from 'react-toast-notifications';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from './Pagination';
+import useQALastUploaded from '../../hooks/useQALastUploaded';
 
 export default function QAData() {
     const DataStatus = [
@@ -20,6 +21,7 @@ export default function QAData() {
     ]
     const params = useParams();
     const history = useHistory();
+    const location = useLocation();
     const {state} = useContext(AuthContext);
     const { addToast } = useToasts();
     const {data,isLoading: isLoadingSubject} = useAllSubjects();
@@ -119,7 +121,7 @@ export default function QAData() {
             perPage: pagination?.perPage,
             page: +params?.page
         }
-        // console.log(postData);
+        console.log(postData);
         // return;
         const response = await axios.post(`${API_URL}question/import-data`,postData,options);
         if(response.status === 201){
@@ -150,7 +152,14 @@ export default function QAData() {
             }, 1000);
         }
     }
-
+    const {data: lastUploaded, isLoading: lastDataLoading} = useQALastUploaded();
+    useEffect(setLastUploaded, [lastUploaded]);
+    async function setLastUploaded(){
+        console.log(lastUploaded)
+        if(lastUploaded?.page_uploaded < lastUploaded?.total_page){
+            history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${+lastUploaded?.page_uploaded+1}`)
+        }
+    }
     return (
         <div className="col-lg-10 col-md-10 main_dash_area">
             <div className="main-area-all">

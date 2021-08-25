@@ -3,8 +3,6 @@ const ChieldSubject = require('../../models/admin/ChieldSubject.js');
 
 const importData = async (req, res) => {
     try {
-        
-        // return res.send(req.body)
         const data = req?.body?.questions;
         await Question.insertMany(data);
         
@@ -38,14 +36,14 @@ const importData = async (req, res) => {
             total_updated = +chieldData?.total_uploaded + +data?.length;
             // return res.send(total_updated);
             let status;
-            if(+page === +pageCount){
+            if(+currentPage === +pageCount){
                 status = true
             }else{
                 status = false
             }
             await ChieldSubject.findOneAndUpdate(filterData,{
                 "toal_question": totalQuestion,
-                "status": true,
+                "status": status,
                 "total_page": pageCount,
                 "page_uploaded": page,
                 "total_uploaded": total_updated

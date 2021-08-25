@@ -1413,6 +1413,25 @@ const deleteChapters = async (req, res) => {
         })
     }
 }
+const deleteQuestions = async (req, res) => {
+    try {
+        let filter = {book_isbn: req.body.book_isbn};
+        await Chapter.updateMany(filter,{question: ''});
+        res.status(201).json({
+            error: false,
+            status: 201,
+            message: "updated"
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+
+
 const deleteAllChapters = async (req, res) => {
     try {
         // res.send(req.body.delete_salt);
@@ -1487,5 +1506,6 @@ module.exports = {
     clearFields,
     addFields,
     deleteChapters,
+    deleteQuestions,
     deleteAllChapters
 }

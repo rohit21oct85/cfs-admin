@@ -18,6 +18,21 @@ const AllChieldSubject = async(req, res) => {
         });
     }
 }
+const lastUploadedQuestions = async(req, res) => {
+    try {
+        const CSubject = await ChieldSubject.findOne({ 
+            chield_subject_id: req.params.chield_subject_id, 
+        }, {status: 1, page_uploaded: 1, total_page:1, total_uploaded:1, toal_question:1});
+        return res.status(200).json({
+            data: CSubject
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
 
 const addFields = async (req, res) => {
     await ChieldSubject.updateMany({},
@@ -33,6 +48,7 @@ const addFields = async (req, res) => {
             message: "field cleared"
         });
 }
+
 const deleteChieldSbjects = async (req, res) => {
     try {
         // res.send(req.body.delete_salt);
@@ -74,8 +90,10 @@ const deleteChieldSbjects = async (req, res) => {
         })
     }
 }
+
 module.exports = {
     deleteChieldSbjects,
     AllChieldSubject,
-    addFields
+    addFields,
+    lastUploadedQuestions
 }
