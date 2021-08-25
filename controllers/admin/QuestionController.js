@@ -38,14 +38,14 @@ const importData = async (req, res) => {
             total_updated = +chieldData?.total_uploaded + +data?.length;
             // return res.send(total_updated);
             let status;
-            if(page == pageCount){
+            if(+page === +pageCount){
                 status = true
             }else{
                 status = false
             }
             await ChieldSubject.findOneAndUpdate(filterData,{
                 "toal_question": totalQuestion,
-                "status": status,
+                "status": true,
                 "total_page": pageCount,
                 "page_uploaded": page,
                 "total_uploaded": total_updated
