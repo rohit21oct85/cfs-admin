@@ -90,7 +90,7 @@ function SearchBook() {
                         <li className="items pb-2" key={books._id}>
                             <div className="row p-2">
                                 <div className="col-md-3 pl-0">
-                                    <BookImage isbn={books.ISBN13}  width="100%"/>
+                                    <BookImage isbn={books.ISBN13}  width="120%"/>
                                 </div>
                                 <div className="col-md-9">    
            

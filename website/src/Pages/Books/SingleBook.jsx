@@ -8,7 +8,7 @@ export default function SingleBook({books, width, heading}) {
     <div className="subject-card pt-2" style={{ width: width+'%'}} key={books._id} id={`card-${books._id}`}>
         <div className="row">
         <div className="col-md-3 pl-2 pr-3">
-            <BookImage isbn={books.ISBN13}  width="115%"/>
+            <BookImage isbn={books.ISBN13}  width="117%"/>
         </div>
         <div className="col-md-9 pr-3 pl-3">   
              
