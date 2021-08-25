@@ -122,7 +122,7 @@ export default function UploadChapters() {
     const handleImportQuestions = async () => {
         setLoading(true);
         const isbn = params?.isbn
-        const response = await axios.get(`https://www.crazyforstudy.com/api/get-book-question.php?accessKey=crazyforstudy&isbn=${isbn}`);    
+        const response = await axios.get(`https://backup.crazyforstudy.com/api/get-book-question.php?accessKey=crazyforstudy&isbn=${isbn}`);    
         if(response){
             const questionData = response?.data;
             questionData.forEach(question => {
