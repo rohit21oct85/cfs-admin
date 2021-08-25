@@ -283,7 +283,7 @@ const viewBook = async(req, res) => {
 const searchBook = async(req, res) => {
     try {
         const isbn = req.params.isbn;
-        const books = await Book.aggregate([
+        const books = await Book.finds([
             { 
                 $or:
                 // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]

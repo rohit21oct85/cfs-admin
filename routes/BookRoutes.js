@@ -22,7 +22,7 @@ const router = express.Router();
 
 router
     .get('/subject/:sub_subject_id', checkAuth, Book.BooksBySubSubjectId)
-    .get('/search/:isbn', checkAuth, Book.searchBook)
+    .get('/search/:isbn?', checkAuth, Book.searchBook)
     .get('/view-all/:sub_subject_id?/:pageno/:limit', checkAuth, Book.getAllBook)
     .post('/create', checkAuth, Book.createBook)
     .post('/upload', upload.single('file'), checkAuth, Book.uploadBook)
