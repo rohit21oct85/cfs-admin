@@ -284,15 +284,12 @@ const searchBook = async(req, res) => {
     try {
         const isbn = req.params.isbn;
         const books = await Book.aggregate([
+            { 
+                $or:
+                // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]
+                [{ISBN13:{$regex: isbn}}]
+            },
             {
-                "$search":{
-                    "autocomplete": {
-                        "path": "ISBN13",
-                        "query": `${isbn}`,
-                    }
-                }
-            }
-            ,{
                 $limit: 5
             }
             ,{
