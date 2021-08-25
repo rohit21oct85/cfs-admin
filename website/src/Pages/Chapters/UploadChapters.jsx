@@ -158,7 +158,7 @@ export default function UploadChapters() {
         if(response.status === 201){
             setSubmitData(false);
             addToast('Books Data Uploaded successfully', { appearance: 'success',autoDismiss: true });
-            history.push(`/book-chapters/${params?.isbn}/${params?.book_name}/${params?.book_id}`)
+            history.push(`/books/upload-chapters`)
         }
     }
 return (
