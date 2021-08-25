@@ -37,20 +37,18 @@ const importData = async (req, res) => {
             total_updated = +chieldData?.total_uploaded + +data?.length;
             // return res.send(total_updated);
             let status;
-            if(+chieldData?.total_uploaded === +chieldData?.total_page){
+            if(+chieldData?.page_uploaded === +chieldData?.total_page){
                 status = true
             }else{
                 status = false
             }
-            setTimeout(async () => {
-                await ChieldSubject.findOneAndUpdate(filterData,{
-                    "toal_question": totalQuestion,
-                    "status": status,
-                    "total_page": pageCount,
-                    "page_uploaded": page,
-                    "total_uploaded": total_updated
-                });
-            }, 1000);
+            await ChieldSubject.findOneAndUpdate(filterData,{
+                "toal_question": totalQuestion,
+                "status": status,
+                "total_page": pageCount,
+                "page_uploaded": page,
+                "total_uploaded": total_updated
+            });
         }
 
         return res.status(201).json({
