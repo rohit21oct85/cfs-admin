@@ -115,7 +115,7 @@ export const privateRoutes = [
         component: ViewData
     },
     {
-        path: '/books/:type',
+        path: '/books/:type?/:subject?/:sub_subject_name?/:sub_subject_id?',
         component: AllBookList
     },
     
@@ -125,7 +125,7 @@ export const privateRoutes = [
     },
 
     {
-        path: '/books/:subject?/:sub_subject_name?/:sub_subject_id?',
+        path: '/books/:type?/:subject?/:sub_subject_name?/:sub_subject_id?',
         component: AllBookList
     },
     {

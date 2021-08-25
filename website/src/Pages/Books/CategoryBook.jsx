@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {useHistory, useParams} from 'react-router-dom'
+import {useHistory, useParams, useLocation} from 'react-router-dom'
 
 import useAllSubSubjects from '../../hooks/useAllSubSubjects';
 import * as util from '../../utils/MakeSlug';
@@ -9,6 +9,7 @@ function CategoryBook() {
     const history = useHistory();
     const {dispatch} = useContext(AdminContext);
     const params = useParams();
+    const location = useLocation();
     const {data} = useAllSubSubjects();
     return (
         <div style={{ width: '220px' }} className="mr-1">
@@ -22,7 +23,7 @@ function CategoryBook() {
                     const data = util.getAllValue(e.target.value)
                     window.localStorage.setItem('pageno',1)
                     dispatch({type: 'Book_CurrentPage',payload: 1});
-                    history.push(`/books/${data.value2}/${data.value}/${data.id}`)
+                    history.push(`/books/${params?.type ?? 'all'}/${data.value2}/${data.value}/${data.id}`)
                 }
             }}
             >

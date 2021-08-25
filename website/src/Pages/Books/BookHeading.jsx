@@ -84,7 +84,7 @@ function BookHeading({books}) {
 
     return (
         <div className="subject-card-heading mt-2">
-                {location?.pathname == '/books' && state.role == '1' && (
+                {params?.type == 'all' && state.role == '1' && (
                 <> 
                     <Button className="dark text-warning br-10" title="Update Books" onClick={handleUpdate.bind(this,{subject_name: books.subject_name, subject_id: books.subject_id,book_id: books._id})}>
                         <span className="fa fa-pencil-square-o displayIcon mr-2"></span>
@@ -96,7 +96,7 @@ function BookHeading({books}) {
                     </Button>
                 </>     
                 )}
-                {location?.pathname == '/books/freelance' && (
+                {params?.type == 'freelance' && (
                     <div className="flex col-md-12 pl-0 pr-0" style={{ 
                         justifyContent: 'space-between',
                         
@@ -112,20 +112,20 @@ function BookHeading({books}) {
                     </div>
                 )}
                 
-                {location?.pathname == '/books/seo' && (
+                {params?.type == 'seo' && (
                     <Button className="dark text-warning pl-2 pr-2 br-10" onClick={handleBookSEO.bind(this,books.ISBN13,books._id)}>
                         <span className={`fa fa-globe displayIcon ${books.seo === true ? 'text-success': 'text-danger'} mr-2`}></span>
                         Manage Text Book Seo
                     </Button>
                 )}
-                {location?.pathname == '/books/check-quality' && (
+                {params?.type == 'check-quality' && (
                     <Button className="dark text-warning pl-2 pr-2 br-10" onClick={handleBookQulity.bind(this,books.ISBN13,books._id)}>
                     <span className="fa fa-thumbs-up displayIcon text-warning mr-2"></span>
                     Manage Books Answers Quality
                     </Button>
                 )}
                 
-                {location?.pathname == '/books/chapters' && (
+                {params?.type == 'chapters' && (
                     <>
                     <Button className="dark text-warning pl-2 pr-2 br-10" title="View chapters & Questions" onClick={handleViewChapters.bind(this,books.ISBN13,books.BookName,books._id)}>
                         <span className="fa fa-eye displayIcon text-white mr-2"></span>
@@ -133,7 +133,7 @@ function BookHeading({books}) {
                     </Button>
                     </>
                 )}
-                {location?.pathname == '/books/upload-chapters' && (
+                {params?.type == 'upload-chapters' && (
                     <>
                     <Button className="dark text-warning pl-2 pr-2 br-10" title="Upload Chapters and Questions" onClick={handleUpload.bind(this,books.ISBN13,books.BookName,books._id)}>
                         <span className="fa fa-cloud displayIcon text-success mr-2"></span>
@@ -141,7 +141,7 @@ function BookHeading({books}) {
                     </Button>
                     </>
                 )}
-                {location?.pathname == '/books/authoring' && (
+                {params?.type == 'authoring' && (
                     <div>
                     {state.role == '1' && (
                         <>
