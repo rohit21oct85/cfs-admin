@@ -105,7 +105,7 @@ return (
                             <div className="box-head">
                                 <h4 style={{
                                     textShadow: '2px 1px #000'
-                                }}>Number of Questions</h4>
+                                }}>Number of Total TBS Questions</h4>
                                 <div className="box-icon">
                                     <span className="fa fa-question" style={{
                                         opacity: '0.2',
@@ -127,7 +127,7 @@ return (
                             <div className="box-head">
                                 <h4 style={{
                                     textShadow: '2px 1px #000'
-                                }}>Number of Unsolved Questions</h4>
+                                }}>Number of Unsolved QAndA</h4>
                                 <div className="box-icon">
                                     <span className="fa fa-question" style={{
                                         opacity: '0.2',
@@ -139,7 +139,7 @@ return (
                                         right: '1rem',
                                         bottom: '5%',
                                         textShadow: '2px 2px #000'
-                                    }}>25</span>
+                                    }}>{dashboard?.total_qna}</span>
                                 </div>
                             </div>
                         </div>
