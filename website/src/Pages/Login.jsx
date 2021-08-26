@@ -70,17 +70,9 @@ export default function Login() {
                 }
                 if(isLoggedIn){
                     dispatch({type: 'LOGIN', payload: payloadData});
-                    if(state.role == "6"){
-                        window.location.href = '/upload-question';
-                        emailRef.current.value = ''
-                        passwordRef.current.value = ''
-                
-                    }else{
-                        emailRef.current.value = ''
-                        passwordRef.current.value = ''
-                        window.location.href = '/dashboard';
-                    }
-        
+                    emailRef.current.value = ''
+                    passwordRef.current.value = ''
+                    window.location.href = '/dashboard';
                 }
             }
             
