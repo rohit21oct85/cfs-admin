@@ -9,7 +9,7 @@ const searchQuestion = async (req, res) => {
         const questions = await Questions.find({ 
             $or:
             // [{book_isbn: { $regex: search}},{book_name:{ $regex:search }},{question:{$regex:search}}]
-            [{type:"QA"},{question:{$regex:search}}]
+            [{question:{$regex:search}}]
         },{
             _id:0,
             price :1,
@@ -22,7 +22,6 @@ const searchQuestion = async (req, res) => {
             chield_subject_id:1,
             question:1,
         }).limit(limit);
-    
         res.status(200).json({
             questions
         });
