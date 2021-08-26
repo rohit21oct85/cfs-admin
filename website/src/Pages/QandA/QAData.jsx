@@ -373,8 +373,8 @@ onChange={e => {
                                 <div className="col-md-12 row table-bordered border-right mt-2 ml-1 pl-2" key={question?.uuid} id={question?.uuid}>
                                     <div className="col-md-1">{question?.old_qid}</div>
 
-                                    <div className="col-md-6 pl-0" dangerouslySetInnerHTML={{__html: `${renderHTML(question?.question)}`}} />
-                                    <div className="col-md-5 pl-0" dangerouslySetInnerHTML={{__html: `${renderHTML(question?.shortanswer)}`}} />
+                                    <div className="col-md-6 pl-0" dangerouslySetInnerHTML={{__html: `${question?.question}`}} />
+                                    <div className="col-md-5 pl-0" dangerouslySetInnerHTML={{__html: `${question?.shortanswer}`}} />
                                     
                                 </div> 
                                 )
