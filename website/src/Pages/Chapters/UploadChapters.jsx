@@ -333,16 +333,21 @@ return (
 
                             {questions?.length > 0 && (
                                 <div className="pull-right">
-                                <button className="btnb tn-sm ml-2 dark"
-                                onClick={handleUploadQuestion}
-                                >
-                                {submitData ? (
-                                    <><span className="fa fa-spinner mr-2"></span> Uploading .... </>
-                                ) : 
-                                (
-                                    <><span className="fa fa-download mr-2"></span> Upload {questions?.length} Questions</>
-                                )}
-                                </button>
+                                {questions?.length > 1 ? (
+                                    <button className="btnb tn-sm ml-2 dark"
+                                    onClick={handleUploadQuestion}
+                                    >
+                                    {submitData ? (
+                                        <><span className="fa fa-spinner mr-2"></span> Uploading .... </>
+                                    ) : 
+                                    (
+                                        <><span className="fa fa-download mr-2"></span> Upload {questions?.length} Questions</>
+                                    )}
+                                    </button>
+                                ) : (
+                                    <button className="btnb tn-sm ml-2 dark">No Questions Available</button>
+                                )}    
+                                
                                 <button className="btn dark btn-sm ml-2"
                                 onClick={e => {
                                     e.preventDefault();
@@ -363,7 +368,7 @@ return (
                                         <div className="col-md-3 text-left">Question</div>
                                     </div>
                                     <div className="col-md-12" style={{ height: '400px', overflowX: 'hidden', overflowY: 'scroll'}}>
-                                    {questions?.map(ques => {
+                                    {questions?.length > 1 && questions?.map(ques => {
                                         return(
                                         <div className="col-md-12 mb-2 mt-2 pl-0 pb-2" key={ques?.uuid}
                                         id={ques?.uuid} 
