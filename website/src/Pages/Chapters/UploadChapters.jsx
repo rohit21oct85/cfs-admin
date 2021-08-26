@@ -183,11 +183,11 @@ return (
                     <div className="row">
                     <div className="pl-3 mr-2">
                     {params.subject_name ? (
-                            <Link to={`/books-upload`} className="btn btn-sm dark">
+                            <Link to={`/books-upload-chapters`} className="btn btn-sm dark">
                             <span className="fa fa-arrow-left"></span>
                             </Link>
                         ):(
-                            <Link to={`/books`} className="btn btn-sm dark">
+                            <Link to={`/books-upload-chapters`} className="btn btn-sm dark">
                             <span className="fa fa-arrow-left"></span>
                             </Link>
                         )}     

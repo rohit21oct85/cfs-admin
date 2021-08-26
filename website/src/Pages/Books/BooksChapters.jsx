@@ -136,7 +136,7 @@ return (
         <div className="dash-con-heading">
             <div className="col-md-12 row">
                 <div className="p-0">
-                <Link to={`/books`} className="btn btn-sm dark">
+                <Link to={`/books-chapters`} className="btn btn-sm dark">
                 <span className="fa fa-arrow-left"></span>
                 </Link>
                 <br />
