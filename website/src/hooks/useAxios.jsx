@@ -11,9 +11,9 @@ export default function useAxios({method, url, data = null}) {
     const {state: errorState, dispatch: errorDispatch} = useContext(ErrorContext);
 
     if(process.env.NODE_ENV === 'development'){
-        var API_URL = 'http://localhost:8080/api/v1/';
+        var API_URL = 'http://localhost:3000/api/v1/';
     }else{
-        var API_URL = 'https://cfs-admin.herokuapp.com/api/v1/';
+        var API_URL = 'https://admin.crazyforstudy.com/api/v1/';
     }
     const api = axios.create({
         baseURL: API_URL,
