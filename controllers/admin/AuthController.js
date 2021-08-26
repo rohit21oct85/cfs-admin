@@ -128,7 +128,7 @@ const Logout = async (req, res) => {
     }
 }
 const AccountLogout = async (req, res) => {
-    await Admin.findOneAndUpdate({email: req.body.email},{isActive: false});
+    await Admin.findOneAndUpdate({email: req.params.email},{isActive: false});
     res.status(200).json({
         message: "successfully loggedout"
     });    

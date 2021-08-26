@@ -9,6 +9,6 @@ router
     .post('/add-fields', Auth.AddField)
     .post('/forgot-password', Auth.ForgotPassword)
     .post('/refresh-token', Auth.RefreshToken)
-    .post('/account-logout', Auth.AccountLogout)
+    .get('/account-logout/:email?', Auth.AccountLogout)
     .delete('/logout', Auth.Logout);
 module.exports = router;

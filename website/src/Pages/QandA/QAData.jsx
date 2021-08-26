@@ -144,7 +144,7 @@ export default function QAData() {
                     setDataImported(false);
                     setLoading(false);
                     if(pagination?.next > pagination?.pageCount){
-                        history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}`)    
+                        history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/true`)    
                     }else{
                         history.push(`/qa-data/${params?.subject}/${params?.subject_id}/${params?.sub_subject}/${params?.sub_subject_id}/${params?.status}/${params?.chield_subject_id}/${params?.chield_subject}/${pagination?.next}`)
                     }

@@ -59,12 +59,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4Z
 
 
 ### Logout ### 
-POST http://localhost:3000/api/v1/admin/account-logout
-Content-Type: application/json
-
-{
-      "email": "rohit21oct85@gmail.com"
-}
+GET  http://localhost:3000/api/v1/admin/account-logout/rohit21oct85@gmail.com
 
 
 ### delete Chapters Test Questions ###
