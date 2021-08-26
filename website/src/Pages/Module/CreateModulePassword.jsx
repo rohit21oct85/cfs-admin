@@ -83,7 +83,7 @@ export default function CreateModulePassword() {
     const [showPassword, setShowPassword] = useState(false);
     const [viewPassword, setViewPassword] = useState('');
     const handlePasswordVerify = () => {
-        if(viewPassword == 'wrongpassword'){
+        if(viewPassword == 'wrong-password'){
             setShowPassword(true);
             setPasswordValidity(false);
         }else{

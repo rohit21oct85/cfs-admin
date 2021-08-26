@@ -39,7 +39,7 @@ export default function ViewData() {
             errorDispatch({type: 'SET_ERROR', payload: 'Please Enter password to view this resource'});
         }else{
             if(formData.password === 'wrong-password'){
-                history.push(`/app-module/password/${params.rmodule}/${params.id}`);
+                history.push(`/app-module/set-password/${params.rmodule}/${params.id}`);
             }else{
                 errorDispatch({type: 'SET_ERROR', payload: "you have entered a Wrong Password"});    
             }

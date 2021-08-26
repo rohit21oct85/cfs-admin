@@ -111,7 +111,7 @@ export const privateRoutes = [
         component: DeleteData
     },
     {
-        path: '/view-data/:module/:rmodule/:method/:id',
+        path: '/view-data/:module?/:rmodule?/:method?/:id',
         component: ViewData
     },
     {
