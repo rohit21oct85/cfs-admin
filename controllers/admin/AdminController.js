@@ -5,6 +5,7 @@ const Book = require('../../models/admin/Book.js');
 const Chapter = require('../../models/admin/Chapter.js');
 const Question = require('../../models/admin/Question.js');
 const TextBook = require('../../models/admin/TextBook.js');
+const ChieldSubject = require('../../models/admin/ChieldSubject.js');
 
 const CreateAdmin = async (req, res) => {
     const body = req.body;
@@ -116,7 +117,57 @@ const DashboardStatics = async (req, res) => {
         })
     }
 }
+const DataReports = async (req, res) => {
+    try {
+        let reports;
+        let status = req?.params?.status
+        let subject_id = req?.params?.subject_id
+        let sub_subject_id = req?.params?.sub_subject_id
+        let filter;
+        // res.status(res.statusCode).json(filter); return;
+        if(status === 'text-book-solutions'){
+            filter = {
+                subject_id: subject_id, 
+                sub_subject_id: sub_subject_id,
+                total_question: {$gt: 0}
+            }
+            reports = await Book.find(filter, {
+                ISBN13: 1,
+                published: 1,
+                total_question: 1,
+                question_uploaded:1,
+                quizlet_imported:1,
+                bartlyby_imported:1
+            });
+        }else if(status === 'question-and-answer'){
+            filter = {
+                subject_id: subject_id, 
+                sub_subject_id: sub_subject_id,
+                toal_question: {$gt: 0}
+            }
+            reports = await ChieldSubject.find(filter,{
+                chield_subject: 1,
+                toal_question:1,
+                page_uploaded:1,
+                total_uploaded:1,
+                total_page:1
+            });
+        }
+        return res.status(res.statusCode).json({
+            status: res.statusCode,
+            data: reports
+        })
+        
+    } catch (error) {
+        res.status(res.statusCode).json({
+            status: res.statusCode,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
+    DataReports,
     DashboardStatics,
     CreateAdmin,
     UpdateAdmin,

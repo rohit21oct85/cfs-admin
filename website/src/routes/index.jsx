@@ -21,6 +21,7 @@ import UploadQuestion from '../Pages/Books/UploadQuestion';
 import BookCheckQuality from '../Pages/Books/BookCheckQuality.jsx';
 import SimilarBooks from '../Pages/Books/SimilarBooks.jsx';
 import QAData from '../Pages/QandA/QAData.jsx';
+import DataReport from '../Pages/Report/DataReport';
 
 import AllStudents from '../Pages/Student/AllStudents.jsx';
 import AllTutors from '../Pages/Tutor/AllTutors.jsx';
@@ -221,6 +222,10 @@ export const privateRoutes = [
     {
         path: '/qa-data/:subject?/:subject_id?/:sub_subject?/:sub_subject_id?/:status?/:chield_subject_id?/:chield_subject?/:page?',
         component: QAData
+    },
+    {
+        path: '/data-report/:subject?/:subject_id?/:sub_subject?/:sub_subject_id?/:status?',
+        component: DataReport
     },
     {
         path: '/manage-vendor/:vendor_id?',

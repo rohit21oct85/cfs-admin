@@ -11,6 +11,7 @@ router
     .get('/view-all',checkAuth,adminAuth, Auth.ViewAllAdmin)
     .delete('/delete/:id', checkAuth,adminAuth, Auth.DeleteAdmin)
     .get('/dashboard-statics',checkAuth,adminAuth, Auth.DashboardStatics)
+    .get('/data-report/:subject_id?/:sub_subject_id?/:status?',checkAuth,adminAuth, Auth.DataReports)
 ;
 
 module.exports = router;

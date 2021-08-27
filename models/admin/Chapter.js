@@ -19,11 +19,9 @@ const ChapterSchema = new mongoose.Schema({
     },
     chapter_no:{
         type: String,
-        required: true,
     },
     chapter_name:{
         type: String,
-        required: true,
     },
 
     section_no:{
