@@ -133,11 +133,10 @@ const DataReports = async (req, res) => {
             }
             reports = await Book.find(filter, {
                 ISBN13: 1,
+                Edition: 1,
+                BookName: 1,
                 published: 1,
-                total_question: 1,
-                question_uploaded:1,
-                quizlet_imported:1,
-                bartlyby_imported:1
+                total_question: 1
             });
         }else if(status === 'question-and-answer'){
             filter = {
@@ -147,10 +146,13 @@ const DataReports = async (req, res) => {
             }
             reports = await ChieldSubject.find(filter,{
                 chield_subject: 1,
+                chield_subject_id: 1,
                 toal_question:1,
                 page_uploaded:1,
                 total_uploaded:1,
                 total_page:1
+            }).sort({
+                chield_subject_id: 1
             });
         }
         return res.status(res.statusCode).json({

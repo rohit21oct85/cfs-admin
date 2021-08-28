@@ -143,23 +143,62 @@ onChange={e => {
                         <div className="col-md-12 p-0 ">
                             <hr className="mt-2 mb-2"/>
                         </div>
-                        
-                        {dataReports?.length > 0 && (
-                        <div className="col-md-12 row bg-info ml-1 text-white pl-2">
-                            <div className="col-md-6">Chield Subjects</div>
-                            <div className="col-md-2">Total Question</div>
-                        </div>
-                        )}
-                        <div style={{ height: '400px', overflowY: 'scroll', overflowX: 'hidden'}}>
-                             {dataReports?.length > 0 && dataReports?.map(report => {
-                                return(
-                                <div className="col-md-12 row table-bordered border-right mt-2 ml-1 pl-2" key={report?._id}>
-                                    <div className="col-md-6">{report?.chield_subject}</div>
-                                    <div className="col-md-2">{report?.toal_question}</div>
-                                </div> 
-                                )
-                            })}        
-                        </div>
+                        {params?.status === 'question-and-answer' && 
+                            <div className="row col-md-12 table-responsive">
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Old Sub ID</th>
+                                        <th>Chield Subjects</th>
+                                        <th>Total </th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody style={{ height: '400px', overflowY: 'scroll', overflowX: 'hidden'}}>
+                                     {dataReports?.length > 0 && dataReports?.map(report => {
+                                        return(
+                                        <tr className="col-md-12 mt-2 ml-1 pl-2" key={report?._id}>
+                                            <td className="col-md-2">{report?.chield_subject_id}</td>
+                                            <td className="col-md-6">{report?.chield_subject}</td>
+                                            <td className="col-md-2">{report?.toal_question}</td>
+                                        </tr> 
+                                        )
+                                    })}
+                                    </tbody>
+                                
+                            </table>
+                            </div>
+                        }
+
+                        {params?.status === 'text-book-solutions' && 
+                            <div className="row col-md-12 table-responsive">
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ISBN13</th>
+                                        <th>Edition</th>
+                                        <th>Book Name</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody style={{ height: '400px', overflowY: 'scroll', overflowX: 'hidden'}}>
+                                     {dataReports?.length > 0 && dataReports?.map(report => {
+                                        return(
+                                        <tr className="col-md-12 mt-2 ml-1 pl-2" key={report?._id}>
+                                            <td >{report?.ISBN13}</td>
+                                            <td >{report?.Edition}</td>
+                                            <td >{report?.BookName}</td>
+                                            <td >{report?.total_question}</td>
+                                        </tr> 
+                                        )
+                                    })}
+                                    </tbody>
+                                
+                            </table>
+                            </div>
+                        }
+                                
                     </div>    
                 </div>
             </div>
