@@ -21,6 +21,7 @@ const searchQuestion = async (req, res) => {
             sub_subject_id:1,
             chield_subject_id:1,
             question:1,
+            old_qid:1,
         }).limit(limit);
         res.status(200).json({
             questions
