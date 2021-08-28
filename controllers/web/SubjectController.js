@@ -48,7 +48,7 @@ const GetChildSubjects = async (req, res) => {
 
 const GetQuestionAndAnswers = async (req, res) => {
     try {
-        const child = req.params.child_subject.replaceAll('-', ' ');
+        const child = req.params.child_subject.replace(/-/g,' ');
         const childSubjects = await ChildSubjects.findOne({ "$or": [
             { "chield_subject": { "$regex": `^${req.params.child_subject}$`,'$options' : 'i'} }, 
             { "chield_subject": { "$regex": `^${child}$`,'$options' : 'i'}}
