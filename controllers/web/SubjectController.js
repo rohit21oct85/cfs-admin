@@ -70,7 +70,9 @@ const GetQuestionAndAnswers = async (req, res) => {
 
 const GetAnswer = async (req, res) => {
     try {
-        const questions = await Questions.findOne({old_qid:req.params.old_id})
+        const questions = await Questions.findOne({old_qid:req.params.old_id}).lean()
+        const childSubject =  await ChildSubjects.findOne({chield_subject_id:questions.chield_subject_id})
+        questions.cheild_subject = childSubject.chield_subject;
         res.status(200).json({
             data: questions,
         });
