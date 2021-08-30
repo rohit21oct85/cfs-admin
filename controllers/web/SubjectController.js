@@ -48,7 +48,11 @@ const GetChildSubjects = async (req, res) => {
 
 const GetQuestionAndAnswers = async (req, res) => {
     try {
-        const childSubjects = await ChildSubjects.findOne({chield_subject:{'$regex' : `^${req.params.child_subject}$`, '$options' : 'i'}});
+        const child = req.params.child_subject.replaceAll('-', ' ');
+        const childSubjects = await ChildSubjects.findOne({ "$or": [
+            { "chield_subject": { "$regex": `^${req.params.child_subject}$`,'$options' : 'i'} }, 
+            { "chield_subject": { "$regex": `^${child}$`,'$options' : 'i'}}
+        ]});
         const child_subject_id = childSubjects.chield_subject_id
         const questions = await Questions.find({chield_subject_id:child_subject_id}).skip(req.body.pageno * req.body.limit).limit(parseInt(req.body.limit))
         const total = await Questions.countDocuments(Questions.find({ chield_subject_id: child_subject_id }));
@@ -63,9 +67,27 @@ const GetQuestionAndAnswers = async (req, res) => {
         });
     }
 }
+
+const GetAnswer = async (req, res) => {
+    try {
+        const questions = await Questions.findOne({old_qid:req.params.old_id}).lean()
+        const childSubject =  await ChildSubjects.findOne({chield_subject_id:questions.chield_subject_id})
+        questions.cheild_subject = childSubject.chield_subject;
+        res.status(200).json({
+            data: questions,
+        });
+    } catch (error) {
+        res.status(409).json({
+            message: "Error occured",
+            errors: error.message
+        });
+    }
+}
+
 module.exports = {
     AllSubjects,
     SubSubjects,
     GetChildSubjects,
-    GetQuestionAndAnswers
+    GetQuestionAndAnswers,
+    GetAnswer
 }
