@@ -3,43 +3,46 @@ import * as utils from '../../utils/MakeSlug';
 import StudentHeading from './StudentHeading';
 
 function SingleStudent({student}) {
+    let profile;
+    if(student?.social_id){
+        profile = student?.img;
+    }else{
+        profile = `https://backup.crazyforstudy.com/uploads/student/thumb/${student?.img}`;
+    }
     return (
-        <div className="subject-card" key={student._id} id={`card-${student._id}`}>
-            <div className="subject-card-body">
-                <div className="row col-md-12">
-                    <div className="col-md-3 pl-0 pr-0">
+        <tr className="subject-card" key={student._id} id={`card-${student._id}`}>
+                <td>
                         {student?.img ? (
-                            <img src={student?.img} className="img-responsive" style={{ width: '100%', borderRadius: '50%'}}/>
+                            <img src={profile} className="img-responsive" style={{ width: '30px',height: '30px', borderRadius: '50%'}}/>
                         ): (
                             <p className="nameCard">
-                                {utils.GetString(student.fullname, 1)}
+                                {student?.Name?.substr(0,1)}
                             </p>
                         )}
-                    </div>
-                    <div className="col-md-9">
-                        <div className="admin-name mb-2"> 
-                            <span className="fa fa-user"></span>{student.fullname}
-                        </div> 
-                        <div className="admin-name mb-2"> 
-                            <span className="fa fa-envelope"></span> {student.email}
-                        </div>
-                        
-                        <div className="admin-name mb-2"> 
-                            <span className="fa fa-building"></span>{student.college}
-                        </div>
-                        <div className="admin-name mb-2"> 
-                            <span className="fa fa-calendar"></span>{student.created_at}
-                        </div>
-                    </div>
-                </div>
-                
-                
+                    </td>
+                    
+                    <td> 
+                        {student.Name}
+                    </td> 
+                    <td> 
+                     {student.Email}
+                    </td>
+                    
+                    <td> 
+                        {student.college}
+                    </td>
+                    <td> 
+                        {student.is_created}
+                    </td>
+                    <td> 
+                        {student.Country}
+                    </td>
+                    
+            <td>    
+               <StudentHeading student={student}/>
+            </td> 
 
-                <hr className="mt-1 mb-1"/>
-                <StudentHeading student={student}/>
-            </div> 
-
-        </div>
+        </tr>
     )
 }
 

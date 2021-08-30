@@ -21,6 +21,9 @@ const TransactionSchema = new mongoose.Schema({
 });
 
 const StudentSchema = new mongoose.Schema({
+    id: {
+        type: String
+    },
     fullname: {
         type: String
     },

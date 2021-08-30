@@ -42,8 +42,20 @@ return (
         {!isLoading && (
         <div className="dash-cont-start">
         <div className="subject-main-container">  
-
+        <table className="table table-bordered">
+        <thead>
+            <tr>
+                <td>Image</td>
+                <td><span className="fa fa-user"></span> Name</td>
+                <td><span className="fa fa-envelope"></span> Email</td>
+                <td><span className="fa fa-building"></span> College Name</td>
+                <td><span className="fa fa-calendar"></span> Created At</td>
+                <td><span className="fa fa-calendar"></span> Country</td>
+                <td>Action</td>
+            </tr>
+        </thead>    
         {data?.data?.map(student => <SingleStudent student={student} key={student._id}/> )}
+        </table>    
 
         {data?.data?.pagination?.itemCount === 0 && (
             <div className="col-md-6 offset-3 p-5">
