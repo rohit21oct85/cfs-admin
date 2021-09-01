@@ -29,8 +29,8 @@ router
     .post('/bartelby-upload-data', checkAuth, Chapter.BartelbyImportChapter)
     .post('/bartelby-clear-all',  checkAuth, Chapter.BartelbyClearAllChapters)
     .post('/bartelby-delete-all',  checkAuth, Chapter.BartelbyDeleteAllChapters)
-    .get('/bartelby-problems/:book_isbn/:section_id',  checkAuth, Chapter.BartelbyProblems)
-    .get('/bartelby-answers/:question_id',  checkAuth, Chapter.BartelbyQuestionAnswers)
+    .get('/bartelby-problems/:book_isbn?/:section_id?/:sub_section_id?',  checkAuth, Chapter.BartelbyProblems)
+    .get('/bartelby-answers/:question_id?',  checkAuth, Chapter.BartelbyQuestionAnswers)
     .post('/bartelby-chapter-change-status',  checkAuth, Chapter.BartelbyChaptersChangeStatus)
     .post('/bartelby-update-chapter-answer',  checkAuth, Chapter.BartelbyUpdateChaptersAnswer)
 

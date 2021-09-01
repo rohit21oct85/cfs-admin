@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const TextBookSchema = new mongoose.Schema({
     user_Id: {type: String},
-    book_isbn: {type: String},
+    sid: {type: String},
+    isbn: {type: String},
     book_name: {type: String},
     edition: {type: String},
     inStock:{

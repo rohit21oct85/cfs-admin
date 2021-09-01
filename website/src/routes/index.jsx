@@ -179,7 +179,7 @@ export const privateRoutes = [
         component: BookSEO
     },
     {
-        path: '/books-freelance/:solution_type?/:isbn?/:status?/:section_id?/:question_id?',
+        path: '/books-freelance/:solution_type?/:isbn?/:status?/:section_id?/:sub_section_id?/:question_id?',
         component: BooksFreelance
     },
     {

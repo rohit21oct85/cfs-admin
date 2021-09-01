@@ -9,6 +9,7 @@ export default function useGetProblems() {
     const params = useParams();
     const isbn = params.isbn;
     const section_id = params?.section_id;
+    const sub_section_id = params?.sub_section_id;
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){
@@ -16,9 +17,15 @@ export default function useGetProblems() {
     }else{
         API_URL = cons.LIVE_API_URL;
     }
-    return useQuery([`problems-${section_id}`], async () => {
+    let path;
+    if(sub_section_id){
+        path = `${API_URL}chapter/bartelby-problems/${isbn}/${section_id}/${sub_section_id}`
+    }else{
+        path = `${API_URL}chapter/bartelby-problems/${isbn}/${section_id}`
+    }
+    return useQuery([`problems-${section_id}-${sub_section_id}`], async () => {
         if(section_id){
-            const result = await axios.get(`${API_URL}chapter/bartelby-problems/${isbn}/${section_id}`,{
+            const result = await axios.get(path,{
                 headers: {
                     'Content-Type': 'Application/json',
                     'Authorization':'Bearer '+state.access_token

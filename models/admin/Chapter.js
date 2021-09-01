@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ChapterSchema = new mongoose.Schema({
     old_qid:{type: String},
     section_id:{type: String},
+    sub_section_id:{type: String},
     source:{type: String},
     sequence:{type: Number},
     book_id: {

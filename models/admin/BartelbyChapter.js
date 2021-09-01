@@ -7,6 +7,12 @@ const BartelbyChapterSchema = new mongoose.Schema({
     section_id:{
         type: String,
     },
+    sections:{
+        type: [],
+    },
+    total_sections:{
+        type: Number,
+    },
     chapter_no:{
         type: String,
     },
@@ -29,6 +35,10 @@ const BartelbyChapterSchema = new mongoose.Schema({
     total_uploaded: {
         type: Number,
         default: 1
+    },
+    total_section_uploaded: {
+        type: Number,
+        default: 0
     }
 
 });

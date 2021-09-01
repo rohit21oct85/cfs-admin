@@ -8,6 +8,7 @@ const TextBook = require('../../models/admin/TextBook.js');
 const ChieldSubject = require('../../models/admin/ChieldSubject.js');
 const RoleModule = require('../../models/admin/RoleModule.js');
 const RolePermission = require('../../models/admin/RolePermission.js');
+const CFSTutor = require('../../models/tutor/CFSTutor.js');
 
 const CreateAdmin = async (req, res) => {
     const body = req.body;
@@ -111,6 +112,7 @@ const DashboardStatics = async (req, res) => {
     try {
         let students = await Student.estimatedDocumentCount({});
         let tutors = await Tutor.estimatedDocumentCount({});
+        let cfs_tutors = await CFSTutor.estimatedDocumentCount({});
         let books = await Book.estimatedDocumentCount({});
         let chapters = await Chapter.estimatedDocumentCount({});
         let qnas = await Question.find({shortanswer: ""}).countDocuments();
@@ -121,6 +123,7 @@ const DashboardStatics = async (req, res) => {
             data: {
                 total_student: students,
                 total_tutor: tutors,
+                total_cfs_tutor: cfs_tutors,
                 total_books: books,
                 total_chapters: chapters,
                 total_qna: qnas,
