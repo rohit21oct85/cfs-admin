@@ -1188,7 +1188,7 @@ const BartelbyProblems = async (req, res) => {
         let singleBook = await Book.findOne({
             "ISBN13": req?.params?.book_isbn
         })
-        if(singleBook?.bartlyby_imported){
+        if(singleBook?.bartlyby_imported === true){
             if(req?.params?.sub_section_id){
                 filter = {
                     book_isbn: req?.params?.book_isbn,
