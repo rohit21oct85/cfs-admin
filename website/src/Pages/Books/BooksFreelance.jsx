@@ -849,6 +849,7 @@ export default function BooksFreelance() {
                         )}
                       </div>
                       <hr className="clearfix mb-2 mt-0" />
+                      {console.log(singleBook[0]?.bartlyby_imported)}
                       <select
                         className="form-control mb-2"
                         value={params?.section_id}
@@ -866,7 +867,7 @@ export default function BooksFreelance() {
                               key={chapter?.section_id}
                               className="card mb-2 pl-2 pr-2 pt-1 pb-2 br-10"
                               id={chapter?.section_id}
-                              value={singleBook && singleBook?.bartlyby_imported === false ? chapter?.section_id : chapter?.chapter_no}
+                              value={singleBook[0]?.bartlyby_imported === true ? chapter?.section_id : chapter?.chapter_no}
                             >
                               {chapter?.chapter_no} - {chapter?.chapter_name}
                             </option>
