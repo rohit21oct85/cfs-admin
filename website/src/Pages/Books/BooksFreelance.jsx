@@ -201,13 +201,15 @@ export default function BooksFreelance() {
         (chapter) => chapter?.section_id === params?.section_id
       );
       setImported(importedData && importedData[0]);
-      setHideImport(true)
+      setFetching(false);
+
     } else {
       addToast("Please select chapters", {
         appearance: "error",
         autoDismiss: true,
       });
     }
+    
   }
   
   const uploadChapterQuestion = useMutation(
@@ -454,7 +456,7 @@ export default function BooksFreelance() {
     if (sourceCode !== "") {
       if(params?.sub_section_id === "undefined"){
         let content = document.querySelectorAll(
-          ".styles__SectionContainer-sc-njq7rd-15"
+          ".styles__SectionContainer-sc-njq7rd-15, .styles__SectionContainer-njq7rd-15"
         );
         console.log(content)
         content.forEach((value, index) => {
@@ -467,19 +469,17 @@ export default function BooksFreelance() {
         });
       }else{
         let content = document.querySelectorAll(
-          ".styles__SectionContainer-njq7rd-15"
+          ".styles__SectionContainer-njq7rd-15, .styles__SectionContainer-sc-njq7rd-15"
         );
         
         console.log(content)
         content.forEach((value, index) => {
-          if (index > 0) {
             setConverted((converted) => [
               ...converted,
               {
                 data: value,
               },
             ]);
-          } 
         });
       }
       
@@ -690,7 +690,7 @@ export default function BooksFreelance() {
                         )}
                       </div>
                       <div className="col-md-2">
-                        {hideImport === false && (
+                        {hideImport === false && questionsData?.length === 0 && (
                         <button
                           className="btn btn-md dark"
                           onClick={importQuestion}
@@ -849,7 +849,6 @@ export default function BooksFreelance() {
                         )}
                       </div>
                       <hr className="clearfix mb-2 mt-0" />
-                      {console.log(singleBook[0]?.bartlyby_imported)}
                       <select
                         className="form-control mb-2"
                         value={params?.section_id}
@@ -867,7 +866,7 @@ export default function BooksFreelance() {
                               key={chapter?.section_id}
                               className="card mb-2 pl-2 pr-2 pt-1 pb-2 br-10"
                               id={chapter?.section_id}
-                              value={singleBook[0]?.bartlyby_imported === true ? chapter?.section_id : chapter?.chapter_no}
+                              value={singleBook && singleBook[0]?.bartlyby_imported === true ? chapter?.section_id : chapter?.chapter_no}
                             >
                               {chapter?.chapter_no} - {chapter?.chapter_name}
                             </option>
@@ -948,7 +947,7 @@ export default function BooksFreelance() {
                                     history.push(path);
                                   }}
                                 >
-                                  {problem?.problem_no}
+                                  {problem?.problem_no}-{problem?.question?.substr(0,10)}
                                 </div>
                               );
                             })}

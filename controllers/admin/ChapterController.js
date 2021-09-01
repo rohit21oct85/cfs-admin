@@ -968,7 +968,7 @@ const importChapter = async (req, res) => {
         await Book.findByIdAndUpdate({_id: data[0].book_id},{
             "question_uploaded": true,
             "total_question": data.length
-        }) ;
+        });
 
         res.status(201).json({
             error: false,
@@ -1214,7 +1214,8 @@ const BartelbyProblems = async (req, res) => {
         const data = await Chapter.find(filter,{
             _id: 1,
             sequence: 1,
-            problem_no: 1
+            problem_no: 1,
+            question: 1,
         }).sort({
             sequence: 1,
         })

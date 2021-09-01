@@ -155,12 +155,10 @@ const BookSchema = new mongoose.Schema({
         default: 0
     },
     bartlyby_imported: {
-        type: Boolean,
-        default: 0
+        type: Boolean
     },
     quizlet_imported: {
-        type: Boolean,
-        default: 0
+        type: Boolean
     },
     created_at: {
         type: Date,
