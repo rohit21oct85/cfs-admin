@@ -145,15 +145,17 @@ export default function ImportChapters() {
                       <td>{chap?.total_section ?? 0}</td>
                       <td>{chap?.sec_uploaded}</td>
                       <td>{chap?.total_question}</td>
-                      <td 
-                      style={{
-                        cursor: "pointer"
-                      }}
-                      onClick={e => {
-                        history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/add-questions/${chap?.type ? chap?.chapter_no+'-oldbook' :chap?._id}/${chap?.chapter_name?.replace(/ /g,'-')}`)
-                      }}>
-                        Add Questions
-                      </td>
+                      {chap?.total_section === 0 && (
+                        <td 
+                        style={{
+                          cursor: "pointer"
+                        }}
+                        onClick={e => {
+                          history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/add-questions/${chap?.type ? chap?.chapter_no+'-oldbook' :chap?._id}/${chap?.chapter_name?.replace(/ /g,'-')}`)
+                        }}>
+                          Add Questions
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
