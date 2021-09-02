@@ -137,6 +137,7 @@ export default function ImportSections() {
                   <th>Section No</th>
                   <th>Section Name</th>
                   <th>Ans Uploaded</th>
+                  <th>Add Questions</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,12 +145,18 @@ export default function ImportSections() {
                   return (
                     <tr key={`tr-${chap?.book_isbn}_${index}`}>
                       <td>{chap?.section_no?.replace(/_/g,' ')}</td>
-                      <td onClick={
+                      <td >{chap?.section_name}</td>
+                      <td>{chap?.answer_uploaded}</td>
+                      <td 
+                      style={{
+                        cursor: pointer
+                      }}
+                      onClick={
                             e => {
                                   history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/add-questions/${params?.section_id}/${params?.sub_section_id}/${chap?._id}::${chap?.section_no?.replace(/ /g,'-')}/${chap?.section_name?.replace(/ /g,'-')}`)
                             }
-                      }>{chap?.section_name}</td>
-                      <td>{chap?.answer_uploaded}</td>
+                      }>Add Question</td>
+
                     </tr>
                   );
                 })}
