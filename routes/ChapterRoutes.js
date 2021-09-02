@@ -34,8 +34,13 @@ router
     .post('/bartelby-chapter-change-status',  checkAuth, Chapter.BartelbyChaptersChangeStatus)
     .post('/bartelby-update-chapter-answer',  checkAuth, Chapter.BartelbyUpdateChaptersAnswer)
 
-    .post('/quizlet-import-chapters',  checkAuth, Chapter.SaveQuizletChapters)
     .get('/quizlet-chapters/:isbn?',  checkAuth, Chapter.quizletChapters)
+    .get('/quizlet-sections/:isbn?/:ch_id?',  checkAuth, Chapter.quizletSection)
+    .get('/oldbook-questions/:isbn?/:chapter_no?',  checkAuth, Chapter.oldbookQuestions)
+    .post('/quizlet-import-chapters',  checkAuth, Chapter.SaveQuizletChapters)
+    .post('/quizlet-import-sections',  checkAuth, Chapter.SaveQuizletSections)
+    .post('/quizlet-add-answer',  checkAuth, Chapter.SaveQuizletAnswer)
+    .post('/update-chaptername',  checkAuth, Chapter.UpdateChapterName)
 
     .get('/questions/:isbn',  checkAuth, Chapter.GetChapterQuestions)
     .get('/qc-chapter-questions/:isbn/:chapter_no?/:status?',  checkAuth, Chapter.GetQCChapterQuestions)

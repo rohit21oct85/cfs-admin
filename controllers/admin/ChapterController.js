@@ -1323,10 +1323,12 @@ const BartelbyDeleteAllChapters = async (req, res) => {
     try {
         let book_isbn = req?.body?.book_isbn;
         await BartelbyChapter.deleteMany({book_isbn: book_isbn});
+        await QuizletChapter.deleteMany({book_isbn: book_isbn});
         await Chapter.deleteMany({book_isbn: book_isbn});
         await Book.findOneAndUpdate({ISBN13: book_isbn},{
             total_question: 0, 
             bartlyby_imported: false, 
+            quizlet_imported: false, 
             question_uploaded: false
         });
         
@@ -1378,7 +1380,7 @@ const BartelbyUpdateChaptersAnswer = async (req, res) => {
         let updateData;
         if(source === 'bartelby'){
             updateData = {
-                expert_answer: expert_answer,
+                answer: expert_answer,
                 question:question,
                 answer_uploaded: true
             }
@@ -1408,14 +1410,115 @@ const BartelbyUpdateChaptersAnswer = async (req, res) => {
             });
         }
         
-        
-       
-       
         res.status(201).json({
             error: false,
             status: 201,
             message: "Answer Updated"
         })
+        
+    } catch (error) {
+        res.status(505).json({
+            error: true,
+            status: 505,
+            message: error.message
+        })
+    }
+}
+const SaveQuizletAnswer = async (req, res) => {
+    try {
+        let chapter_id = req?.body?.chapter_id;
+        let section_id = req?.body.section_id;
+        
+        let isbn = req?.body.book_isbn;
+        let singleBook = await Book.findOne({
+            ISBN13: isbn
+        });
+        if(req?.body?.type === 'quizlet'){
+            await Chapter.create({
+                book_id: req?.body.book_id,
+                book_name: req?.body.book_name,
+                book_isbn: req?.body.book_isbn,
+                chapter_no: req?.body.chapter_no,
+                chapter_name: req?.body.chapter_name,
+                section_id: req?.body.section_id,
+                section_no: req?.body.section_no,
+                section_name: req?.body.section_name,
+                problem_no: req?.body.problem_no,
+                question: req?.body.question,
+                answer: req?.body.answer,
+                answer_uploaded: req?.body.answer_uploaded,
+                flag: req?.body.flag,
+                source: req?.body.source,
+            });
+            
+            let quizlet = await QuizletChapter.findOne({
+                _id: chapter_id
+            });
+    
+            let total_questionQuizlet = quizlet?.total_question + 1
+            await QuizletChapter.findOneAndUpdate({
+                _id: chapter_id, book_isbn: isbn
+            },{
+                total_question: total_questionQuizlet
+            });
+            
+            let quizChapter = await QuizletChapter.findOne({"_id": chapter_id});
+            if(quizChapter?.total_section > 0){
+                let quizletSection = await quizChapter.sections.id(section_id);
+    
+                let total_quizletSection = quizletSection?.answer_uploaded + 1
+                
+                await QuizletChapter.findById(chapter_id, function(err, result){
+                    if(err){
+                        res.status(404).send('Chapter Not found');
+                    }else{
+                        result.sections.id(section_id).answer_uploaded = total_quizletSection;
+                        result.save(function(saveerr, saveresult) {
+                            if (!saveerr) {
+                              res.status(200).send(saveresult);
+                            } else {
+                              res.status(400).send(saveerr.message);
+                            }
+                          });
+                    }
+                });    
+            }
+            let total_question = singleBook?.total_question + 1
+            await Book.findOneAndUpdate({
+                ISBN13: isbn
+            },{
+                total_question: total_question
+            })
+         
+        }else{
+            await Chapter.findByIdAndUpdate({
+                _id: req?.body?.question_id
+            },{
+                book_id: req?.body.book_id,
+                book_name: req?.body.book_name,
+                book_isbn: req?.body.book_isbn,
+                chapter_no: req?.body.chapter_no,
+                chapter_name: req?.body.chapter_name,
+                section_no: req?.body.section_no,
+                section_name: req?.body.section_name,
+                problem_no: req?.body.problem_no,
+                question: req?.body.question,
+                answer: req?.body.answer,
+                answer_uploaded: req?.body.answer_uploaded,
+                flag: req?.body.flag,
+                source: req?.body.source,
+            });
+            let total_question = singleBook?.total_question + 1
+            await Book.findOneAndUpdate({
+                ISBN13: isbn
+            },{
+                total_question: total_question
+            })
+            res.status(200).json({
+                status: res?.statusCode,
+                message: "updated chapters question"
+            });
+        }
         
     } catch (error) {
         res.status(505).json({
@@ -1436,7 +1539,7 @@ const SaveQuizletChapters = async (req, res) => {
         // res.send(count); return;
         if(count === 0){
             await QuizletChapter.insertMany(FinalData);
-            await Book.findOneAndUpdate({ISBN13: req?.body?.book_isbn},{quizlet_imported: 1})
+            await Book.findOneAndUpdate({ISBN13: req?.body?.book_isbn},{quizlet_imported: 1,bartleby_imported: 0})
             res.status(201).json({
                 error: false,
                 status: 201,
@@ -1452,10 +1555,94 @@ const SaveQuizletChapters = async (req, res) => {
         })
     }
 }
+const SaveQuizletSections = async (req, res) => {
+    try {
+        
+        let FinalData = req.body.sections;
+        let filter = {book_isbn: req.body.book_isbn, _id: req?.body?._id};
+        let count = await QuizletChapter.count(filter) ;
+        // res.send(count); return;
+        if(count > 0){
+            await QuizletChapter.findByIdAndUpdate(filter, {
+                $push: {
+                    sections: FinalData
+                }
+            });
+            await QuizletChapter.findByIdAndUpdate(filter, {
+                total_section: req?.body?.total_section,
+                sec_uploaded: 1
+            });
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: 'chapter inserted'
+            })
+        }
+
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error
+        })
+    }
+}
+
+
 const quizletChapters = async (req, res) => {
     try {
-        let filter = {book_isbn: req.params.isbn, uploaded: 0, answer_uploaded: 0};
-        let data = await QuizletChapter.find(filter);
+        let data = await QuizletChapter.find({
+            book_isbn: req?.params?.isbn
+        });
+
+        data.forEach( d => {
+            d.type = 'quizlet'
+        })
+        if(data?.length === 0){
+            const chapters = [];
+            const map = new Map();
+            const results = await Chapter.find({
+                "book_isbn": `${req.params.isbn}`,
+            },{
+                _id: 1,
+                chapter_no: 1,
+                chapter_name: 1
+            });
+            results.forEach( item => {
+                if(!map.has(item.chapter_no)){
+                    map.set(item.chapter_no, true);
+                    chapters.push({
+                        _id: item.id,
+                        chapter_no: item.chapter_no, 
+                        chapter_name: item.chapter_name, 
+                        type: 'old-book'
+                    })
+                }
+            });
+            data = chapters
+         
+        }
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data,
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+const quizletSection = async (req, res) => {
+    try {
+        
+        let data = await QuizletChapter.find({
+            book_isbn: req?.params?.isbn, 
+            _id: req?.params?.ch_id, 
+            sec_uploaded: 1
+        },{sections: 1, total_section: 1});
         res.status(201).json({
             error: false,
             status: 201,
@@ -1469,6 +1656,33 @@ const quizletChapters = async (req, res) => {
         })
     }
 }
+const oldbookQuestions = async (req, res) => {
+    try {
+        
+        let data = await Chapter.find({
+            book_isbn: req?.params?.isbn, 
+            chapter_no: req?.params?.chapter_no,
+            answer_uploaded: false 
+        },{
+            problem_no: 1,
+            question: 1,
+            _id: 1,
+            answer_uploaded: 1
+        });
+        res.status(201).json({
+            error: false,
+            status: 201,
+            data: data
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
+
 const deleteChapters = async (req, res) => {
     try {
         let filter = {book_isbn: req.body.isbn, chapter_no: req.body.chapter_no};
@@ -1551,8 +1765,60 @@ const deleteAllChapters = async (req, res) => {
     }
 }
 
+const UpdateChapterName = async (req, res) => {
+    try {
+        if(req?.body?.update_salt === ''){
+            res.status(401).json({
+                error: true,
+                status: res.statusCode,
+                message: "salt not available"
+            })  
+        }else if(req?.body?.update_salt !== 'server-update'){
+            res.status(401).json({
+                error: true,
+                status: 501,
+                message: "salt mismatched"
+            })    
+        }else if(req?.body?.update_salt === 'server-update'){
+            let filter = {
+                book_isbn: req?.body?.book_isbn,
+                chapter_no: req?.body?.chapter_no,
+            };
+            let update = {
+                chapter_name: req?.body?.chapter_name
+            }
+            let count = await Chapter.find(filter).countDocuments();
+            if(req?.body?.source === "QZ"){
+                await QuizletChapter.findOneAndUpdate(filter, update);
+            }
+            else if(req?.body?.source === "BB"){
+                await BartelbyChapter.findOneAndUpdate(filter, update);
+            }
+            
+            if(count > 0){
+                await Chapter.updateMany(filter, update);
+            }
+            res.status(201).json({
+                error: false,
+                status: 201,
+                message: "Chapter Updated"
+            })
+        }
+    } catch (error) {
+        res.status(501).json({
+            error: true,
+            status: 501,
+            message: error.message
+        })
+    }
+}
 module.exports = {
+    UpdateChapterName,
+    oldbookQuestions,
+    SaveQuizletAnswer,
+    SaveQuizletSections,
     SaveQuizletChapters,
+    quizletSection,
     quizletChapters,
     BartelbyProblems,
     BartelbyUpdateChaptersAnswer,

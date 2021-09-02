@@ -31,7 +31,7 @@ router
     .patch('/update-all/:sub_subject_id', Book.updateAllBook)
     .delete('/delete/:id', Book.deleteBook)
     .delete('/delete-all', Book.deleteBookAll)
-    .get('/view/:id', Book.viewBook)
+    .get('/view/:id?', Book.viewBook)
     .post('/add-review', checkAuth, Book.addReview)
     .get('/all-reviews/:book_id', checkAuth, Book.allReviews)
     .post('/upload-review', upload.single('file'), checkAuth, Book.UploadReviewCSV)

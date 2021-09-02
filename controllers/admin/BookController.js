@@ -268,7 +268,7 @@ const deleteBook = async(req, res) => {
 
 const viewBook = async(req, res) => {
     try {
-        const SingleBook = await Book.findOne({ _id: req.params.id }, { __v: 0 });
+        const SingleBook = await Book.findOne({ISBN13: req?.params?.id }, { __v: 0 });
         return res.status(200).json({
             data: SingleBook
         });

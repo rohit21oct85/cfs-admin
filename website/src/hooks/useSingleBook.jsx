@@ -7,7 +7,12 @@ import * as cons from '../Helper/Cons.jsx'
 
 export default function useSingleBook() {
     const params = useParams();
-    const book_id = params.book_id;
+    let book_id;
+    if(params.book_id){
+        book_id = params?.book_id
+    }else if(params?.isbn){
+        book_id = params?.isbn
+    }
     const {state } = useContext(AuthContext);
     let API_URL = '';
     if(process.env.NODE_ENV === 'development'){

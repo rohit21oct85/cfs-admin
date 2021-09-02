@@ -141,7 +141,7 @@ const Logout = async(req, res) => {
         const decode = await jwt.verify(accessToken, accessTokenSecret);
         const UserData = { id: decode.id, role: decode.role };
         let newAccessToken = await jwt.sign(UserData, 'sasdasd', { expiresIn: '0s' });
-        return res.status(402).json({
+        return res.status(201).json({
             message: "successfully loggedout",
             accessToken: newAccessToken
         });

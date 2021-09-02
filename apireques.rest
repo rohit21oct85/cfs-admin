@@ -66,6 +66,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4Z
 {
       "book_isbn":"9781285858913"
 }
+### update Chapters ###
+POST http://localhost:3000/api/v1/chapter/update-chaptername
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZmE5MzY4ZTVhMWZmMzc3NTVmODVkZSIsInJvbGUiOjEsImlhdCI6MTYyOTM2MDc1NywiZXhwIjoxNjMxOTUyNzU3fQ.IMmgLaYZodeY8t38jKqhU2K32smChLpT7cNax_SPids
+
+// QZ = QuizLet , BB = Bartleby , OB = OldBook
+
+{
+      "update_salt":"server-update",
+      "book_isbn":"9781285867045",
+      "source":"QZ",
+      "chapter_no":"3",
+      "chapter_name":"Descriptive Statistics: Numerical Measures"
+}
 
 ### delete Chapters Test Questions ###
 POST http://localhost:3000/api/v1/master-admin/delete-old-role

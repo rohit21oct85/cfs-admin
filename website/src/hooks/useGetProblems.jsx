@@ -18,9 +18,9 @@ export default function useGetProblems() {
         API_URL = cons.LIVE_API_URL;
     }
     let path;
-    if(sub_section_id){
+    if(sub_section_id && params?.solution_type === 'BB'){
         path = `${API_URL}chapter/bartelby-problems/${isbn}/${section_id}/${sub_section_id}`
-    }else{
+    }else if(params?.solution_type === 'BB'){
         path = `${API_URL}chapter/bartelby-problems/${isbn}/${section_id}`
     }
     return useQuery([`problems-${section_id}-${sub_section_id}`], async () => {

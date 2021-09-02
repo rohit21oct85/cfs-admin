@@ -154,6 +154,9 @@ const BookSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    source:{
+        type: String
+    },
     bartlyby_imported: {
         type: Boolean
     },
