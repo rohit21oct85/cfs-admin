@@ -146,13 +146,17 @@ export default function AddQuestion() {
       },
       {
         onSuccess: () => {
+          setFormData({...formData, ['problem_no']: formData['problem_no'] +1})
+          setSourceCode([]);
+          setConverted([]);
+          setUploading(false);
           addToast("Expert Answer Updated", {
               appearance: "success",
               autoDismiss: true,
             });
-            queryClient.invalidateQueries([
-              `old-questions-${params?.isbn}`,
-            ]);
+          queryClient.invalidateQueries([
+            `old-questions-${params?.isbn}`,
+          ]);
           let path;  
           if(params?.section_id?.includes('oldbook')){
             path = `/books-freelance/${params?.solution_type}/${params.isbn}/add-question/${params?.section_id}/${params?.sub_section_id}`;
@@ -160,7 +164,7 @@ export default function AddQuestion() {
             path = `/books-freelance/${params?.solution_type}/${params.isbn}/add-question/${params?.section_id}/${params?.sub_section_id}/${problems[1]?._id}`;
           }  
           history.push(path);
-          setConverted([]);
+          
         },
       }
     );
@@ -169,7 +173,7 @@ export default function AddQuestion() {
     <div className="col-md-12 flex pl-0 ">
       
       {params?.status === 'add-questions'  && (
-        <div className="col-md-4 p-2 bg-white">
+        <div className="col-md-5 p-2 bg-white">
             <p>Chapter Name: {params?.sub_section_id}</p>
             <p>Chapter No: {params?.section_id}</p>
             {params?.question_id && (
@@ -204,6 +208,9 @@ export default function AddQuestion() {
               <input type="text" className="form-control" placeholder="Enter Question" onChange={e => setQuestion(e.target.value)}/>
             </div>
             <div className="form-group">
+            <p><span className="text-danger">*</span> Open Quizlet and search this ISBN {params?.isbn} then go to Textbook then click right click then select content from Element 
+            <br /><b className="text-danger">{`<div data-testid="ExplanationsSolution" class="e1sw891e">Copy All Content Including this div</div>`}</b>.</p>
+                
               <textarea
                 value={sourceCode?.length > 0 ? sourceCode : ""}
                 id="sourceCode"
@@ -212,7 +219,7 @@ export default function AddQuestion() {
                   setSourceCode(e.target.value);
                 }}
                 className="form-control p-2"
-                style={{ height: "240px" }}
+                style={{ height: "160px" }}
                 placeholder="Enter Source Code for Sections"
               ></textarea>
             </div>
@@ -240,7 +247,7 @@ export default function AddQuestion() {
       {htmlConverterReact(sourceCode)}
       </div>
       )}
-      <div className="col-md-8 ml-2 bg-white p-2">
+      <div className="col-md-7 ml-2 bg-white p-2">
       <h4> Expert Solutions {converted?.length}{" "} {sourceCode?.length}</h4>
       <hr className="mt-1 mb-2" />
       <div

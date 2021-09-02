@@ -1434,7 +1434,11 @@ const SaveQuizletAnswer = async (req, res) => {
             ISBN13: isbn
         });
         if(req?.body?.type === 'quizlet'){
-            await Chapter.create({
+            await Chapter.findOneAndUpdate({
+                book_isbn: req?.body.book_isbn,
+                book_id: req?.body.book_id,
+                problem_no: req?.body.problem_no,
+            },{
                 book_id: req?.body.book_id,
                 book_name: req?.body.book_name,
                 book_isbn: req?.body.book_isbn,
@@ -1489,7 +1493,10 @@ const SaveQuizletAnswer = async (req, res) => {
             },{
                 total_question: total_question
             })
-         
+            res.status(200).json({
+                status: res?.statusCode,
+                message: "updated chapters question"
+            });
         }else{
             await Chapter.findByIdAndUpdate({
                 _id: req?.body?.question_id
