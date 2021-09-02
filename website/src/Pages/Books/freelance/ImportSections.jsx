@@ -149,7 +149,7 @@ export default function ImportSections() {
                       <td>{chap?.answer_uploaded}</td>
                       <td 
                       style={{
-                        cursor: pointer
+                        cursor: "pointer"
                       }}
                       onClick={
                             e => {
