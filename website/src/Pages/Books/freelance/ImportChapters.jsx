@@ -145,7 +145,7 @@ export default function ImportChapters() {
                       <td>{chap?.total_section ?? 0}</td>
                       <td>{chap?.sec_uploaded}</td>
                       <td>{chap?.total_question}</td>
-                      {chap?.total_section === 0 && (
+                      {(chap?.total_section === 0 || chap?.type === 'old-book') && (
                         <td 
                         style={{
                           cursor: "pointer"
