@@ -17,5 +17,5 @@ router
     .post('/get-user',studentAuth, Auth.getUser)
     .post('/edit-user-profile',studentAuth, Auth.editUser)
     .get('/getcountries', Auth.getCountryList);
-
+    
 module.exports = router;

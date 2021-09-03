@@ -12,7 +12,7 @@ let refreshTokens = [];
 const Register = async(req, res) => {
     const body = req.body;
     try {
-        let student = await Student.countDocuments(Student.findOne({ email: body.email }));
+        let student = await Student.countDocuments(Student.findOne({ Email: body.Email }));
         if (student) {
             return res.status(409).send('User with the same email already registered');
         }
@@ -35,7 +35,7 @@ const Register = async(req, res) => {
         const link = `http:\/\/${req.headers.host}\/student/verify\/${saved.email}\/${token.token}`;
         var mailOptions = {
             from: process.env.email,
-            to: newStudent.email,
+            to: newStudent.Email,
             subject: 'Verify your email address',
             html: `<h1>Welcome</h1><p><a href=${link}>Click here to verify</a></p>`
         };
@@ -65,7 +65,7 @@ const Verify = async(req, res) => {
         if (!token) {
             return res.status(400).send({ msg: 'Your verification link may have expired. Please click on resend for verify your Email.' });
         }
-        const stud = await Student.findOneAndUpdate({ _id: token._userId, email: req.params.email }, { $set: { 'status': true } })
+        const stud = await Student.findOneAndUpdate({ _id: token._userId, Email: req.params.email }, { $set: { 'status': true } })
         if (stud) {
             await Token.deleteOne({ token: req.params.token });
             return res.status(200).send({ msg: 'Your account has been successfully verified!' });
@@ -81,10 +81,14 @@ const Verify = async(req, res) => {
 
 const Login = async(req, res) => {
     try {
-        let student = await Student.findOne({ email: req.body.email }, { __v: 0 });
+        let student = await Student.findOne({ Email: req.body.email }, { __v: 0 });
         if (!student) return res.status(401).send('Invalid email or password');
-
-        const validPassword = await bcrypt.compare(req.body.password, student.password);
+        let validPassword = "";
+        if(student.type === "old"){
+            validPassword = (req.body.password == student.Password) ? true : false;
+        }else{
+            validPassword = await bcrypt.compare(req.body.password, student.Password);
+        }
         if (!validPassword) return res.status(401).send("Invalid email or password");
 
         const accessToken = generateAccessToken(student);
@@ -122,7 +126,7 @@ const generateRefreshToken = (user) => {
 const ForgotPassword = async(req, res) => {
     try {
         const email = req.body.email;
-        const data = await Student.findOne({ email: email });
+        const data = await Student.findOne({ Email: email });
         if (data) {
             return res.status(201).json(data)
         } else {
@@ -141,7 +145,7 @@ const Logout = async(req, res) => {
         const decode = await jwt.verify(accessToken, accessTokenSecret);
         const UserData = { id: decode.id, role: decode.role };
         let newAccessToken = await jwt.sign(UserData, 'sasdasd', { expiresIn: '0s' });
-        return res.status(201).json({
+        return res.status(200).json({
             message: "successfully loggedout",
             accessToken: newAccessToken
         });
@@ -155,7 +159,7 @@ const RefreshToken = async(req, res) => {
     if (!refreshTokens.includes(refreshToken)) return res.status(401).json({ message: 'Invalid refresh token' });
     jwt.verify(refreshToken, refreshTokenSecret, (err, user) => {
         if (err) return res.status(err).json({ message: "Error found" });
-        const accessToken = generateAccessToken({ email: user.email, role: user.role });
+        const accessToken = generateAccessToken({ Email: user.email, role: user.role });
         return res.status(200).json({
             accessToken
         });
@@ -166,7 +170,7 @@ const saveUser = async(req, res) => {
     const body = req.body;
     try {
         // let student = await Student.countDocuments(Student.findOne({ email: body.email }));
-        let student = await Student.findOne({ email: body.email });
+        let student = await Student.findOne({ Email: body.Email });
         if (student) {
             
             const accessToken = generateAccessToken(student);
@@ -180,7 +184,7 @@ const saveUser = async(req, res) => {
                 student:student
             });
         }
-        body.password = new Token({ _userId: body.id, token: randomBytes(16).toString('hex') });
+        body.Password = new Token({ _userId: body.id, token: randomBytes(16).toString('hex') });
         const newStudent = new Student(body);
         const saved = await newStudent.save();
         if (!saved) return res.status(500).send("Error in saving Student");
@@ -193,6 +197,7 @@ const saveUser = async(req, res) => {
             message: "Registered Sucessfully",
             accessToken:accessToken,
             refreshToken:refreshToken,
+            student:saved
         });
     } catch (error) {
         console.log(error)
@@ -205,7 +210,7 @@ const saveUser = async(req, res) => {
 const sendResetEmail = async(req, res) =>{
     try{
         const body = req.body;
-        let student = await Student.findOne({ email: body.email });
+        let student = await Student.findOne({ Email: body.email });
         if (!student) {
             return res.status(404).send('User not Found');
         }
@@ -266,7 +271,7 @@ const verifyOtp = async(req,res) => {
 }
 const changePassword = async(req,res) => {
     try{
-        const stud = await Student.findOneAndUpdate({ _id: req.body.id }, {'password': req.body.password })
+        const stud = await Student.findOneAndUpdate({ _id: req.body.id }, {'Password': req.body.password })
         if (stud) {
             await Token.deleteOne({ token: req.body.otp });
             return res.status(200).send({ msg: 'Password changed successfully' });
@@ -287,7 +292,7 @@ const getUser = async(req,res) => {
                 message: "Something Went Wrong"
             });
         }
-        let user = await Student.findOne({email : req.body.email});
+        let user = await Student.findOne({Email : req.body.email});
         return res.send(user);
     }catch(e){
         return res.status(502).json({
@@ -299,7 +304,7 @@ const getUser = async(req,res) => {
 const editUser = async(req,res) => {
     try{
         // return res.send(req.body)
-        const filter = {email: req.body.email};
+        const filter = {Email: req.body.email};
         const data = {
             college: req.body.college,
             dob: req.body.dob, 
@@ -307,7 +312,7 @@ const editUser = async(req,res) => {
             Address: req.body.Address,
             Zipcode: req.body.Zipcode,
             Contact: req.body.Contact,
-            fullname: req.body.fullname,
+            Name: req.body.Name,
         }
         let user = await Student.findOneAndUpdate(filter,{$set: data});
         return res.status(200).send({ msg: 'user updated successfully',user: user });
@@ -328,6 +333,7 @@ const getCountryList = async(req,res) => {
         });
     }
 }
+
 
 module.exports = {
     Register,
