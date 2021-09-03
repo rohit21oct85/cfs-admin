@@ -21,15 +21,16 @@ const TransactionSchema = new mongoose.Schema({
 });
 
 const StudentSchema = new mongoose.Schema({
-    fullname: {
+    Name: {
         type: String
     },
-    email: {
+    Email: {
         type: String,
         unique: true,
     },
     dob:{type: String},
     wallet: {type: String},
+    type: {type: String, default: "new"},
     Subscribe: 
         {
             type: Boolean,
@@ -37,7 +38,7 @@ const StudentSchema = new mongoose.Schema({
         },
     SubscribeDate: {type: String},
     social_id: {type: String},
-    password: {type: String,trim: true},
+    Password: {type: String,trim: true},
     dept: {type: String},
     typ: {type: String},
     college: {type: String},
@@ -83,12 +84,12 @@ StudentSchema.pre('save', function(next) {
     if (!student.isModified || !student.isNew) {
         next();
     } else {
-        bcrypt.hash(student.password, 10, function(err, hash) {
+        bcrypt.hash(student.Password, 10, function(err, hash) {
             if (err) {
-                console.log('Error hashing password for student', student.fullname);
+                console.log('Error hashing password for student', student.Name);
                 next(err);
             } else {
-                student.password = hash;
+                student.Password = hash;
                 next();
             }
         })
@@ -97,9 +98,9 @@ StudentSchema.pre('save', function(next) {
 
 StudentSchema.pre('findOneAndUpdate', async function(next) {
     try {
-        if (this._update.password) {
-            const hashed = await bcrypt.hash(this._update.password, 10)
-            this._update.password = hashed;
+        if (this._update.Password) {
+            const hashed = await bcrypt.hash(this._update.Password, 10)
+            this._update.Password = hashed;
         }
         next();
     } catch (err) {
