@@ -6,6 +6,9 @@ const Chapter = require('../../models/admin/Chapter.js');
 const Question = require('../../models/admin/Question.js');
 const TextBook = require('../../models/admin/TextBook.js');
 const ChieldSubject = require('../../models/admin/ChieldSubject.js');
+const RoleModule = require('../../models/admin/RoleModule.js');
+const RolePermission = require('../../models/admin/RolePermission.js');
+const CFSTutor = require('../../models/tutor/CFSTutor.js');
 
 const CreateAdmin = async (req, res) => {
     const body = req.body;
@@ -41,6 +44,7 @@ const UpdateAdmin = async (req, res) =>{
                         errors: error.message
                     })
                 });
+                
 
     } catch (error) {
         res.status(409).json({
@@ -89,10 +93,26 @@ const DeleteAdmin = async (req, res) =>{
         });
     }
 };
+const DeleteOldRole = async (req, res) =>{
+    const id = req.params.id;
+    try {
+        await RoleModule.deleteMany({email: req?.body?.email, role: req?.body?.role});
+        await RolePermission.deleteMany({email: req?.body?.email, role: req?.body?.role});
+        return res.status(201).json({
+                message: "Admin, deleted successfully"
+        })
+    } catch (error) {
+        res.status(409).json({
+            message: error.message
+        });
+    }
+};
+
 const DashboardStatics = async (req, res) => {
     try {
         let students = await Student.estimatedDocumentCount({});
         let tutors = await Tutor.estimatedDocumentCount({});
+        let cfs_tutors = await CFSTutor.estimatedDocumentCount({});
         let books = await Book.estimatedDocumentCount({});
         let chapters = await Chapter.estimatedDocumentCount({});
         let qnas = await Question.find({shortanswer: ""}).countDocuments();
@@ -103,6 +123,7 @@ const DashboardStatics = async (req, res) => {
             data: {
                 total_student: students,
                 total_tutor: tutors,
+                total_cfs_tutor: cfs_tutors,
                 total_books: books,
                 total_chapters: chapters,
                 total_qna: qnas,
@@ -176,4 +197,5 @@ module.exports = {
     ViewAdmin,
     ViewAllAdmin,
     DeleteAdmin,
+    DeleteOldRole
 }

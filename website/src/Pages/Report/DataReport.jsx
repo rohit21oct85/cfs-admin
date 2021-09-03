@@ -27,8 +27,12 @@ export default function DataReport() {
     const {data,isLoading: isLoadingSubject} = useAllSubjects();
     const {data:sub_subjects,isLoading: isLoadingSubSubject} = useGetSubSubjects();
     const {data:dataReports,isLoading: isLoadingReport} = useDataReports();
-    
-    const [questions, setQuestions] = useState([]);
+    let totalQuestions;
+    if(params?.status === 'question-and-answer'){
+        totalQuestions = dataReports?.reduce((a, b) => a + b.toal_question, 0)
+    }else{
+        totalQuestions = dataReports?.reduce((a, b) => a + b.total_question, 0)
+    }
     
     return (
         <div className="col-lg-10 col-md-10 main_dash_area">
@@ -137,7 +141,11 @@ onChange={e => {
                     <div className="dash-cont-start">
                         <div className="col-md-12 row">
                             <div className="col-md-9">
-                                <h2 style={{ textTransform: 'capitalize'}}>All Upload Questions {params?.status ? 'in' : ''}  {params?.status?.replaceAll('-', ' ')}</h2>
+                                <h2 style={{ textTransform: 'capitalize'}}>All Upload Questions {params?.status ? 'in ' : ''}  
+                                <span className="text-danger">{params?.status?.replaceAll('-', ' ')}</span>
+                                <span className="text-success"> { totalQuestions }</span>
+
+                                </h2>
                             </div>
                         </div>
                         <div className="col-md-12 p-0 ">
@@ -150,7 +158,7 @@ onChange={e => {
                                     <tr>
                                         <th>Old Sub ID</th>
                                         <th>Chield Subjects</th>
-                                        <th>Total </th>
+                                        <th>Total Questions</th>
                                     </tr>
                                 </thead>
                                 
@@ -178,7 +186,7 @@ onChange={e => {
                                         <th>ISBN13</th>
                                         <th>Edition</th>
                                         <th>Book Name</th>
-                                        <th>Total</th>
+                                        <th>Total Questions</th>
                                     </tr>
                                 </thead>
                                 
@@ -188,7 +196,7 @@ onChange={e => {
                                         <tr className="col-md-12 mt-2 ml-1 pl-2" key={report?._id}>
                                             <td >{report?.ISBN13}</td>
                                             <td >{report?.Edition}</td>
-                                            <td >{report?.BookName}</td>
+                                            <td >{report?.BookName?.substr(0,30)}</td>
                                             <td >{report?.total_question}</td>
                                         </tr> 
                                         )

@@ -58,7 +58,7 @@ return (
                             <div className="box-head">
                                 <h4 style={{
                                     textShadow: '2px 1px #000'
-                                }}>Number of Tutor Registered</h4>
+                                }}>Number of Freelance Tutor Registered</h4>
                                 <div className="box-icon">
                                     <span className="fa fa-users" style={{
                                         position: 'absolute',
@@ -73,6 +73,30 @@ return (
                                         bottom: '5%',
                                         textShadow: '2px 2px #000'
                                     }}>{dashboard?.total_tutor}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 ml-1 mb-2 main-box gradient-ibiza">
+                        <div className="card-body">
+                            <div className="box-head">
+                                <h4 style={{
+                                    textShadow: '2px 1px #000'
+                                }}>Number of CFS Tutor Registered</h4>
+                                <div className="box-icon">
+                                    <span className="fa fa-users" style={{
+                                        position: 'absolute',
+                                        right: '1.5rem',
+                                        opacity: '0.2',
+                                        fontSize: '6rem',
+                                    }}></span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        fontSize: '2rem',
+                                        right: '1rem',
+                                        bottom: '1%',
+                                        textShadow: '2px 2px #000'
+                                    }}>{dashboard?.total_cfs_tutor}</span>
                                 </div>
                             </div>
                         </div>

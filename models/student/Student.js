@@ -22,6 +22,9 @@ const TransactionSchema = new mongoose.Schema({
 
 const StudentSchema = new mongoose.Schema({
     Name: {
+         type: String
+    },
+    id: {
         type: String
     },
     Email: {

@@ -17,6 +17,7 @@ export default function useBartelbyChapters() {
         API_URL = cons.LIVE_API_URL;
     }
     return useQuery([`chapters-bartelby-${isbn}-${status}`], async () => {
+        
         const result = await axios.get(`${API_URL}chapter/bartelby-chapters/${isbn}/${status}`,{
             headers: {
                 'Content-Type': 'Application/json',
@@ -24,6 +25,7 @@ export default function useBartelbyChapters() {
             }
         });
         return result.data; 
+    
     });
     
 }

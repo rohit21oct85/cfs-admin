@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
-
+const sectionSchema = new mongoose.Schema({
+    chapter_no: String,
+    section_no: String,
+    section_name: String,
+    book_isbn: String,
+    exe_uploaded: {
+        type: Number
+    },
+    answer_uploaded: {
+        type: Number
+    }
+})
 const QuizletChapterSchema = new mongoose.Schema({
     book_isbn: {
         type: String,
@@ -13,12 +24,10 @@ const QuizletChapterSchema = new mongoose.Schema({
     sec_uploaded: {
         type: Number,
         default: 0
-        
     },
     exe_uploaded: {
         type: Number,
-        default: 0
-        
+        default: 0 
     },
     answer_uploaded: {
         type: Number,
@@ -31,6 +40,12 @@ const QuizletChapterSchema = new mongoose.Schema({
     total_uploaded: {
         type: Number,
         default: 0
+    },
+    total_section: {
+        type: Number
+    },
+    sections: {
+        type: [sectionSchema]
     }
 
 });

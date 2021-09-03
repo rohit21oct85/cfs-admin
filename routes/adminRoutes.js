@@ -10,8 +10,10 @@ router
     .get('/view/:id',checkAuth,adminAuth, Auth.ViewAdmin)
     .get('/view-all',checkAuth,adminAuth, Auth.ViewAllAdmin)
     .delete('/delete/:id', checkAuth,adminAuth, Auth.DeleteAdmin)
+    .post('/delete-old-role', checkAuth,adminAuth, Auth.DeleteOldRole)
     .get('/dashboard-statics',checkAuth,adminAuth, Auth.DashboardStatics)
     .get('/data-report/:subject_id?/:sub_subject_id?/:status?',checkAuth,adminAuth, Auth.DataReports)
+    
 ;
 
 module.exports = router;

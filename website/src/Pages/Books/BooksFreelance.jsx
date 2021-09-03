@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import "../mainDash.css";
 import "./MathJaxStyle.css";
 import "../Chapters/math.css";
-import { useParams, Link, useHistory, useLocation } from "react-router-dom";
+import { useParams,Link, useHistory, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useToasts } from "react-toast-notifications";
@@ -18,6 +18,7 @@ import { htmlConverterReact } from "html-converter-react";
 import Button from "./Button";
 import useGetProblems from "../../hooks/useGetProblems";
 import QZSolution from "./freelance/QZSolution";
+import DeleteIsbn from "./DeleteIsbn";
 
 export default function BooksFreelance() {
   
@@ -32,7 +33,7 @@ export default function BooksFreelance() {
   const [questionsData, setQuestionsData] = useState([]);
   const queryClient = useQueryClient();
   const [fetching, setFetching] = useState(false);
-  const [formData] = useState({});
+  const [formData, setFormData] = useState({});
   const [imported, setImported] = useState({});
   const [uploaded, setUploaded] = useState(false);
   const [ViewUploaded, setViewUploaded] = useState(false);
@@ -46,7 +47,7 @@ export default function BooksFreelance() {
   const [converted, setConverted] = useState([]);
   const [question, setQuestion] = useState("");
   const [uploading, setUploading] = useState(false);
-
+  const [hideImport, setHideImport] = useState(false)
 
   useEffect(()=> {
     if(location.pathname === '/books-freelance'){
@@ -71,8 +72,7 @@ export default function BooksFreelance() {
 
   useEffect(getSampleJSON, [params, singleBook]);
   async function getSampleJSON() {
-    
-    if(singleBook && singleBook[0]?.bartlyby_imported === false) {
+    if(singleBook && singleBook[0]?.bartlyby_imported === false && singleBook && singleBook[0]?.question_uploaded === false) {
       const response = await axios.get(
         `https://backup.crazyforstudy.com/api/chapters.php?isbn=${params?.isbn}`
       );
@@ -82,13 +82,17 @@ export default function BooksFreelance() {
         chaptersData.push({
           book_isbn: params?.isbn,
           section_id: section?.bookSectionId,
+          sections: section?.sections,
+          total_sections: section?.sections?.length,
           chapter_no: section?.sequenceText,
           chapter_name: section?.title,
           total_question: 0,
           total_uploaded: 0,
+          total_section_uploaded: 0,
         });
       });
-      // console.log(sections); return;
+      // console.log(sections);
+      // console.log(chaptersData); return;
       await importBarteybyChapters.mutate({
         bartley: chaptersData,
         book_isbn: params?.isbn,
@@ -112,7 +116,14 @@ export default function BooksFreelance() {
     }
   );
 
-  
+  const [subSections, setSubSections] = useState([]);
+  useEffect(filterSubSections,[chapters, params?.section_id, params?.question_id]);
+  function filterSubSections(){
+    let subsection = chapters?.data?.filter(ch => ch?.section_id === params?.section_id)
+    if(subsection?.length > 0){
+      setSubSections(subsection[0].sections)
+    }
+  }
 
   const updateImportChapters = useMutation(
     (formData) => {
@@ -123,17 +134,35 @@ export default function BooksFreelance() {
       );
     },
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryClient.invalidateQueries([
           `chapters-bartelby-${params?.isbn}-${params?.status}`,
         ]);
-        history.push(
-          `/books-freelance/${params?.solution_type}/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
-        );
+        
         addToast("Question Imported", {
           appearance: "success",
           autoDismiss: true,
         });
+        setHideImport(false)
+        let path;
+        setTimeout(() => {
+          if(params?.sub_section_id){
+            let e = document.getElementById("subsection");
+            if(e.options[2] === undefined){
+              path = `/books-freelance/${params?.solution_type}/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
+              history.push(`${path}`)
+            }else{
+              let subsection_id = e.options[2].value;
+              path = `/books-freelance/${params?.solution_type}/${params.isbn}/${params?.status}/${params?.section_id}/${subsection_id}`
+              history.push(`${path}`)
+            } 
+          }else if(params?.section){
+            path = `/books-freelance/${params?.solution_type}/${params.isbn}/${params?.status}/${chapters?.data[1]?.section_id}`
+            history.push(`${path}`)
+          }
+        }, 1000)
+        
+        
       },
     }
   );
@@ -141,8 +170,14 @@ export default function BooksFreelance() {
   async function importQuestion() {
     if (params?.section_id) {
       setFetching(true);
+      let sec_id;
+      if(params?.section_id && params?.sub_section_id){
+        sec_id = params?.sub_section_id;
+      }else{
+        sec_id = params?.section_id;
+      }
       let sectionResponse = await axios.get(
-        `https://nk6xemh85d.execute-api.us-east-1.amazonaws.com/prod/solution/${params?.isbn}/section-questions/${params?.section_id}`
+        `https://nk6xemh85d.execute-api.us-east-1.amazonaws.com/prod/solution/${params?.isbn}/section-questions/${sec_id}`
       );
       const questions = sectionResponse?.data?.data?.questions;
       questions?.map(async (question, index) => {
@@ -167,12 +202,15 @@ export default function BooksFreelance() {
         (chapter) => chapter?.section_id === params?.section_id
       );
       setImported(importedData && importedData[0]);
+      setFetching(false);
+
     } else {
       addToast("Please select chapters", {
         appearance: "error",
         autoDismiss: true,
       });
     }
+    
   }
   
   const uploadChapterQuestion = useMutation(
@@ -202,16 +240,24 @@ export default function BooksFreelance() {
     setUploaded(true);
     let book_id = singleBook && singleBook[0]?._id;
     let book_name = singleBook && singleBook[0]?.BookName;
+    let section_id = params?.section_id
+    let sub_section_id = params?.sub_section_id
+    let subSection = subSections.filter(ss => ss?.bookSectionId === params?.sub_section_id)
+    let section_no = subSection[0].sequenceText;
+    let section_name = subSection[0].title;
     questionsData.map((question, index) => {
       question.sequence = question?.sequence;
       question.source = "bartelby";
-      question.section_id = params?.section_id;
+      question.section_id = section_id;
+      question.sub_section_id = sub_section_id;
       question.old_qid = question?.uuid;
       question.book_id = book_id;
       question.book_name = book_name;
       question.book_isbn = params?.isbn;
       question.chapter_no = imported?.chapter_no;
       question.chapter_name = imported?.chapter_name;
+      question.section_no = section_no;
+      question.section_name = section_name;
       question.answer = JSON.stringify(question?.answer);
     });
     // console.log("after append " , questionsData); return;
@@ -220,9 +266,11 @@ export default function BooksFreelance() {
       chapters: questionsData,
       book_isbn: params?.isbn,
       section_id: params?.section_id,
+      sub_section_id: params?.sub_section_id,
     });
     formData["book_isbn"] = params?.isbn;
     formData["section_id"] = params?.section_id;
+    formData["sub_section_id"] = params?.sub_section_id;
     await updateImportChapters.mutate(formData);
   }
 
@@ -256,33 +304,7 @@ export default function BooksFreelance() {
       },
     }
   );
-  const [doDeleteISBN, setDoDeleteISBN] = useState(false)
-  const [deleteISBN, setDeleteISBN] = useState(false);
-  async function deleteBooksByISBN(){
-      setDeleteISBN(true);
-      let formData = {
-        book_isbn: params?.isbn,
-      };
-      await DeleteChapters.mutate(formData);
-  }
-  const DeleteChapters = useMutation(
-    (formData) => {
-      return axios.post(
-        `${API_URL}chapter/bartelby-delete-all`,
-        formData,
-        options
-      );
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("chapters-bartelby");
-        setDeleteISBN(false);
-        history.push(
-          `/books-freelance/${params?.solution_type}/${params?.isbn}/import-chapter/${params?.section_id}`
-        );
-      },
-    }
-  );
+  
   async function handleClearChapter() {
     setClearing(true);
     let formData = {
@@ -339,7 +361,6 @@ export default function BooksFreelance() {
 
 
   async function handleKeyDown(e) {
-    console.log(e.keyCode);
     if (e.keyCode === 13) {
       if (clearPassword === "wrong-password") {
         setEnterPassword(false);
@@ -367,19 +388,15 @@ export default function BooksFreelance() {
   }
 
   async function handleExpertAnswer(id) {
-    history.push(
-      `/books-freelance/${params?.solution_type}/${params?.isbn}/update-expert-answer/${params?.section_id}/${id}`
-    );
+    let path;
+    if(params?.sub_section_id){
+      path = `/books-freelance/${params?.solution_type}/${params?.isbn}/update-expert-answer/${params?.section_id}/${params?.sub_section_id}/${id}`
+    }else{
+      path = `/books-freelance/${params?.solution_type}/${params?.isbn}/update-expert-answer/${params?.section_id}/${id}`
+    }
+    history.push(path);
   }
   
-  async function handleAnotherAnswer(id) {
-    history.push(
-      `/books-freelance/${params?.solution_type}/${params?.isbn}/update-another-answer/${params?.section_id}/${id}`
-    );
-  }
-
-  
-
   useEffect(GetSingleQuestion, [Banswers, params]);
   async function GetSingleQuestion() {
     let sqData = await Banswers?.data?.filter(
@@ -411,19 +428,34 @@ export default function BooksFreelance() {
   async function handleExtractExpertAnswer(e) {
     e.preventDefault();
     if (sourceCode !== "") {
-      let content = document.querySelectorAll(
-        ".styles__SectionContainer-njq7rd-15"
-      );
-      content.forEach((value, index) => {
-        if (index > 0) {
-          setConverted((converted) => [
-            ...converted,
-            {
-              data: value,
-            },
-          ]);
-        }
-      });
+      if(params?.sub_section_id === "undefined"){
+        let content = document.querySelectorAll(
+          ".styles__SectionContainer-sc-njq7rd-15, .styles__SectionContainer-njq7rd-15"
+        );
+        console.log(content)
+        content.forEach((value, index) => {
+            setConverted((converted) => [
+              ...converted,
+              {
+                data: value,
+              },
+            ]);
+        });
+      }else{
+        let content = document.querySelectorAll(
+          ".styles__SectionContainer-njq7rd-15, .styles__SectionContainer-sc-njq7rd-15"
+        );
+        
+        console.log(content)
+        content.forEach((value, index) => {
+            setConverted((converted) => [
+              ...converted,
+              {
+                data: value,
+              },
+            ]);
+        });
+      }
     }
     setSourceCode("");
   }
@@ -458,9 +490,9 @@ export default function BooksFreelance() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([`problems-${params?.section_id}`]);
+        queryClient.invalidateQueries([`problems-${params?.section_id}-${params?.sub_section_id}`]);
         queryClient.invalidateQueries([
-          `question-answeres-${params?.section_id}-${params?.question_id}`,
+          `question-answeres-${params?.section_id}-${params?.sub_section_id}-${params?.question_id}`,
         ]);
         setQuestionsData([]);
         setFetching(false);
@@ -472,7 +504,7 @@ export default function BooksFreelance() {
             autoDismiss: true,
           });
         history.push(
-          `/books-freelance/${params?.solution_type}/${params.isbn}/view-uploaded-chapter/${params?.section_id}/${problems[1]?._id}`
+          `/books-freelance/${params?.solution_type}/${params.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.sub_section_id}/${problems[1]?._id}`
         );
       },
     }
@@ -495,41 +527,12 @@ export default function BooksFreelance() {
               {params?.solution_type == 'BB' && (
               <div className="dash-con-heading">
                 <div className="col-md-12 row">
-                  <div className="p-0">
                     <Link to={`${state?.role == "1" ? '/books/freelance': '/upload-question'}`} className="btn btn-sm dark">
                       <span className="fa fa-arrow-left"></span>
                     </Link>
-                    {doDeleteISBN === false && (
-                      <button className="ml-2 btn-sm dark bg-danger"
-                      onClick={e => {
-                        let uConfirm = confirm("Do you have rights to delete all data related to this ISBN " + params?.isbn, "yes", "No");
-                        if(uConfirm){
-                          let answer = prompt("please enter the delete Password");
-                          if(answer === 'wrong-password'){
-                            setDoDeleteISBN(true);
-                          }else{
-                            alert("your have entered a wong-password...?")
-                          }
-                        }
-                      }}
-                      >
-                        <span className="fa fa-times"></span>
-                      </button>
-                    )}
-                    {state.role == "1" && doDeleteISBN && (
-                      <button className="ml-2 btn-sm dark bg-danger"
-                      onClick={deleteBooksByISBN}
-                      disabled={deleteISBN}>
-                        {deleteISBN 
-                        ? 
-                        <span className="fa fa-spinner"></span>
-                        :
-                        <span className="fa fa-trash"></span>
-                        }
-                      </button>
-                    )}
-                  </div>
-                  <div className="p-0 ml-2">
+                   
+                   <DeleteIsbn /> 
+                   <div className="p-0 ml-2">
                     <button
                       className="btn btn-sm dark"
                       onClick={(e) => {
@@ -544,14 +547,17 @@ export default function BooksFreelance() {
                       Import Chapters
                     </button>
                   </div>
+                  
 
                   <div className="p-0 ml-2">
                     <button
                       className="btn btn-sm dark"
                       onClick={(e) => {
                         e.preventDefault();
+                        let path;
+                        path = `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter`
                         history.push(
-                          `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter`
+                          `${path}`
                         );
                         setViewUploaded(true);
                       }}
@@ -567,7 +573,7 @@ export default function BooksFreelance() {
                 <>
                   <div className="dash-con-heading">
                     <div className="col-md-12 row">
-                      <div className="col-md-8 pl-0">
+                      <div className="col-md-10 flex pl-0">
                         <select
                           className="form-control"
                           value={params?.section_id}
@@ -582,6 +588,7 @@ export default function BooksFreelance() {
                               );
                             } else {
                               setSectionId(section_id);
+
                               history.push(
                                 `/books-freelance/${params?.solution_type}/${params?.isbn}/${params?.status}/${section_id}`
                               );
@@ -601,8 +608,33 @@ export default function BooksFreelance() {
                             );
                           })}
                         </select>
+                        {chapters?.data[0]?.total_sections > 0 && (
+                        <select className="form-control"
+                        value={params?.sub_section_id}
+                        id="subsection"
+                        onChange={e => {
+                          history.push(
+                          `/books-freelance/${params?.solution_type}/${params?.isbn}/${params?.status}/${params?.section_id}/${e.target.value}`
+                        )}}>
+                             <option>Select Sub Scetions</option>
+                             {subSections?.map((subs, ind) => {
+                                if(ind >= chapters?.data[0]?.total_section_uploaded)
+                                return(
+                                  <option 
+                                  data-booksectionid={subs?.bookSectionId}
+                                  data-sectionno={subs?.sequenceText}
+                                  data-sectionname={subs?.title}
+                                  value={subs?.bookSectionId}
+                                  key={subs?.bookSectionId}
+                                >{subs?.sequenceText} - &nbsp; {subs?.title}</option>
+                                )
+                               
+                             })}
+                        </select>  
+                        )}
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-2">
+                        {hideImport === false && questionsData?.length === 0 && (
                         <button
                           className="btn btn-md dark"
                           onClick={importQuestion}
@@ -621,9 +653,10 @@ export default function BooksFreelance() {
                             <span className="fa fa-download"></span>
                           )}
                         </button>
+                        )}
                         {questionsData?.length > 0 && (
                           <button
-                            className="btn btn-md dark ml-2"
+                            className="btn btn-md dark"
                             onClick={exportQuestion}
                             disabled={uploaded}
                           >
@@ -666,7 +699,7 @@ export default function BooksFreelance() {
                         className="col-md-12 pl-0 bb-1 pr-0 mb-2"
                         style={{ height: "450px", overflow: "scroll" }}
                       >
-                        {questionsData.reverse()?.map((ques) => {
+                        {questionsData?.map((ques) => {
                           return (
                             <div
                               className="col-md-12 pl-0 pr-0 mt-2 mb-2 pb-2 bb-1"
@@ -680,7 +713,7 @@ export default function BooksFreelance() {
                                 className="pl-2 pt-2"
                                 style={{ width: "10%" }}
                               >
-                                {ques?.sequence}-{ques?.problem_no}
+                                {ques?.sequence} ). &nbsp; {ques?.problem_no}
                               </div>
                               <div
                                 className="pl-2 pt-2"
@@ -777,14 +810,37 @@ export default function BooksFreelance() {
                               key={chapter?.section_id}
                               className="card mb-2 pl-2 pr-2 pt-1 pb-2 br-10"
                               id={chapter?.section_id}
-                              value={chapter?.section_id}
+                              value={singleBook && singleBook[0]?.bartlyby_imported === true ? chapter?.section_id : chapter?.chapter_no}
                             >
                               {chapter?.chapter_no} - {chapter?.chapter_name}
                             </option>
                           );
                         })}
                       </select>
-
+                      
+                      {chapters?.data[0]?.total_sections > 0 && (
+                        <select className="form-control"
+                        value={params?.sub_section_id}
+                        id="subsection"
+                        onChange={e => {
+                          history.push(
+                          `/books-freelance/${params?.solution_type}/${params?.isbn}/${params?.status}/${params?.section_id}/${e.target.value}`
+                        )}}>
+                             <option>Select Sub Scetions</option>
+                             {chapters?.data[0].sections?.map((subs, ind) => {
+                                return(
+                                  <option 
+                                  data-booksectionid={subs?.bookSectionId}
+                                  data-sectionno={subs?.sequenceText}
+                                  data-sectionname={subs?.title}
+                                  value={subs?.bookSectionId}
+                                  key={subs?.bookSectionId}
+                                >{subs?.sequenceText} - &nbsp; {subs?.title}</option>
+                                )
+                               
+                             })}
+                        </select>  
+                        )}
                       <div className="col-md-12 pl-0 pr-0">
                         {problemLoading && (
                           <p>
@@ -799,7 +855,7 @@ export default function BooksFreelance() {
                           <div className="dark br-10 pl-2">
                             Questions:
                             <span className="badge-success ml-3 br-10 pull-right pl-2 pr-2">
-                              {singleChapter?.total_question}
+                              {params?.sub_section_id ? problems?.length : singleChapter?.total_question}
                             </span>
                           </div>
                           <div className="dark br-10 pl-2">
@@ -830,12 +886,12 @@ export default function BooksFreelance() {
                                   style={{ cursor: "pointer" }}
                                   id={problem?._id}
                                   onClick={(e) => {
-                                    history.push(
-                                      `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${problem?._id}`
-                                    );
+                                    let path;
+                                    path = `/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.sub_section_id}/${problem?._id}`;
+                                    history.push(path);
                                   }}
                                 >
-                                  {problem?.problem_no}
+                                  {problem?.problem_no}-{problem?.question?.substr(0,10)}
                                 </div>
                               );
                             })}
@@ -911,22 +967,20 @@ export default function BooksFreelance() {
                                   placeholder="Problem No"
                                   counter={chapter?.problem_no}
                                 />
-
-                                {chapter?.sequence > 0 && (
-                                  <div
-                                    className="col-md-8 pull-right pr-0"
-                                  >
-                                    
-                                    <button className="btn dark btn-sm br-5 pull-right"
-                                    onClick={handleExpertAnswer.bind(
-                                      this,
-                                      chapter?._id
-                                    )}>
-                                      <span className="fa fa-question-circle mr-2"></span>
-                                      Bartelby Solution
-                                    </button>
-                                  </div>
-                                )}
+                                <div
+                                  className="col-md-8 pull-right pr-0"
+                                >
+                                  
+                                  <button className="btn dark btn-sm br-5 pull-right"
+                                  onClick={handleExpertAnswer.bind(
+                                    this,
+                                    chapter?._id
+                                  )}>
+                                    <span className="fa fa-question-circle mr-2"></span>
+                                    Bartelby Solution
+                                  </button>
+                                </div>
+                              
                               </h6>
 
                               <hr className="mt-1 mb-1" />
@@ -1063,7 +1117,10 @@ export default function BooksFreelance() {
                       </div>
                       <div className="col-md-12 mt-3 pr-0 pull-right">
                         <button className="dark bg-succcess"
-                        onClick={() => history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.question_id}`)}>
+                        onClick={() => {
+
+                          history.push(`/books-freelance/${params?.solution_type}/${params?.isbn}/view-uploaded-chapter/${params?.section_id}/${params?.sub_section_id}/${params?.question_id}`)
+                        }}>
                           <span className="fa fa-times mr-2"></span>
                           Cancel
                         </button>
